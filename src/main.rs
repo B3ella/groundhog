@@ -116,6 +116,7 @@ fn by_weekday(line: &str, date: DateTime<Local>) -> String{
 }
 
 fn symlink_daily_note(date: DateTime<Local>) {
+    println!("creating symlink for daily-note: {}", date_to_file_name(date));
     let daily_note = date_to_file_name(date);
     let sym_link_path = "/home/bella/Notes/daily-note.md";
     let _ = remove_file("a.txt");
