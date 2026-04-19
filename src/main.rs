@@ -5,6 +5,7 @@ use chrono::{Local, DateTime, Duration, Datelike};
 use std::os::unix::fs as unix_fs;
 
 const BASE_PATH: &str = "/home/bella/notes";
+const NOTE_PATH: &str = "/home/bella/notes/daily-note";
 
 fn main() {
     let current_local: DateTime<Local> = Local::now();  
@@ -44,7 +45,7 @@ fn date_to_file_name(date: DateTime<Local>) -> String {
     let month = date.month();
     let day = date.day();
     let file_name = format!("{}-{:0>2}-{:0>2}.md", year, month, day);
-    BASE_PATH.to_owned() + &file_name
+    NOTE_PATH.to_owned() + &file_name
 }
 
 fn read_file(path: &str) -> String {
