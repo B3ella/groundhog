@@ -4,6 +4,8 @@ use std::io::prelude::*;
 use chrono::{Local, DateTime, Duration, Datelike};  
 use std::os::unix::fs as unix_fs;
 
+const BASE_PATH: &str = "/home/bella/notes";
+
 fn main() {
     let current_local: DateTime<Local> = Local::now();  
     create_daily_note(current_local);
@@ -22,7 +24,7 @@ fn create_daily_note(date: DateTime<Local>) {
     let yesterday = date_to_file_name(yesterday);
     let yesterday = read_file(&yesterday);
 
-    let template = read_file("/home/bella/Notes/templates/dnt.md");
+    let template = read_file(&(BASE_PATH.to_owned() + "templates/dnt.md"));
 
     let note = process_tokens(&template, &yesterday, date);
     let path = date_to_file_name(date);
@@ -42,8 +44,7 @@ fn date_to_file_name(date: DateTime<Local>) -> String {
     let month = date.month();
     let day = date.day();
     let file_name = format!("{}-{:0>2}-{:0>2}.md", year, month, day);
-    let base_path = "/home/bella/Notes/".to_string();
-    base_path + &file_name
+    BASE_PATH.to_owned() + &file_name
 }
 
 fn read_file(path: &str) -> String {
@@ -118,7 +119,7 @@ fn by_weekday(line: &str, date: DateTime<Local>) -> String{
 fn symlink_daily_note(date: DateTime<Local>) {
     println!("creating symlink for daily-note: {}", date_to_file_name(date));
     let daily_note = date_to_file_name(date);
-    let sym_link_path = "/home/bella/Notes/daily-note.md";
+    let sym_link_path = BASE_PATH.to_owned() + "daily-note.md";
     let _ = remove_file("a.txt");
     let _ = unix_fs::symlink(daily_note, sym_link_path);
 }
