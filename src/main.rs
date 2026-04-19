@@ -1,11 +1,13 @@
 use std::fs;
-use std::fs::File;
+use std::fs::{File, remove_file};
 use std::io::prelude::*;
 use chrono::{Local, DateTime, Duration, Datelike};  
+use std::os::unix::fs as unix_fs;
 
 fn main() {
     let current_local: DateTime<Local> = Local::now();  
     create_daily_note(current_local);
+    symlink_daily_note(current_local);
 }
 
 fn create_daily_note(date: DateTime<Local>) {
@@ -113,6 +115,12 @@ fn by_weekday(line: &str, date: DateTime<Local>) -> String{
     return content_by_day[index].to_string();
 }
 
+fn symlink_daily_note(date: DateTime<Local>) {
+    let daily_note = date_to_file_name(date);
+    let sym_link_path = "/home/bella/Notes/daily-note.md";
+    let _ = remove_file("a.txt");
+    let _ = unix_fs::symlink(daily_note, sym_link_path);
+}
 
 #[cfg(test)]
 mod tests {
