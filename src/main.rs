@@ -4,8 +4,8 @@ use std::io::prelude::*;
 use chrono::{Local, DateTime, Duration, Datelike};  
 use std::os::unix::fs as unix_fs;
 
-const BASE_PATH: &str = "/home/bella/notes";
-const NOTE_PATH: &str = "/home/bella/notes/daily-note";
+const BASE_PATH: &str = "/home/bella/Notes/";
+const NOTE_PATH: &str = "/home/bella/Notes/daily-note/";
 
 fn main() {
     let current_local: DateTime<Local> = Local::now();  
