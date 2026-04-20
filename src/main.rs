@@ -121,7 +121,7 @@ fn symlink_daily_note(date: DateTime<Local>) {
     println!("creating symlink for daily-note: {}", date_to_file_name(date));
     let daily_note = date_to_file_name(date);
     let sym_link_path = BASE_PATH.to_owned() + "daily-note.md";
-    let _ = remove_file("a.txt");
+    let _ = remove_file(&daily_note);
     let _ = unix_fs::symlink(daily_note, sym_link_path);
 }
 
