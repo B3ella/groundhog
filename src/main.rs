@@ -1,4 +1,5 @@
 use std::fs;
+use std::env;
 use std::fs::{File, remove_file};
 use std::io::prelude::*;
 use std::collections::HashMap;
@@ -7,12 +8,35 @@ use std::os::unix::fs as unix_fs;
 
 
 fn main() {
-    let config_path = "data/default_config";
+    let args: Vec<String> = env::args().collect();
+
+    let config_path = get_config_path(&args);
+
     let config = get_config(&config_path);
 
     let current_local: DateTime<Local> = Local::now();  
     create_daily_note(current_local, &config);
     symlink_daily_note(current_local, &config);
+}
+
+fn get_config_path(args: &Vec<String>) -> String {
+    let mut config_path = "~/.config/groundhog".to_string();
+
+    if args.len() > 1 {
+        config_path = args[1].clone();
+    }
+
+    let config_path_exists = fs::exists(&config_path)
+        .expect("The file system is throwing an error?");
+
+    if !config_path_exists {
+        println!(
+            "no file found at {}, using default config instead",
+            config_path
+        );
+        config_path = "data/default_config".to_string();
+    }
+    return config_path
 }
 
 fn get_config(config_path: &str) -> HashMap<String, String> {
