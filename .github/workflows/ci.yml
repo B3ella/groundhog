@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: ["feat"]
+    branches: ["feat", "main"]
 
 env:
   CARGO_TERM_COLOR: always
@@ -39,6 +39,7 @@ jobs:
       - name: Run Clippy
         run: cargo clippy --all-targets --all-features
   sonarqube:
+    if: github.ref == 'refs/heads/main'
     needs: clippy_check
     name: SonarQube
     runs-on: ubuntu-latest
@@ -50,4 +51,3 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@7006c4492b2e0ee0f816d36501671557c97f5995 # v8.1.0
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
