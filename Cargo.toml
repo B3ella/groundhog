@@ -7,5 +7,5 @@ edition = "2024"
 chrono = "0.4"
 
 [[bin]]
-name = "templater"
+name = "groundhog"
 path = "src/main.rs"
