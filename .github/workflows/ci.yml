@@ -20,7 +20,7 @@ jobs:
       - name: test
         run: cargo test --verbose
   build-nix:
-    needs: build-rust
+    needs: rust_build_and_test
     runs-on: ubuntu-latest
     steps:
       - name: checkout
