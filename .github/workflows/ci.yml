@@ -5,7 +5,14 @@ on:
     branches: ["feat"]
 
 jobs:
-  build:
+  build-rust:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: Compile
+          uses: rust-build/rust-build.action@v1.4.5
+  build-nix:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
