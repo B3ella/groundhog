@@ -18,14 +18,13 @@ fn main() {
 fn get_config(config_path: &str) -> HashMap<String, String> {
     let mut config = HashMap::new();
     let config_file = read_file(config_path);
+
     for line in config_file.lines() {
-        let kv: Vec<&str> = line.split("=").collect();
-        if kv.len() != 2 {
-            continue
-        };
-        let key = kv[0].to_owned();
-        let value = kv[1].to_owned();
-        config.insert(key, value);
+        let (key, value) = line
+             .split_once('=')
+             .expect("Invalid config line (missing '=')");
+
+        config.insert(key.trim().to_string(), value.trim().to_string());
     };
     config
 }
