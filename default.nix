@@ -6,7 +6,7 @@ pkgs.rustPlatform.buildRustPackage (finalAttrs: {
   src = pkgs.fetchFromGitHub {
     owner = "B3ella";
     repo = "groundhog";
-    rev = "369ce36649aafd2566fea7bfa89a2e779debd211";
+    rev = "v0.1.0";
     hash = "sha256-Xrjpk8zLeLctDruuLzXVL9/m1eEp+fx98GiLuxnq6Qs=";
   };
 
