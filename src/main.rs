@@ -19,7 +19,7 @@ fn main() {
     symlink_daily_note(current_local, &config);
 }
 
-fn get_config_path(args: &Vec<String>) -> String {
+fn get_config_path(args: &[String]) -> String {
     let mut config_path = "~/.config/groundhog".to_string();
 
     if args.len() > 1 {
@@ -36,7 +36,7 @@ fn get_config_path(args: &Vec<String>) -> String {
         );
         config_path = "data/default_config".to_string();
     }
-    return config_path
+    config_path
 }
 
 fn get_config(config_path: &str) -> HashMap<String, String> {
@@ -78,8 +78,7 @@ fn create_daily_note(date: DateTime<Local>, config: &HashMap<String, String>) {
 
 fn note_exists(date: DateTime<Local>, config: &HashMap<String, String>) -> bool {
     let note_name = date_to_file_name(date, config);
-    let result = fs::exists(note_name).expect("The file system is throwing an error?");
-    return result
+    fs::exists(note_name).expect("The file system is throwing an error?")
 }
 
 fn date_to_file_name(date: DateTime<Local>, config: &HashMap<String, String>) -> String {
@@ -96,7 +95,7 @@ fn read_file(path: &str) -> String {
     let file = File::open(path);
     let mut contents = String::new();
     let _ = file.expect("Failed to read file {}").read_to_string(&mut contents);
-    return contents
+    contents
 } 
 
 fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) -> String {
@@ -108,7 +107,7 @@ fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) -> Str
             current_section = line;
         }
         if line.contains("!copy_last_day") {
-            result += &get_section_text(&current_section, &yesterday, &dont_copy);
+            result += &get_section_text(current_section, yesterday, &dont_copy);
             result += "\n";
             continue
         }
@@ -120,7 +119,7 @@ fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) -> Str
         result += line;
         result += "\n";
     }
-    return result
+    result
 }
 fn get_section_text(section: &str, yesterday: &str, dont_copy: &[&str; 1]) -> String {
     let mut result = "".to_string();
@@ -129,15 +128,15 @@ fn get_section_text(section: &str, yesterday: &str, dont_copy: &[&str; 1]) -> St
         if line.starts_with("#") {
             copy = false;
         }
-        if copy &! should_skip(line, dont_copy) {
+        if copy & !should_skip(line, dont_copy) {
             result += line;
             result += "\n";
         }
-        if line.starts_with(&section) {
+        if line.starts_with(section) {
             copy = true;
         }
     }
-    return result.trim().to_string()
+    result.trim().to_string()
 }
 
 fn should_skip(line: &str, dont_copy: &[&str; 1]) -> bool {
@@ -146,7 +145,7 @@ fn should_skip(line: &str, dont_copy: &[&str; 1]) -> bool {
             return true
         };
     };
-    return false
+    false
 }
 
 fn by_weekday(line: &str, date: DateTime<Local>) -> String{
@@ -158,7 +157,7 @@ fn by_weekday(line: &str, date: DateTime<Local>) -> String{
     let content_by_day: Vec<&str> = result.split(";").collect();
     let index = date.weekday().num_days_from_sunday();
     let index = usize::try_from(index).expect("Cannot convert weekday to usize");
-    return content_by_day[index].to_string();
+    content_by_day[index].to_string()
 }
 
 fn symlink_daily_note(date: DateTime<Local>, config: &HashMap<String, String>) {

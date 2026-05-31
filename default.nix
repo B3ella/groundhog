@@ -7,7 +7,7 @@ pkgs.rustPlatform.buildRustPackage (finalAttrs: {
     owner = "B3ella";
     repo = "groundhog";
     rev = "v0.1.1";
-    hash = "sha256-Xrjpk8zLeLctDruuLzXVL9/m1eEp+fx98GiLuxnq6Qs=";
+    hash = "sha256-2s2vdeI1jsgYSsVK9N6EQunwGg0q2TcpwGtPgyIKOuk=";
   };
 
   cargoLock = {
