@@ -19,7 +19,7 @@ fn main() {
     symlink_daily_note(current_local, &config);
 }
 
-fn get_config_path(args: &Vec<String>) -> String {
+fn get_config_path(args: &[String]) -> String {
     let mut config_path = "~/.config/groundhog".to_string();
 
     if args.len() > 1 {
@@ -78,8 +78,7 @@ fn create_daily_note(date: DateTime<Local>, config: &HashMap<String, String>) {
 
 fn note_exists(date: DateTime<Local>, config: &HashMap<String, String>) -> bool {
     let note_name = date_to_file_name(date, config);
-    let result = fs::exists(note_name).expect("The file system is throwing an error?");
-    result
+    fs::exists(note_name).expect("The file system is throwing an error?")
 }
 
 fn date_to_file_name(date: DateTime<Local>, config: &HashMap<String, String>) -> String {
@@ -129,7 +128,7 @@ fn get_section_text(section: &str, yesterday: &str, dont_copy: &[&str; 1]) -> St
         if line.starts_with("#") {
             copy = false;
         }
-        if copy &! should_skip(line, dont_copy) {
+        if copy & !should_skip(line, dont_copy) {
             result += line;
             result += "\n";
         }
