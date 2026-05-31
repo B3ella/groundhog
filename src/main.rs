@@ -143,7 +143,7 @@ fn should_skip(line: &str, dont_copy: &[&str; 1]) -> bool {
     for token in dont_copy {
         if line.starts_with(token) {
             return true
-        };
+        }
     };
     false
 }
