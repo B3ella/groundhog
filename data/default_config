@@ -1,2 +1,3 @@
-BASE_PATH=/home/bella/Notes/
-NOTE_PATH=/home/bella/Notes/daily-note/
+template_path=~/Notes/templates/dnt.md
+symlink_path=~/Notes/daily-note.md
+archive_path=~/Notes/daily-note
