@@ -36,8 +36,18 @@ fn get_config_path(args: &[String]) -> String {
         );
         config_path = "data/default_config".to_string();
     }
+    if config_path.contains("~") {
+        config_path = expand_tilde(&config_path);
+    }
     config_path
 }
+
+fn expand_tilde(string: &str) -> String {
+    let home = env::var("HOME")
+        .expect("Stirng contains ~ but variable HOME is not set");
+    string.replace("~",&home)
+}
+
 
 fn get_config(config_path: &str) -> HashMap<String, String> {
     let mut config = HashMap::new();
@@ -48,7 +58,10 @@ fn get_config(config_path: &str) -> HashMap<String, String> {
              .split_once('=')
              .expect("Invalid config line (missing '=')");
 
-        config.insert(key.trim().to_string(), value.trim().to_string());
+        config.insert(
+            key.trim().to_string(),
+            expand_tilde(value.trim())
+        );
     };
     config
 }
