@@ -41,9 +41,6 @@ fn expand_tilde(string: &str) -> String {
 
 
 fn get_config(config_path: &str) -> HashMap<String, String> {
-    let mut config = HashMap::new();
-    let config_file = read_file(config_path);
-
     let config_path_exists = fs::exists(&config_path)
         .expect("The file system is throwing an error?");
 
@@ -54,6 +51,10 @@ fn get_config(config_path: &str) -> HashMap<String, String> {
         );
         return get_default_config();
     }
+
+    let mut config = HashMap::new();
+    let config_file = read_file(config_path);
+
 
     for line in config_file.lines() {
         let (key, value) = line
