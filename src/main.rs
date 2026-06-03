@@ -26,6 +26,10 @@ fn get_config_path(args: &[String]) -> String {
         config_path = args[1].clone();
     }
 
+    if config_path.contains("~") {
+        config_path = expand_tilde(&config_path);
+    }
+
     let config_path_exists = fs::exists(&config_path)
         .expect("The file system is throwing an error?");
 
@@ -35,9 +39,6 @@ fn get_config_path(args: &[String]) -> String {
             config_path
         );
         config_path = "data/default_config".to_string();
-    }
-    if config_path.contains("~") {
-        config_path = expand_tilde(&config_path);
     }
     config_path
 }
