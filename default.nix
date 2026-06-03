@@ -1,13 +1,13 @@
 { pkgs ? import <nixpkgs> {} }:
-pkgs.rustPlatform.buildRustPackage (finalAttrs: {
+pkgs.rustPlatform.buildRustPackage {
   pname = "groundhog";
-  version = "0.1.1";
+  version = "0.1.2";
 
   src = pkgs.fetchFromGitHub {
     owner = "B3ella";
     repo = "groundhog";
-    rev = "v0.1.1";
-    hash = "sha256-2s2vdeI1jsgYSsVK9N6EQunwGg0q2TcpwGtPgyIKOuk=";
+    rev = "v0.1.2";
+    hash = "sha256-EsEgHEsofkHOntN5/BmKk3PpKROyCxKzwzs09/TjGew=";
   };
 
   cargoLock = {
@@ -20,5 +20,4 @@ pkgs.rustPlatform.buildRustPackage (finalAttrs: {
     license = pkgs.lib.licenses.unlicense;
     maintainers = [ ];
   };
-})
-
+}

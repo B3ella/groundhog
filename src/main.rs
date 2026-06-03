@@ -36,8 +36,18 @@ fn get_config_path(args: &[String]) -> String {
         );
         config_path = "data/default_config".to_string();
     }
+    if config_path.contains("~") {
+        config_path = expand_tilde(&config_path);
+    }
     config_path
 }
+
+fn expand_tilde(string: &str) -> String {
+    let home = env::var("HOME")
+        .expect("Stirng contains ~ but variable HOME is not set");
+    string.replace("~",&home)
+}
+
 
 fn get_config(config_path: &str) -> HashMap<String, String> {
     let mut config = HashMap::new();
@@ -48,7 +58,10 @@ fn get_config(config_path: &str) -> HashMap<String, String> {
              .split_once('=')
              .expect("Invalid config line (missing '=')");
 
-        config.insert(key.trim().to_string(), value.trim().to_string());
+        config.insert(
+            key.trim().to_string(),
+            expand_tilde(value.trim())
+        );
     };
     config
 }
@@ -65,9 +78,9 @@ fn create_daily_note(date: DateTime<Local>, config: &HashMap<String, String>) {
     let yesterday = date_to_file_name(yesterday, config);
     let yesterday = read_file(&yesterday);
 
-    let base_path: String = config.get("BASE_PATH")
+    let template_path: String = config.get("template_path")
         .expect("Base path not provided on config").to_owned().to_string();
-    let template = read_file(&(base_path + "templates/dnt.md"));
+    let template = read_file(&template_path);
 
     let note = process_tokens(&template, &yesterday, date);
     let path = date_to_file_name(date, config);
@@ -86,9 +99,9 @@ fn date_to_file_name(date: DateTime<Local>, config: &HashMap<String, String>) ->
     let month = date.month();
     let day = date.day();
     let file_name = format!("{}-{:0>2}-{:0>2}.md", year, month, day);
-    let note_path: String = config.get("NOTE_PATH")
+    let archive_path: String = config.get("archive_path")
         .expect("Base path not provided on config").to_owned().to_string();
-    note_path + &file_name
+    archive_path + &file_name
 }
 
 fn read_file(path: &str) -> String {
@@ -163,9 +176,8 @@ fn by_weekday(line: &str, date: DateTime<Local>) -> String{
 fn symlink_daily_note(date: DateTime<Local>, config: &HashMap<String, String>) {
     println!("creating symlink for daily-note: {}", date_to_file_name(date, config));
     let daily_note = date_to_file_name(date, config);
-    let base_path: String = config.get("BASE_PATH")
+    let sym_link_path: String = config.get("symlink_path")
         .expect("Base path not provided on config").to_owned().to_string();
-    let sym_link_path = base_path + "daily-note.md";
     let _ = remove_file(&sym_link_path);
     let _ = unix_fs::symlink(daily_note, sym_link_path);
 }
