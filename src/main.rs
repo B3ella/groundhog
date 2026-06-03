@@ -2,87 +2,22 @@ use std::fs;
 use std::env;
 use std::fs::{File, remove_file};
 use std::io::prelude::*;
-use std::collections::HashMap;
 use chrono::{Local, DateTime, Duration, Datelike};  
 use std::os::unix::fs as unix_fs;
+use std::collections::HashMap;
+mod config;
 
 
 fn main() {
     let args: Vec<String> = env::args().collect();
 
-    let config_path = get_config_path(&args);
+    let config_path = config::get_config_path(&args);
 
-    let config = get_config(&config_path);
+    let config = config::get_config(&config_path);
 
     let current_local: DateTime<Local> = Local::now();  
     create_daily_note(current_local, &config);
     symlink_daily_note(current_local, &config);
-}
-
-fn get_config_path(args: &[String]) -> String {
-    let mut config_path = "~/.config/groundhog".to_string();
-
-    if args.len() > 1 {
-        config_path = args[1].clone();
-    }
-
-    if config_path.contains("~") {
-        config_path = expand_tilde(&config_path);
-    }
-
-    config_path
-}
-
-fn expand_tilde(string: &str) -> String {
-    let home = env::var("HOME")
-        .expect("Stirng contains ~ but variable HOME is not set");
-    string.replace("~",&home)
-}
-
-
-fn get_config(config_path: &str) -> HashMap<String, String> {
-    let config_path_exists = fs::exists(&config_path)
-        .expect("The file system is throwing an error?");
-
-    if !config_path_exists {
-        println!(
-            "no file found at {}, using default config instead",
-            config_path
-        );
-        return get_default_config();
-    }
-
-    let mut config = HashMap::new();
-    let config_file = read_file(config_path);
-
-
-    for line in config_file.lines() {
-        let (key, value) = line
-             .split_once('=')
-             .expect("Invalid config line (missing '=')");
-
-        config.insert(
-            key.trim().to_string(),
-            expand_tilde(value.trim())
-        );
-    };
-    config
-}
-
-fn get_default_config() -> HashMap<String, String> {
-    let mut config = HashMap::new();
-
-    config.insert(
-        "template_path".to_string(),
-        expand_tilde("~/Notes/templates/dnt.md"));
-    config.insert(
-        "symlink_path".to_string(),
-        expand_tilde("~/Notes/daily-note.md"));
-    config.insert(
-        "archive_path".to_string(),
-        expand_tilde("~/Notes/daily-note/"));
-
-    config
 }
 
 fn create_daily_note(date: DateTime<Local>, config: &HashMap<String, String>) {
