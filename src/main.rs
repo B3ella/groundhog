@@ -30,16 +30,6 @@ fn get_config_path(args: &[String]) -> String {
         config_path = expand_tilde(&config_path);
     }
 
-    let config_path_exists = fs::exists(&config_path)
-        .expect("The file system is throwing an error?");
-
-    if !config_path_exists {
-        println!(
-            "no file found at {}, using default config instead",
-            config_path
-        );
-        config_path = "data/default_config".to_string();
-    }
     config_path
 }
 
@@ -54,6 +44,17 @@ fn get_config(config_path: &str) -> HashMap<String, String> {
     let mut config = HashMap::new();
     let config_file = read_file(config_path);
 
+    let config_path_exists = fs::exists(&config_path)
+        .expect("The file system is throwing an error?");
+
+    if !config_path_exists {
+        println!(
+            "no file found at {}, using default config instead",
+            config_path
+        );
+        return get_default_config();
+    }
+
     for line in config_file.lines() {
         let (key, value) = line
              .split_once('=')
@@ -64,6 +65,22 @@ fn get_config(config_path: &str) -> HashMap<String, String> {
             expand_tilde(value.trim())
         );
     };
+    config
+}
+
+fn get_default_config() -> HashMap<String, String> {
+    let mut config = HashMap::new();
+
+    config.insert(
+        "template_path".to_string(),
+        expand_tilde("~/Notes/templates/dnt.md"));
+    config.insert(
+        "symlink_path".to_string(),
+        expand_tilde("~/Notes/daily-note.md"));
+    config.insert(
+        "archive_path".to_string(),
+        expand_tilde("~/Notes/daily-note/"));
+
     config
 }
 
