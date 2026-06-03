@@ -1,5 +1,5 @@
 { pkgs ? import <nixpkgs> {} }:
-pkgs.rustPlatform.buildRustPackage (finalAttrs: {
+pkgs.rustPlatform.buildRustPackage {
   pname = "groundhog";
   version = "0.1.2";
 
@@ -20,5 +20,4 @@ pkgs.rustPlatform.buildRustPackage (finalAttrs: {
     license = pkgs.lib.licenses.unlicense;
     maintainers = [ ];
   };
-})
-
+}
