@@ -1,12 +1,12 @@
 { pkgs ? import <nixpkgs> {} }:
 pkgs.rustPlatform.buildRustPackage {
   pname = "groundhog";
-  version = "0.1.2";
+  version = "0.1.3";
 
   src = pkgs.fetchFromGitHub {
     owner = "B3ella";
     repo = "groundhog";
-    rev = "v0.1.2";
+    rev = "v0.1.3";
     hash = "sha256-/ROhxqkM8IgcXaabigSMTuxTpSp6EwBPMcHtN8at86U=";
   };
 
