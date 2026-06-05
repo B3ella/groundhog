@@ -15,18 +15,28 @@ fn main() {
     let config = config::get_config(&config_path);
 
     let current_local: DateTime<Local> = Local::now();  
-    create_daily_note(current_local, &config);
+    create_daily_note(current_local, &config, config.max_recursion.clone());
     symlink_daily_note(current_local, &config);
 }
 
-fn create_daily_note(date: DateTime<Local>, config: &config::Config) {
+fn create_daily_note(date: DateTime<Local>, config: &config::Config, max_recursion: i32) {
+    let path = date_to_file_name(date, config);
+
     if note_exists(date, config) {
-        println!("Daily note {} already exists", date_to_file_name(date, config));
+        println!("Daily note {} already exists", &path);
+        return
+    }
+
+    if max_recursion < 0 {
+        println!("hit max recursion, creating blank note as start");
+        let file = File::create(&path);
+        let _ = file.expect("File creation failed")
+            .write_all("".as_bytes());
         return
     }
 
     let yesterday = date - Duration::days(1);
-    create_daily_note(yesterday, config);
+    create_daily_note(yesterday, config, max_recursion - 1);
 
     let yesterday = date_to_file_name(yesterday, config);
     let yesterday = read_file(&yesterday);
@@ -34,7 +44,6 @@ fn create_daily_note(date: DateTime<Local>, config: &config::Config) {
     let template = read_file(&config.template_path);
 
     let note = process_tokens(&template, &yesterday, date);
-    let path = date_to_file_name(date, config);
 
     let file = File::create(path);
     let _ = file.expect("File createon failed").write_all(note.as_bytes());

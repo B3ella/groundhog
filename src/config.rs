@@ -7,7 +7,8 @@ use std::collections::HashMap;
 pub struct Config {
     pub template_path: String,
     pub symlink_path: String,
-    pub archive_path: String
+    pub archive_path: String,
+    pub max_recursion: i32
 }
 
 pub fn get_config(config_path: &str) -> Config {
@@ -31,8 +32,12 @@ pub fn get_config(config_path: &str) -> Config {
         .unwrap_or(&default_config.symlink_path));
     let archive_path = expand_tilde(config_map.get("archive_path")
         .unwrap_or(&default_config.archive_path));
+    let max_recursion = config_map.get("max_recursion")
+        .unwrap_or(&"".to_string())
+        .parse::<i32>()
+        .unwrap_or(default_config.max_recursion);
 
-    let config = Config {template_path, symlink_path, archive_path};
+    let config = Config {template_path, symlink_path, archive_path, max_recursion};
 
     config
 }
@@ -58,7 +63,8 @@ fn get_default_config() -> Config {
     let config = Config {
         template_path: expand_tilde("~/Notes/templates/dnt.md"),
         symlink_path: expand_tilde("~/Notes/daily-note.md"),
-        archive_path: expand_tilde("~/Notes/daily-note/")
+        archive_path: expand_tilde("~/Notes/daily-note/"),
+        max_recursion: 5
     };
 
     config
