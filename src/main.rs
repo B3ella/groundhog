@@ -15,7 +15,7 @@ fn main() {
     let config = config::get_config(&config_path);
 
     let current_local: DateTime<Local> = Local::now();  
-    create_daily_note(current_local, &config, config.max_recursion.clone());
+    create_daily_note(current_local, &config, config.max_recursion);
     symlink_daily_note(current_local, &config);
 }
 
