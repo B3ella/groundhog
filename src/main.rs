@@ -4,7 +4,6 @@ use std::fs::{File, remove_file};
 use std::io::prelude::*;
 use chrono::{Local, DateTime, Duration, Datelike};  
 use std::os::unix::fs as unix_fs;
-use std::collections::HashMap;
 mod config;
 
 
@@ -20,7 +19,7 @@ fn main() {
     symlink_daily_note(current_local, &config);
 }
 
-fn create_daily_note(date: DateTime<Local>, config: &HashMap<String, String>) {
+fn create_daily_note(date: DateTime<Local>, config: &config::Config) {
     if note_exists(date, config) {
         println!("Daily note {} already exists", date_to_file_name(date, config));
         return
@@ -32,9 +31,7 @@ fn create_daily_note(date: DateTime<Local>, config: &HashMap<String, String>) {
     let yesterday = date_to_file_name(yesterday, config);
     let yesterday = read_file(&yesterday);
 
-    let template_path: String = config.get("template_path")
-        .expect("Base path not provided on config").to_owned().to_string();
-    let template = read_file(&template_path);
+    let template = read_file(&config.template_path);
 
     let note = process_tokens(&template, &yesterday, date);
     let path = date_to_file_name(date, config);
@@ -43,19 +40,17 @@ fn create_daily_note(date: DateTime<Local>, config: &HashMap<String, String>) {
     let _ = file.expect("File createon failed").write_all(note.as_bytes());
 }
 
-fn note_exists(date: DateTime<Local>, config: &HashMap<String, String>) -> bool {
+fn note_exists(date: DateTime<Local>, config: &config::Config) -> bool {
     let note_name = date_to_file_name(date, config);
     fs::exists(note_name).expect("The file system is throwing an error?")
 }
 
-fn date_to_file_name(date: DateTime<Local>, config: &HashMap<String, String>) -> String {
+fn date_to_file_name(date: DateTime<Local>, config: &config::Config) -> String {
     let year = date.year();
     let month = date.month();
     let day = date.day();
     let file_name = format!("{}-{:0>2}-{:0>2}.md", year, month, day);
-    let archive_path: String = config.get("archive_path")
-        .expect("Base path not provided on config").to_owned().to_string();
-    archive_path + &file_name
+    config.archive_path.clone() + &file_name
 }
 
 fn read_file(path: &str) -> String {
@@ -127,13 +122,11 @@ fn by_weekday(line: &str, date: DateTime<Local>) -> String{
     content_by_day[index].to_string()
 }
 
-fn symlink_daily_note(date: DateTime<Local>, config: &HashMap<String, String>) {
+fn symlink_daily_note(date: DateTime<Local>, config: &config::Config) {
     println!("creating symlink for daily-note: {}", date_to_file_name(date, config));
     let daily_note = date_to_file_name(date, config);
-    let sym_link_path: String = config.get("symlink_path")
-        .expect("Base path not provided on config").to_owned().to_string();
-    let _ = remove_file(&sym_link_path);
-    let _ = unix_fs::symlink(daily_note, sym_link_path);
+    let _ = remove_file(&config.symlink_path);
+    let _ = unix_fs::symlink(daily_note, &config.symlink_path);
 }
 
 #[cfg(test)]
