@@ -92,5 +92,3 @@ pub fn get_config_path(args: &[String]) -> String {
 
     config_path
 }
-
-
