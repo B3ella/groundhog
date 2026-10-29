@@ -90,7 +90,7 @@ mod tests {
             .parse::<DateTime<Local>>()
             .expect("Error converting date to local");
 
-        let result = interpreters::process_tokens(&template, &yesterday, date);
+        let result = interpreter::process_tokens(&template, &yesterday, date);
 
         let expected = read_file("test_data/expected.md");
         assert_eq!(result, expected);
