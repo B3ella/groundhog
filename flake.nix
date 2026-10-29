@@ -5,11 +5,9 @@
   };
 
   outputs = { self, nixpkgs, flake-utils }:
-    flake-utils.lib.eachDefaultSystem (system:
-      let
-        pkgs = nixpkgs.legacyPackages.${system};
-
-        groundhog = pkgs.rustPlatform.buildRustPackage {
+    let
+      mkGroundhogPackage = pkgs:
+        pkgs.rustPlatform.buildRustPackage {
           pname = "groundhog";
           version = "0.1.3";
 
@@ -29,12 +27,52 @@
             maintainers = [ ];
           };
         };
-      in {
-        packages.default = groundhog;
 
-        apps.default = {
-          type = "app";
-          program = "${groundhog}/bin/groundhog";
+      nixosModule = { config, lib, pkgs, ... }:
+        let
+          cfg = config.services.groundhog;
+          groundhogPkg = self.packages.${pkgs.system}.default;
+        in {
+          options.services.groundhog = {
+            enable = lib.mkEnableOption "Groundhog daily note generator";
+
+            user = lib.mkOption {
+              type = lib.types.str;
+              description = "User that runs Groundhog.";
+            };
+          };
+
+          config = lib.mkIf cfg.enable {
+            systemd.timers.groundhog = {
+              wantedBy = [ "timers.target" ];
+
+              timerConfig = {
+                OnCalendar = "daily";
+                Persistent = true;
+              };
+            };
+
+            systemd.services.groundhog = {
+              description = "Generate daily notes with Groundhog";
+
+              serviceConfig = {
+                Type = "oneshot";
+                User = cfg.user;
+                ExecStart = "${groundhogPkg}/bin/groundhog";
+              };
+            };
+          };
         };
-      });
+    in
+      (flake-utils.lib.eachDefaultSystem (system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in {
+          packages = {
+            default = mkGroundhogPackage pkgs;
+          };
+        }))
+      // {
+        nixosModules.default = nixosModule;
+      };
 }
