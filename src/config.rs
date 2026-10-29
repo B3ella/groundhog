@@ -12,7 +12,7 @@ pub struct Config {
 }
 
 pub fn get_config(config_path: &str) -> Config {
-    let config_path_exists = fs::exists(&config_path)
+    let config_path_exists = fs::exists(config_path)
         .expect("The file system is throwing an error?");
 
     let default_config = get_default_config();
@@ -37,9 +37,7 @@ pub fn get_config(config_path: &str) -> Config {
         .parse::<i32>()
         .unwrap_or(default_config.max_recursion);
 
-    let config = Config {template_path, symlink_path, archive_path, max_recursion};
-
-    config
+    Config {template_path, symlink_path, archive_path, max_recursion}
 }
 
 fn read_config(config_path: &str) -> HashMap<String, String> {
@@ -60,14 +58,12 @@ fn read_config(config_path: &str) -> HashMap<String, String> {
 }
 
 fn get_default_config() -> Config {
-    let config = Config {
+    Config {
         template_path: expand_tilde("~/Notes/templates/dnt.md"),
         symlink_path: expand_tilde("~/Notes/daily-note.md"),
         archive_path: expand_tilde("~/Notes/daily-note/"),
         max_recursion: 5
-    };
-
-    config
+    }
 }
 
 fn read_file(path: &str) -> String {
