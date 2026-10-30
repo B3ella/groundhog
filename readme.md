@@ -11,8 +11,6 @@ It is inspired by obsidian daily-note plug-in and can easily be used with obsidi
 - Copies sections from the prior day with a template directive
 - Inserts date-aware content using weekday-based substitutions
 - Maintains a symlink to the current daily note for quick access
-- Supports configuration via a simple key/value file
-- Built as a Rust binary and also exposed via a Nix flake
 
 ## Project Structure
 
