@@ -1,5 +1,4 @@
 use std::fs;
-use std::env;
 use std::fs::{File, remove_file};
 use std::io::prelude::*;
 use chrono::{Local, DateTime, Duration, Datelike};  
@@ -12,7 +11,7 @@ mod interpreter;
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
 struct Args {
-    #[arg(short, long, default_value_t = "~/.config/groundhog")]
+    #[arg(short, long, default_value_t = "~/.config/groundhog").to_string()]
     config_path: String,
 }
 
