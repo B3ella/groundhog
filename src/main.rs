@@ -11,7 +11,7 @@ mod interpreter;
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
 struct Args {
-    #[arg(short, long, default_value_t = "~/.config/groundhog").to_string()]
+    #[arg(short, long, default_value_t = "~/.config/groundhog".to_string())]
     config_path: String,
 }
 
