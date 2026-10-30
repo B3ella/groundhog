@@ -2,12 +2,12 @@
 
 Groundhog is a lightweight daily note templating system written in Rust. It generates a markdown note for the current day, optionally carries over content from the previous day, and keeps a symlink pointing to the most recent daily note.
 
-It is designed for people who want a simple, repeatable workflow for journaling, planning, or daily recap notes without managing the note files manually.
+It is inspired by obsidian daily-note plug-in and can easily be used with obsidian
 
 ## Features
 
 - Generates a daily note named in the format `YYYY-MM-DD.md`
-- Uses a configurable template file
+- Configurable template file
 - Copies sections from the prior day with a template directive
 - Inserts date-aware content using weekday-based substitutions
 - Maintains a symlink to the current daily note for quick access
@@ -98,6 +98,7 @@ Completed task are lines that begin with:
 
 ```md
 !by_weekday[Deep work;Admin;Planning;Meetings;Follow-ups;Review;Reset]
+!by_weekday[Sunday;Monday;Tuesday;Wednesday;Thursday;Friday;Saturday]
 ```
 
 This selects a value based on the current day of the week.
@@ -144,12 +145,8 @@ This will open the most recently generated daily note.
 
 ## Notes
 
-- This project currently targets Unix-like systems because it uses symlinks.
-- The tool is intentionally simple and keeps the daily note flow lightweight.
+- This project currently targets Unix-like systems.
 
-## License
-
-This project is distributed under the terms of the repository’s chosen license. See the repository for license details.
 
 ## Contributing
 
