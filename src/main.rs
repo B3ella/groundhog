@@ -9,15 +9,25 @@ mod interpreter;
 
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
-
-    let config_path = config::get_config_path(&args);
-
-    let config = config::get_config(&config_path);
+    let args = parse_args()
+    let config = config::get_config(args.config_path);
 
     let current_local: DateTime<Local> = Local::now();  
     create_daily_note(current_local, &config, config.max_recursion);
     symlink_daily_note(current_local, &config);
+}
+
+struct Args {
+    config_path: String,
+}
+
+fn parse_args() -> Args {
+    let args: Vec<String> = env::args().collect();
+    let mut config_path = "~/.config/groundhog".to_string();
+    if args.len() > 1 {
+        config_path = args[1].clone();
+    }
+    return Args {config_path: config_path}
 }
 
 fn create_daily_note(date: DateTime<Local>, config: &config::Config, max_recursion: i32) {

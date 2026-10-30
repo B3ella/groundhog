@@ -12,6 +12,7 @@ pub struct Config {
 }
 
 pub fn get_config(config_path: &str) -> Config {
+    let config_path =  expand_tilde(config_path)
     let config_path_exists = fs::exists(config_path)
         .expect("The file system is throwing an error?");
 
@@ -71,24 +72,10 @@ fn read_file(path: &str) -> String {
     let mut contents = String::new();
     let _ = file.expect("Failed to read file {}").read_to_string(&mut contents);
     contents
-} 
+}
 
 fn expand_tilde(string: &str) -> String {
     let home = env::var("HOME")
         .expect("Stirng contains ~ but variable HOME is not set");
     string.replace("~",&home)
-}
-
-pub fn get_config_path(args: &[String]) -> String {
-    let mut config_path = "~/.config/groundhog".to_string();
-
-    if args.len() > 1 {
-        config_path = args[1].clone();
-    }
-
-    if config_path.contains("~") {
-        config_path = expand_tilde(&config_path);
-    }
-
-    config_path
 }
