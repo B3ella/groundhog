@@ -37,6 +37,9 @@ nix build .#default
 This builds the `groundhog` package using the included flake.
 
 ## Template Syntax
+By default groundhog looks for a template on ~/Notes/templates/dnt.md
+
+to overwrite this value read the config section
 
 Groundhog processes markdown templates and supports a few special tokens.
 
