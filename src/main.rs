@@ -10,7 +10,7 @@ mod interpreter;
 
 fn main() {
     let args = parse_args()
-    let config = config::get_config(args.config_path);
+    let config = config::get_config(&args.config_path);
 
     let current_local: DateTime<Local> = Local::now();  
     create_daily_note(current_local, &config, config.max_recursion);
