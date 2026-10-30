@@ -12,14 +12,6 @@ It is inspired by obsidian daily-note plug-in and can easily be used with obsidi
 - Inserts date-aware content using weekday-based substitutions
 - Maintains a symlink to the current daily note for quick access
 
-## Project Structure
-
-- `src/main.rs` — CLI entry point and daily note generation flow
-- `src/config.rs` — configuration loading and default settings
-- `src/interpreter.rs` — template token processing
-- `data/default_config` — sample default config
-- `test_data/` — sample template and expected output for testing
-
 ## Installation
 
 ### From source
@@ -144,6 +136,14 @@ This will open the most recently generated daily note.
 ## Notes
 
 - This project currently targets Unix-like systems.
+
+## Project Structure
+
+- `src/main.rs` — CLI entry point and daily note generation flow
+- `src/config.rs` — configuration loading and default settings
+- `src/interpreter.rs` — template token processing
+- `data/default_config` — sample default config
+- `test_data/` — sample template and expected output for testing
 
 
 ## Contributing
