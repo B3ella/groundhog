@@ -4,30 +4,26 @@ use std::fs::{File, remove_file};
 use std::io::prelude::*;
 use chrono::{Local, DateTime, Duration, Datelike};  
 use std::os::unix::fs as unix_fs;
+use clap::Parser;
 mod config;
 mod interpreter;
 
 
+#[derive(Parser, Debug)]
+#[command(version, about, long_about = None)]
+struct Args {
+    #[arg(short, long, default_value_t = "~/.config/groundhog")]
+    config_path: String,
+}
+
 fn main() {
-    let args = parse_args();
+    let args = Args::parse();
+
     let config = config::get_config(&args.config_path);
 
     let current_local: DateTime<Local> = Local::now();  
     create_daily_note(current_local, &config, config.max_recursion);
     symlink_daily_note(current_local, &config);
-}
-
-struct Args {
-    config_path: String,
-}
-
-fn parse_args() -> Args {
-    let args: Vec<String> = env::args().collect();
-    let mut config_path = "~/.config/groundhog".to_string();
-    if args.len() > 1 {
-        config_path = args[1].clone();
-    }
-    Args {config_path}
 }
 
 fn create_daily_note(date: DateTime<Local>, config: &config::Config, max_recursion: i32) {
