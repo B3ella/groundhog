@@ -12,7 +12,7 @@ pub struct Config {
 }
 
 pub fn get_config(config_path: &str) -> Config {
-    let config_path =  expand_tilde(config_path);
+    let config_path =  expand_tilde(&config_path);
     let config_path_exists = fs::exists(config_path)
         .expect("The file system is throwing an error?");
 
