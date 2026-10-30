@@ -12,8 +12,8 @@ pub struct Config {
 }
 
 pub fn get_config(config_path: &str) -> Config {
-    let config_path =  expand_tilde(config_path)
-    let config_path_exists = fs::exists(config_path)
+    let config_path =  expand_tilde(config_path);
+    let config_path_exists = fs::exists(&config_path)
         .expect("The file system is throwing an error?");
 
     let default_config = get_default_config();
@@ -25,7 +25,7 @@ pub fn get_config(config_path: &str) -> Config {
         return default_config;
     }
 
-    let config_map = read_config(config_path);
+    let config_map = read_config(&config_path);
 
     let template_path = expand_tilde(config_map.get("template_path")
         .unwrap_or(&default_config.template_path));
