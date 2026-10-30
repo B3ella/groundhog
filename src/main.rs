@@ -9,7 +9,7 @@ mod interpreter;
 
 
 fn main() {
-    let args = parse_args()
+    let args = parse_args();
     let config = config::get_config(&args.config_path);
 
     let current_local: DateTime<Local> = Local::now();  
