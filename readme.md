@@ -36,38 +36,6 @@ nix build .#default
 
 This builds the `groundhog` package using the included flake.
 
-## Configuration
-
-Groundhog reads config from:
-
-```bash
-~/.config/groundhog
-```
-
-If the file does not exist, it falls back to these defaults:
-
-```ini
-template_path=~/Notes/templates/dnt.md
-archive_path=~/Notes/daily-note/
-symlink_path=~/Notes/daily-note.md
-max_recursion=5
-```
-
-template_path is the path to the template file
-
-archive_path is where the generate notes will be stored
-
-symlink_path is the shortcut for the current daily note
-
-for features like !copy_last_day groundhog will look for past daily notes, max recursion defines how many days groundhog will look back to before assuming a past note doesnt exist
-
-If you use your computer everyday a small value is okay. If you use your computer less frequently (once a week for example) a bigger value may be needed so groundhog can find your last note 
-
-You can override the config path with:
-
-```bash
-groundhog --config-path /path/to/config
-```
 ## Template Syntax
 
 Groundhog processes markdown templates and supports a few special tokens.
@@ -121,6 +89,38 @@ When run, Groundhog will:
 5. Write the generated note
 6. Update the symlink to the new daily note
 
+## Configuration
+
+Groundhog reads config from:
+
+```bash
+~/.config/groundhog
+```
+
+If the file does not exist, it falls back to these defaults:
+
+```ini
+template_path=~/Notes/templates/dnt.md
+archive_path=~/Notes/daily-note/
+symlink_path=~/Notes/daily-note.md
+max_recursion=5
+```
+
+template_path is the path to the template file
+
+archive_path is where the generate notes will be stored
+
+symlink_path is the shortcut for the current daily note
+
+for features like !copy_last_day groundhog will look for past daily notes, max recursion defines how many days groundhog will look back to before assuming a past note doesnt exist
+
+If you use your computer everyday a small value is okay. If you use your computer less frequently (once a week for example) a bigger value may be needed so groundhog can find your last note 
+
+You can override the config path with:
+
+```bash
+groundhog --config-path /path/to/config
+```
 ## Typical Workflow
 
 ```bash
