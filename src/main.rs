@@ -27,14 +27,14 @@ fn parse_args() -> Args {
     if args.len() > 1 {
         config_path = args[1].clone();
     }
-    return Args {config_path: config_path}
+    Args {config_path}
 }
 
 fn create_daily_note(date: DateTime<Local>, config: &config::Config, max_recursion: i32) {
     let path = date_to_file_name(date, config);
 
     if note_exists(date, config) {
-        println!("Daily note {} already exists", &path);
+        println!("Daily note {} already exists", path);
         return
     }
 

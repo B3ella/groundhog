@@ -20,7 +20,7 @@ pub fn get_config(config_path: &str) -> Config {
     if !config_path_exists {
         println!(
             "no file found at {}, using default config instead",
-            &config_path
+            config_path
         );
         return default_config;
     }
