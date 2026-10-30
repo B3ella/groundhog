@@ -54,7 +54,9 @@ max_recursion=5
 ```
 
 template_path is the path to the template file
+
 archive_path is where the generate notes will be stored
+
 symlink_path is the shortcut for the current daily note
 
 for features like !copy_last_day groundhog will look for past daily notes, max recursion defines how many days groundhog will look back to before assuming a past note doesnt exist
