@@ -12,15 +12,15 @@ pub struct Config {
 }
 
 pub fn get_config(config_path: &str) -> Config {
-    let config_path =  expand_tilde(&config_path);
-    let config_path_exists = fs::exists(config_path)
+    let config_path =  expand_tilde(config_path);
+    let config_path_exists = fs::exists(&config_path)
         .expect("The file system is throwing an error?");
 
     let default_config = get_default_config();
     if !config_path_exists {
         println!(
             "no file found at {}, using default config instead",
-            config_path
+            &config_path
         );
         return default_config;
     }
