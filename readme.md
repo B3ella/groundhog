@@ -87,7 +87,8 @@ Groundhog processes markdown templates and supports a few special tokens.
 !copy_last_day
 ```
 
-This copies the matching section from yesterday’s note, skipping completed tasks (lines that begin with):
+This copies the matching section from yesterday’s note, skipping completed tasks. 
+Completed task are lines that begin with:
 
 ```md
 - [x]
