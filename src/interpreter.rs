@@ -3,13 +3,12 @@ use chrono::{Local, DateTime, Datelike};
 pub fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) -> String {
     let mut result = "".to_string();
     let mut current_section = "";
-    let dont_copy = ["- [x]"];
     for line in template.lines() {
         if line.starts_with("#") {
             current_section = line;
         }
         if line.contains("!copy_last_day") {
-            result += &get_section_text(current_section, yesterday, &dont_copy);
+            result += &get_section_text(current_section, yesterday, &[]);
             result += "\n";
             continue
         }
