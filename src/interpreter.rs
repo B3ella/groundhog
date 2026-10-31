@@ -7,6 +7,11 @@ pub fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) ->
         if line.starts_with("#") {
             current_section = line;
         }
+        if line.contains("!copy_tasks") {
+            result += &get_section_text(current_section, yesterday, &["- [x]"]);
+            result += "\n";
+            continue
+        }
         if line.contains("!copy_last_day") {
             result += &get_section_text(current_section, yesterday, &[]);
             result += "\n";
