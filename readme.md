@@ -13,7 +13,38 @@ It is inspired by obsidian daily-note plug-in and can easily be used with obsidi
 - Maintains a symlink to the current daily note for quick access
 
 ## Installation
+```nix
+{
+  inputs = {
+    groundhog.url = "github:B3ella/groundhog";
+  };
 
+  outputs = { self, nixpkgs, groundhog, ...}@inputs:
+  let
+    system = "x86_64-linux";
+    username = "bella";
+  in {
+    nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
+      inherit system;
+
+      specialArgs = {
+        inherit system;
+        inherit groundhog;
+      };
+
+      modules = [
+        groundhog.nixosModules.default
+        {
+          services.groundhog = {
+            enable = true;
+            user = "bella";
+          };
+        }
+      ];
+    };
+  };
+}
+```
 ### From source
 
 ```bash
