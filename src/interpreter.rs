@@ -8,12 +8,12 @@ pub fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) ->
             current_section = line;
         }
         if line.contains("!copy_tasks") {
-            result += &get_section_text(current_section, yesterday, &["- [x]"]);
+            result += &get_section_text(current_section, yesterday, &vec!["- [x]"]);
             result += "\n";
             continue
         }
         if line.contains("!copy_last_day") {
-            result += &get_section_text(current_section, yesterday, &[]);
+            result += &get_section_text(current_section, yesterday, &vec![]);
             result += "\n";
             continue
         }
@@ -27,7 +27,7 @@ pub fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) ->
     }
     result
 }
-fn get_section_text(section: &str, yesterday: &str, dont_copy: &[&str; 1]) -> String {
+fn get_section_text(section: &str, yesterday: &str, dont_copy: &Vec<&str>) -> String {
     let mut result = "".to_string();
     let mut copy = false;
     for line in yesterday.lines() {
@@ -45,7 +45,7 @@ fn get_section_text(section: &str, yesterday: &str, dont_copy: &[&str; 1]) -> St
     result.trim().to_string()
 }
 
-fn should_skip(line: &str, dont_copy: &[&str; 1]) -> bool {
+fn should_skip(line: &str, dont_copy: &Vec<&str>) -> bool {
     for token in dont_copy {
         if line.starts_with(token) {
             return true
