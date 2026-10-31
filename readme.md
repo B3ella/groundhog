@@ -13,8 +13,11 @@ It is inspired by obsidian daily-note plug-in and can easily be used with obsidi
 - Maintains a symlink to the current daily note for quick access
 
 ## Installation
+To install groundhog add the following to your nix flake
 ```nix
+
 {
+  description = "Nixos config";
   inputs = {
     groundhog.url = "github:B3ella/groundhog";
   };
