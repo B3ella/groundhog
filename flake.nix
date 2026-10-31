@@ -12,6 +12,7 @@
           version = "0.1.3";
 
           cargoLock.lockFile = ./Cargo.lock;
+          src = self;
 
           meta = with pkgs.lib; {
             description = "Templater for daily notes";
