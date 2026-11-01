@@ -101,13 +101,6 @@ Completed taks are lines that start with:
 ```
 
 
-This copies the matching section from yesterday’s note, skipping completed tasks. 
-Completed task are lines that begin with:
-
-```md
-- [x]
-```
-
 ### Weekday-specific content
 
 ```md
