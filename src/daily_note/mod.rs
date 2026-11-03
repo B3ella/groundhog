@@ -64,10 +64,10 @@ fn read_file(path: &str) -> String {
     contents
 } 
 
-fn get_latest_note(path: &str) -> &str{
-    let max = "";
+fn get_latest_note(path: &str) -> Option<String>{
+    let max = "".to_string();
     for entry in fs::read_dir(path)? {
-        max = cmp::max(entry?.path(), max);
+        max = cmp::max(entry?.path().into_string(), max);
     };
     max
 }
