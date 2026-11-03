@@ -69,5 +69,5 @@ fn get_latest_note(path: &str) -> Option<String>{
     for entry in fs::read_dir(path)? {
         max = cmp::max(entry?.path().into_string(), max);
     };
-    max
+    Some(max)
 }
