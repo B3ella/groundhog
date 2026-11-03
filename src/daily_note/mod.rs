@@ -65,7 +65,7 @@ fn read_file(path: &str) -> String {
 } 
 
 fn get_latest_note(path: &str) -> &str{
-    let dir = read_dir(path);
+    let dir = fs::read_dir(path);
     let max = "";
     for entry in dir{
         max = cmp::max(entry.path(), max);
