@@ -64,8 +64,8 @@ fn read_file(path: &str) -> String {
     contents
 } 
 
-fn get_latest_note(config: Config){
-    let dir = read_dir(config.archive_path);
+fn get_latest_note(path: &str){
+    let dir = read_dir(path);
     let max = null;
     for entry in dir{
         max = cmp::max(entry, max);
