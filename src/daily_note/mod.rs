@@ -5,6 +5,7 @@ use std::io::prelude::*;
 use std::os::unix::fs as unix_fs;
 use crate::config;
 mod interpreter;
+use std::cmp;
 
 pub fn symlink_daily_note(date: DateTime<Local>, config: &config::Config) {
     println!("creating symlink for daily-note: {}", date_to_file_name(date, config));
@@ -62,3 +63,12 @@ fn read_file(path: &str) -> String {
     let _ = file.expect("Failed to read file {}").read_to_string(&mut contents);
     contents
 } 
+
+fn get_latest_note(config: Config){
+    let dir = read_dir(config.archive_path);
+    let max = null;
+    for entry in dir{
+        max = cmp::max(entry, max);
+    };
+    max
+}
