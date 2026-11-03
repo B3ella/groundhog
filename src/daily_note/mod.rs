@@ -68,7 +68,7 @@ fn get_latest_note(path: &str){
     let dir = read_dir(path);
     let max = "";
     for entry in dir{
-        max = cmp::max(entry, max);
+        max = cmp::max(entry.path(), max);
     };
     max
 }
