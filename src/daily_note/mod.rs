@@ -64,7 +64,7 @@ fn read_file(path: &str) -> String {
     contents
 } 
 
-fn get_latest_note(path: &str){
+fn get_latest_note(path: &str) -> &str{
     let dir = read_dir(path);
     let max = "";
     for entry in dir{
