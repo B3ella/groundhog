@@ -8,25 +8,22 @@ pub fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) ->
         if is_header {
             current_section = line;
         }
-        if line.contains("!copy_tasks") {
-            result += &get_section_text(current_section, yesterday, &vec!["- [x]"]);
-            result += "\n";
-            continue;
-        }
-        if line.contains("!copy_last_day") {
-            result += &get_section_text(current_section, yesterday, &vec![]);
-            result += "\n";
-            continue;
-        }
-        if line.starts_with("!by_weekday") {
-            result += &by_weekday(line, date);
-            result += "\n";
-            continue;
-        }
-        result += line;
+        result += process_token(line, yesterday, current_section)
         result += "\n";
     }
     result.trim().to_string()
+}
+
+fn process_token(line: &str, yesterday: &str, current_section: &str){
+        let token_end = section.find(" ").unwrap();
+        let token = &section[..header_end+1];
+
+        match token {
+            "!copy_tasks" => &get_section_text(current_section, yesterday, &vec!["- [x]"]),
+            "!copy_last_day" => &get_section_text(current_section, yesterday, &vec![]),
+            "!by_weekday" => &by_weekday(line, date),
+            _ => line
+        }
 }
 
 fn get_section_text(section: &str, yesterday: &str, dont_copy: &Vec<&str>) -> String {
