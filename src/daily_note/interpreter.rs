@@ -118,14 +118,15 @@ mod tests {
 
     #[test]
     fn copy_last_day_copies_the_matching_section_until_the_next_heading() {
-        let yesterday = "# Work\n- unfinished\n# Personal\n- unrelated";
+        let yesterday = "# Work\n- unfinished\n## Subsection\n# Personal\n- unrelated";
 
         let output = process_tokens(
             "# Work\n!copy_last_day\n# Personal", 
         yesterday, date(2024, 1, 8));
 
         assert_eq!(output, 
-            "# Work\n- unfinished\n# Personal");
+            "# Work\n- unfinished\n## Subsection\n# Personal"
+        );
     }
 
     #[test]
