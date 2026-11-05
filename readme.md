@@ -68,6 +68,8 @@ And then on tuesday the note would look like this
 
 The !copy_tasks token ignores any completed tasks
 
+And !by_weekday will return different content depending on the day of the week 
+
 ## Features
 
 - Generates a daily note named in the format `YYYY-MM-DD.md`
