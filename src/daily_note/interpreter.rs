@@ -8,13 +8,13 @@ pub fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) ->
         if is_header {
             current_section = line;
         }
-        result += process_token(line, yesterday, current_section);
+        result += process_token(line, yesterday, current_section, date);
         result += "\n";
     }
     result.trim().to_string()
 }
 
-fn process_token(line: &str, yesterday: &str, current_section: &str){
+fn process_token(line: &str, yesterday: &str, current_section: &str, date: DateTime<Local>){
         let token_end = line.find(" ").unwrap();
         let token = &line[..token_end];
 
