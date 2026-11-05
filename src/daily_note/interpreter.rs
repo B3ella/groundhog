@@ -4,7 +4,7 @@ pub fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) ->
     let mut result = "".to_string();
     let mut current_section = "";
     for line in template.lines() {
-        is_header = line.starts_with("#");
+        let is_header = line.starts_with("#");
         if is_header {
             current_section = line;
         }
