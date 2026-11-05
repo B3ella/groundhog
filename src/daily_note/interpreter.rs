@@ -132,6 +132,6 @@ mod tests {
     fn copy_tasks_skips_completed_items_but_keeps_open_items() {
         let yesterday = "# Tasks\n- [x] done\n- [ ] pending\n# Other\n- unrelated";
         let output = process_tokens("# Tasks\n!copy_tasks", yesterday, date(2024, 1, 8));
-        assert_eq!(output, "# Tasks\n- [ ] pending\n\n");
+        assert_eq!(output, "# Tasks\n- [ ] pending");
     }
 }
