@@ -174,15 +174,26 @@ You can override the config path with:
 groundhog --config-path /path/to/config
 ```
 ## Typical Workflow
-
+If you installed via the nix service, groundhog will run automatically everyday at 00:00
+If you used cargo or other installation method you can run groundhog with the following command
 ```bash
 groundhog
 ```
 
-Then open the symlink:
+if you are using obsidian just turn on obsidians daily note plugin and configure the new file location to daily-note or whatever the path from your vault to your archive_dir will be
 
+[comment]: <> (to-do add print here)
+
+Groundhog uses the same naming convention as obsidian for its daily notes. This means every daily note funtion from obsidian will work (Open next daily note, open todays daily note and open previous daily note)
+
+If you are not using obsidian you probably want to open the symlink in your editor of choice. in my case
 ```bash
-vim ~/Notes/daily-note.md
+nvim ~/Notes/daily-note.md
+```
+
+wich I aliased to:
+```bash
+notes
 ```
 
 This will open the most recently generated daily note.
