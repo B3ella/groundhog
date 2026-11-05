@@ -111,7 +111,6 @@ mod tests {
             template_path: dir.join("template.md").to_string_lossy().into_owned(),
             symlink_path: dir.join("today.md").to_string_lossy().into_owned(),
             archive_path: format!("{}/", dir.to_string_lossy()),
-            max_recursion: 5,
         }
     }
 

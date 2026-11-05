@@ -8,7 +8,6 @@ pub struct Config {
     pub template_path: String,
     pub symlink_path: String,
     pub archive_path: String,
-    pub max_recursion: i32,
 }
 
 pub fn get_config(config_path: &str) -> Config {
@@ -42,17 +41,11 @@ pub fn get_config(config_path: &str) -> Config {
             .get("archive_path")
             .unwrap_or(&default_config.archive_path),
     );
-    let max_recursion = config_map
-        .get("max_recursion")
-        .unwrap_or(&"".to_string())
-        .parse::<i32>()
-        .unwrap_or(default_config.max_recursion);
 
     Config {
         template_path,
         symlink_path,
         archive_path,
-        max_recursion,
     }
 }
 
@@ -75,7 +68,6 @@ fn get_default_config() -> Config {
         template_path: expand_tilde("~/Notes/templates/dnt.md"),
         symlink_path: expand_tilde("~/Notes/daily-note.md"),
         archive_path: expand_tilde("~/Notes/daily-note/"),
-        max_recursion: 5,
     }
 }
 
@@ -117,7 +109,6 @@ mod tests {
         assert_eq!(config.template_path, format!("{home}/Notes/templates/dnt.md"));
         assert_eq!(config.symlink_path, format!("{home}/Notes/daily-note.md"));
         assert_eq!(config.archive_path, format!("{home}/Notes/daily-note/"));
-        assert_eq!(config.max_recursion, 5);
     }
 
     #[test]
@@ -125,7 +116,7 @@ mod tests {
         let path = temp_path("complete");
         fs::write(
             &path,
-            " template_path = /tmp/template.md \nsymlink_path=/tmp/today.md\n archive_path = /tmp/archive/ \nmax_recursion = 12 \n",
+            " template_path = /tmp/template.md \nsymlink_path=/tmp/today.md\n archive_path = /tmp/archive/ \n",
         )
         .unwrap();
 
@@ -148,15 +139,6 @@ mod tests {
         assert_eq!(config.symlink_path, format!("{home}/Notes/daily-note.md"));
         assert_eq!(config.archive_path, format!("{home}/Notes/daily-note/"));
         assert_eq!(config.max_recursion, 5);
-        fs::remove_file(path).unwrap();
-    }
-
-    #[test]
-    fn invalid_recursion_value_falls_back_to_default() {
-        let path = temp_path("invalid-recursion");
-        fs::write(&path, "max_recursion=not-a-number\n").unwrap();
-
-        assert_eq!(get_config(&path).max_recursion, 5);
         fs::remove_file(path).unwrap();
     }
 }
