@@ -150,6 +150,28 @@ mod tests {
         fs::remove_dir_all(dir).unwrap();
     }
 
+    fn creates_note_based_on_arbitrarily_old_notes() {
+        let dir = temp_dir();
+        let cfg = config_for(&dir);
+
+        fs::write(&cfg.template_path, "# Work\n!copy_last_day\n").unwrap();
+        fs::write(
+            date_to_file_name(date(2022, 2, 1), &cfg),
+            "# Work\n- carry me\n",
+        )
+        .unwrap();
+
+        create_daily_note(date(2024, 2, 2), &cfg, 3);
+
+        let expected = "# Work\n- carry me";
+        assert_eq!(
+            fs::read_to_string(date_to_file_name(date(2024, 2, 2), &cfg)).unwrap(),
+            expected
+        );
+
+        fs::remove_dir_all(dir).unwrap();
+    }
+
     #[test]
     fn existing_note_is_not_overwritten() {
         let dir = temp_dir();
