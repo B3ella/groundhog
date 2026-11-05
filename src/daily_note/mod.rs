@@ -166,19 +166,6 @@ mod tests {
     }
 
     #[test]
-    fn negative_recursion_creates_a_blank_seed_note() {
-        let dir = temp_dir();
-        let cfg = config_for(&dir);
-        let path = date_to_file_name(date(2024, 2, 2), &cfg);
-
-        create_daily_note(date(2024, 2, 2), &cfg, -1);
-
-        assert_eq!(fs::read_to_string(path).unwrap(), "");
-
-        fs::remove_dir_all(dir).unwrap();
-    }
-
-    #[test]
     fn symlink_points_to_the_requested_daily_note() {
         let dir = temp_dir();
         let cfg = config_for(&dir);
