@@ -16,7 +16,7 @@ pub fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) ->
 
 fn process_token(line: &str, yesterday: &str, current_section: &str){
         let token_end = line.find(" ").unwrap();
-        let token = &line[..header_end+1];
+        let token = &line[..token_end+1];
 
         match token {
             "!copy_tasks" => &get_section_text(current_section, yesterday, &vec!["- [x]"]),
