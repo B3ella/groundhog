@@ -66,11 +66,13 @@ fn read_file(path: &str) -> String {
 }
 
 fn get_latest_note(path: &str) -> Option<String> {
-    let mut max = "".to_string();
-    let daily_note_reggex = Regex::new(r".*\d{4}-\d{2}-\d{2}.md").unwrap();
     let files = fs::read_dir(path).ok()?;
     let paths = files.map(|file| file.ok().expect("File system error").path().to_string_lossy().to_string());
+
+    let daily_note_reggex = Regex::new(r".*\d{4}-\d{2}-\d{2}.md").unwrap();
     let daily_notes = paths.filter(|file| daily_note_reggex.is_match(file));
+
+    let mut max = "".to_string();
     for note in  daily_notes {
         let string_path = note;
         max = cmp::max(string_path, max);
