@@ -68,7 +68,7 @@ fn get_latest_note(path: &str) -> Option<String> {
     let mut max = "".to_string();
     let daily_note_reggex = Regex::new(r"\d{4}-\d{2}-\d{2}.md").unwrap();
     let files = fs::read_dir(path).ok()?;
-    let daily_notes = files.filter(|file| daily_note_reggex.is_match(file))
+    let daily_notes = files.filter(|file| daily_note_reggex.is_match(file));
     for note in  daily_notes {
         let string_path = note.ok()?.path().to_string_lossy().to_string();
         max = cmp::max(string_path, max);
