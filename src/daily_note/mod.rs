@@ -150,6 +150,7 @@ mod tests {
         fs::remove_dir_all(dir).unwrap();
     }
 
+    #[test]
     fn creates_note_based_on_arbitrarily_old_notes() {
         let dir = temp_dir();
         let cfg = config_for(&dir);
