@@ -8,7 +8,7 @@ pub fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) ->
         if is_header {
             current_section = line;
         }
-        result += process_token(line, yesterday, current_section)
+        result += process_token(line, yesterday, current_section);
         result += "\n";
     }
     result.trim().to_string()
