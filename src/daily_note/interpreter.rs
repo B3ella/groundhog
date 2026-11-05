@@ -132,8 +132,7 @@ mod tests {
         assert_eq!(output, 
             "# Work
             - unfinished
-            # Personal
-            ");
+            # Personal");
     }
 
     #[test]
