@@ -98,7 +98,7 @@ This will generate a daily-note with todays date in
 if you are using obsidian just turn on obsidians daily note plugin and configure the new file location to daily-note
 
 > ### Warning
-> this assumes your vault is in ~/Notes if your vault is in any other dir, refer to the configuration docs and substitute ~/Notes for your vaults path
+> this assumes your vault is in ~/Notes if your vault is in any other dir, refer to the [configuration section](#configuration) and substitute ~/Notes for your vaults path
 
 [comment]: <> (to-do add print here)
 
@@ -147,7 +147,7 @@ then enable groundhog and put your username in
 ## Template Syntax
 By default groundhog looks for a template on ~/Notes/templates/dnt.md
 
-to overwrite this value refer to the config section
+to overwrite this value refer to the [configuration section](#configuration)
 
 Groundhog processes markdown templates and supports a few special tokens.
 
