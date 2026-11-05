@@ -69,10 +69,10 @@ fn get_latest_note(path: &str) -> Option<String> {
     let mut max = "".to_string();
     let daily_note_reggex = Regex::new(r".*\d{4}-\d{2}-\d{2}.md").unwrap();
     let files = fs::read_dir(path).ok()?;
-    let paths = files.map(|file| file.ok().expect("File system error").path().to_string_lossy());
+    let paths = files.map(|file| file.ok().expect("File system error").path().to_string_lossy().to_string());
     let daily_notes = paths.filter(|file| daily_note_reggex.is_match(file));
     for note in  daily_notes {
-        let string_path = note.to_string();
+        let string_path = note;
         max = cmp::max(string_path, max);
     }
     Some(max)
