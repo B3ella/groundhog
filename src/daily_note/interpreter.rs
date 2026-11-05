@@ -113,7 +113,7 @@ mod tests {
             "",
             date(2024, 1, 8),
         );
-        assert_eq!(output, "# Day\nMonday\nKeep this\n");
+        assert_eq!(output, "# Day\nMonday\nKeep this");
     }
 
     #[test]
