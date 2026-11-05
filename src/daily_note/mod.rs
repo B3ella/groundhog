@@ -6,7 +6,7 @@ use std::io::prelude::*;
 use std::os::unix::fs as unix_fs;
 mod interpreter;
 use std::cmp;
-use regex::regex;
+use regex::Regex;
 
 pub fn symlink_daily_note(date: DateTime<Local>, config: &config::Config) {
     println!(
