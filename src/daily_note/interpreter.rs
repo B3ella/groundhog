@@ -25,7 +25,7 @@ pub fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) ->
         result += line;
         result += "\n";
     }
-    result
+    result.trim()
 }
 
 fn get_section_text(section: &str, yesterday: &str, dont_copy: &Vec<&str>) -> String {
