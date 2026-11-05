@@ -25,9 +25,9 @@ Todays most valuable action and tasks is where I list and prioritize the tasks I
 - [ ] take my meds
 - [ ] Play the guitar
 ## todays Most Valuable Action
-!copy_tasks()
+!copy_tasks
 ## Tasks
-!copy_tasks()
+!copy_tasks
 ## Diary
 ```
 
