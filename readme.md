@@ -25,36 +25,36 @@ the note generated will depend on the day of the week
 
 On monday for example we would have
 
-# Monday
-## Plans for today
-long run
-## Habit tracker
-- [ ] Open notes
-- [ ] Clean the cats litterboxed
-- [ ] take my meds
-- [ ] Play the guitar
-## todays Most Valuable Action
-- [x] Take my cat to the vet
-## Tasks
-- [ ] Fix my tv
-- [ ] schedule an apointment
-## Diary
+> # Monday
+> ## Plans for today
+> long run
+> ## Habit tracker
+> - [ ] Open notes
+> - [ ] Clean the cats litterboxed
+> - [ ] take my meds
+> - [ ] Play the guitar
+> ## todays Most Valuable Action
+> - [x] Take my cat to the vet
+> ## Tasks
+> - [ ] Fix my tv
+> - [ ] schedule an apointment
+> ## Diary
 
 And then on tuesday the note would look like this
 
-# Tuesday
-## Plans for today
-Therapy
-## Habit tracker
-- [ ] Open notes
-- [ ] Clean the cats litterboxed
-- [ ] take my meds
-- [ ] Play the guitar
-## todays Most Valuable Action
-## Tasks
-- [ ] Fix my tv
-- [ ] schedule an apointment
-## Diary
+> # Tuesday
+> ## Plans for today
+> Therapy
+> ## Habit tracker
+> - [ ] Open notes
+> - [ ] Clean the cats litterboxed
+> - [ ] take my meds
+> - [ ] Play the guitar
+> ## todays Most Valuable Action
+> ## Tasks
+> - [ ] Fix my tv
+> - [ ] schedule an apointment
+> ## Diary
 
 The !copy_tasks token ignores any completed tasks
 
