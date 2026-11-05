@@ -32,7 +32,7 @@ fn get_section_text(section: &str, yesterday: &str, dont_copy: &Vec<&str>) -> St
     let mut result = "".to_string();
     let mut copy = false;
     let header_end = section.find(" ").unwrap();
-    let header = &section[..header_end];
+    let header = &section[..header_end+1];
     for line in yesterday.lines() {
         if line.starts_with(header) {
             copy = false;
