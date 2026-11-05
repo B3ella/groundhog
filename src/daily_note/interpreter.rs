@@ -129,6 +129,7 @@ mod tests {
             # Personal", 
         yesterday, date(2024, 1, 8));
 
+        println!("{}", output)
         assert_eq!(output, 
             "# Work
             - unfinished
