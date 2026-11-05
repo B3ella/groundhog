@@ -128,6 +128,22 @@ mod tests {
     }
 
     #[test]
+    fn create_greenfield_note() {
+        let dir = temp_dir();
+        let cfg = config_for(&dir);
+
+        fs::write(&cfg.template_path, "# Work\n!copy_last_day\n").unwrap();
+        create_daily_note(date(2024, 2, 2), &cfg);
+
+        let expected = "# Work";
+        assert_eq!(
+            fs::read_to_string(date_to_file_name(date(2024, 2, 2), &cfg)).unwrap(),
+            expected
+        );
+
+        fs::remove_dir_all(dir).unwrap();
+    }
+    #[test]
     fn creates_note_using_template_and_yesterdays_section() {
         let dir = temp_dir();
         let cfg = config_for(&dir);
