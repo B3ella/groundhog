@@ -17,7 +17,7 @@ pub fn symlink_daily_note(date: DateTime<Local>, config: &config::Config) {
     let _ = unix_fs::symlink(daily_note, &config.symlink_path);
 }
 
-pub fn create_daily_note(date: DateTime<Local>, config: &config::Config, max_recursion: i32) {
+pub fn create_daily_note(date: DateTime<Local>, config: &config::Config) {
     let path = date_to_file_name(date, config);
 
     if note_exists(date, config) {
@@ -25,22 +25,13 @@ pub fn create_daily_note(date: DateTime<Local>, config: &config::Config, max_rec
         return;
     }
 
-    if max_recursion < 0 {
-        println!("hit max recursion, creating blank note as start");
-        let file = File::create(&path);
-        let _ = file.expect("File creation failed").write_all("".as_bytes());
-        return;
-    }
+    let last_note = get_latest_note(&config.archive_path)
 
-    let yesterday = date - Duration::days(1);
-    create_daily_note(yesterday, config, max_recursion - 1);
-
-    let yesterday = date_to_file_name(yesterday, config);
-    let yesterday = read_file(&yesterday);
+    let last_note = read_file(&last_note);
 
     let template = read_file(&config.template_path);
 
-    let note = interpreter::process_tokens(&template, &yesterday, date);
+    let note = interpreter::process_tokens(&template, &last_note, date);
 
     let file = File::create(path);
     let _ = file
@@ -139,7 +130,7 @@ mod tests {
         )
         .unwrap();
 
-        create_daily_note(date(2024, 2, 2), &cfg, 3);
+        create_daily_note(date(2024, 2, 2), &cfg);
 
         let expected = "# Work\n- carry me";
         assert_eq!(
@@ -162,7 +153,7 @@ mod tests {
         )
         .unwrap();
 
-        create_daily_note(date(2024, 2, 2), &cfg, 3);
+        create_daily_note(date(2024, 2, 2), &cfg);
 
         let expected = "# Work\n- carry me";
         assert_eq!(
@@ -181,7 +172,7 @@ mod tests {
 
         fs::write(&existing, "keep this note").unwrap();
 
-        create_daily_note(date(2024, 2, 2), &cfg, 3);
+        create_daily_note(date(2024, 2, 2), &cfg);
 
         assert_eq!(fs::read_to_string(existing).unwrap(), "keep this note");
 
