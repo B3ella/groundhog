@@ -26,9 +26,13 @@ pub fn create_daily_note(date: DateTime<Local>, config: &config::Config) {
         return;
     }
 
-    let last_note = get_latest_note(&config.archive_path).unwrap();
+    let last_note = get_latest_note(&config.archive_path);
 
-    let last_note = read_file(&last_note);
+    let last_note = match last_note {
+        Some(note) => read_file(&note),
+        None => "",
+    };
+
 
     let template = read_file(&config.template_path);
 
