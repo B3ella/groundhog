@@ -30,7 +30,7 @@ pub fn create_daily_note(date: DateTime<Local>, config: &config::Config) {
 
     let last_note = match last_note {
         Some(note) => read_file(&note),
-        None => "",
+        None => "".to_string(),
     };
 
 
@@ -79,7 +79,7 @@ fn get_latest_note(path: &str) -> Option<String> {
         max = cmp::max(string_path, max);
     }
     if max=="" {
-        None
+        return None;
     }
     Some(max)
 }
