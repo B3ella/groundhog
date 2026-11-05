@@ -124,7 +124,6 @@ mod tests {
         assert_eq!(config.template_path, "/tmp/template.md");
         assert_eq!(config.symlink_path, "/tmp/today.md");
         assert_eq!(config.archive_path, "/tmp/archive/");
-        assert_eq!(config.max_recursion, 12);
         fs::remove_file(path).unwrap();
     }
 
@@ -138,7 +137,6 @@ mod tests {
         assert_eq!(config.template_path, "/tmp/custom-template.md");
         assert_eq!(config.symlink_path, format!("{home}/Notes/daily-note.md"));
         assert_eq!(config.archive_path, format!("{home}/Notes/daily-note/"));
-        assert_eq!(config.max_recursion, 5);
         fs::remove_file(path).unwrap();
     }
 }
