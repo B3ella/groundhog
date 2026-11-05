@@ -30,8 +30,10 @@ pub fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) ->
 fn get_section_text(section: &str, yesterday: &str, dont_copy: &Vec<&str>) -> String {
     let mut result = "".to_string();
     let mut copy = false;
+    let header_end = section.find(" ");
+    let header = section[..header_end];
     for line in yesterday.lines() {
-        if line.starts_with("#") {
+        if line.starts_with(header) {
             copy = false;
         }
         if copy & !should_skip(line, dont_copy) {
