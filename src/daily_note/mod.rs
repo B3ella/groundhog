@@ -1,5 +1,5 @@
 use crate::config;
-use chrono::{DateTime, Datelike, Duration, Local};
+use chrono::{DateTime, Datelike, Local};
 use std::fs;
 use std::fs::{remove_file, File};
 use std::io::prelude::*;
