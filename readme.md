@@ -6,13 +6,13 @@ Daily notes are great but obsidian is limited to just copying the same text over
 Groundhog can generate different text depending on the day of the week, carries forward tasks and recurring content, and integrates particularly well with NixOS
 ## Example
 ```md
+!by_weekday[# Sunday;# Monday;# Tuesday;# Wednesday;# Thursday;# Friday;# Saturday]
 ## Plans for today
 !by_weekday [short run; long run; Therapy; Guitar lessons- 16:00; short run; long run;]
 ## Habit tracker
 - [ ] Open notes
 - [ ] Clean the cats litterboxed
 - [ ] take my meds
----
 - [ ] Play the guitar
 ## todays MVA
 !copy_tasks()
@@ -25,14 +25,13 @@ the note generated will depend on the day of the week
 
 On monday for example we would have
 
-```md
+# Monday
 ## Plans for today
 long run
 ## Habit tracker
 - [ ] Open notes
 - [ ] Clean the cats litterboxed
 - [ ] take my meds
----
 - [ ] Play the guitar
 ## todays Most Valuable Action
 - [x] Take my cat to the vet
@@ -40,24 +39,23 @@ long run
 - [ ] Fix my tv
 - [ ] schedule an apointment
 ## Diary
-```
 
 And then on tuesday the note would look like this
-```md
+
+# Tuesday
 ## Plans for today
 Therapy
 ## Habit tracker
 - [ ] Open notes
 - [ ] Clean the cats litterboxed
 - [ ] take my meds
----
 - [ ] Play the guitar
 ## todays Most Valuable Action
 ## Tasks
 - [ ] Fix my tv
 - [ ] schedule an apointment
 ## Diary
-```
+
 The !copy_tasks token ignores any completed tasks
 
 ## Features
