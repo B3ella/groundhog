@@ -1,4 +1,4 @@
-use chrono::{Local, DateTime, Datelike};  
+use chrono::{DateTime, Datelike, Local};
 
 pub fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) -> String {
     let mut result = "".to_string();
@@ -10,17 +10,17 @@ pub fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) ->
         if line.contains("!copy_tasks") {
             result += &get_section_text(current_section, yesterday, &vec!["- [x]"]);
             result += "\n";
-            continue
+            continue;
         }
         if line.contains("!copy_last_day") {
             result += &get_section_text(current_section, yesterday, &vec![]);
             result += "\n";
-            continue
+            continue;
         }
         if line.starts_with("!by_weekday") {
             result += &by_weekday(line, date);
             result += "\n";
-            continue
+            continue;
         }
         result += line;
         result += "\n";
@@ -50,18 +50,20 @@ fn get_section_text(section: &str, yesterday: &str, dont_copy: &Vec<&str>) -> St
 fn should_skip(line: &str, dont_copy: &Vec<&str>) -> bool {
     for token in dont_copy {
         if line.starts_with(token) {
-            return true
+            return true;
         }
-    };
+    }
     false
 }
 
-fn by_weekday(line: &str, date: DateTime<Local>) -> String{
+fn by_weekday(line: &str, date: DateTime<Local>) -> String {
     let start_bytes = line
-        .find("[").expect("no opening brackets found in by weekday template line");
-    let end_bytes = line.find("]")
+        .find("[")
+        .expect("no opening brackets found in by weekday template line");
+    let end_bytes = line
+        .find("]")
         .expect("no closing brackets found in by weekday template line");
-    let result = &line[start_bytes+1..end_bytes];
+    let result = &line[start_bytes + 1..end_bytes];
     let content_by_day: Vec<&str> = result.split(";").collect();
     let index = date.weekday().num_days_from_sunday();
     let index = usize::try_from(index).expect("Cannot convert weekday to usize");

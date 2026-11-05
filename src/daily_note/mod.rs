@@ -1,14 +1,17 @@
-use chrono::{Local, DateTime, Duration, Datelike};  
+use crate::config;
+use chrono::{DateTime, Datelike, Duration, Local};
 use std::fs;
-use std::fs::{File, remove_file};
+use std::fs::{remove_file, File};
 use std::io::prelude::*;
 use std::os::unix::fs as unix_fs;
-use crate::config;
 mod interpreter;
 use std::cmp;
 
 pub fn symlink_daily_note(date: DateTime<Local>, config: &config::Config) {
-    println!("creating symlink for daily-note: {}", date_to_file_name(date, config));
+    println!(
+        "creating symlink for daily-note: {}",
+        date_to_file_name(date, config)
+    );
     let daily_note = date_to_file_name(date, config);
     let _ = remove_file(&config.symlink_path);
     let _ = unix_fs::symlink(daily_note, &config.symlink_path);
@@ -19,15 +22,14 @@ pub fn create_daily_note(date: DateTime<Local>, config: &config::Config, max_rec
 
     if note_exists(date, config) {
         println!("Daily note {} already exists", path);
-        return
+        return;
     }
 
     if max_recursion < 0 {
         println!("hit max recursion, creating blank note as start");
         let file = File::create(&path);
-        let _ = file.expect("File creation failed")
-            .write_all("".as_bytes());
-        return
+        let _ = file.expect("File creation failed").write_all("".as_bytes());
+        return;
     }
 
     let yesterday = date - Duration::days(1);
@@ -41,7 +43,9 @@ pub fn create_daily_note(date: DateTime<Local>, config: &config::Config, max_rec
     let note = interpreter::process_tokens(&template, &yesterday, date);
 
     let file = File::create(path);
-    let _ = file.expect("File createon failed").write_all(note.as_bytes());
+    let _ = file
+        .expect("File createon failed")
+        .write_all(note.as_bytes());
 }
 
 fn note_exists(date: DateTime<Local>, config: &config::Config) -> bool {
@@ -60,15 +64,17 @@ fn date_to_file_name(date: DateTime<Local>, config: &config::Config) -> String {
 fn read_file(path: &str) -> String {
     let file = File::open(path);
     let mut contents = String::new();
-    let _ = file.expect("Failed to read file {}").read_to_string(&mut contents);
+    let _ = file
+        .expect("Failed to read file {}")
+        .read_to_string(&mut contents);
     contents
-} 
+}
 
-fn get_latest_note(path: &str) -> Option<String>{
+fn get_latest_note(path: &str) -> Option<String> {
     let mut max = "".to_string();
     for entry in fs::read_dir(path).ok()? {
         let string_path = entry.ok()?.path().to_string_lossy().to_string();
         max = cmp::max(string_path, max);
-    };
+    }
     Some(max)
 }
