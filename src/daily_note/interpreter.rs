@@ -14,7 +14,7 @@ pub fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) ->
     result.trim().to_string()
 }
 
-fn process_token(line: &str, yesterday: &str, current_section: &str, date: DateTime<Local>){
+fn process_token(line: &str, yesterday: &str, current_section: &str, date: DateTime<Local>) -> &str {
         let token_end = line.find(" ").unwrap();
         let token = &line[..token_end];
 
