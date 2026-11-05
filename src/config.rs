@@ -92,3 +92,71 @@ fn expand_tilde(string: &str) -> String {
     let home = env::var("HOME").expect("Stirng contains ~ but variable HOME is not set");
     string.replace("~", &home)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::time::{SystemTime, UNIX_EPOCH};
+
+    fn temp_path(label: &str) -> String {
+        let nonce = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        env::temp_dir()
+            .join(format!("groundhog-config-{label}-{}-{nonce}", std::process::id()))
+            .to_string_lossy()
+            .into_owned()
+    }
+
+    #[test]
+    fn missing_config_uses_defaults() {
+        let config = get_config(&temp_path("missing"));
+        let home = env::var("HOME").unwrap();
+
+        assert_eq!(config.template_path, format!("{home}/Notes/templates/dnt.md"));
+        assert_eq!(config.symlink_path, format!("{home}/Notes/daily-note.md"));
+        assert_eq!(config.archive_path, format!("{home}/Notes/daily-note/"));
+        assert_eq!(config.max_recursion, 5);
+    }
+
+    #[test]
+    fn reads_all_config_values_and_trims_whitespace() {
+        let path = temp_path("complete");
+        fs::write(
+            &path,
+            " template_path = /tmp/template.md \nsymlink_path=/tmp/today.md\n archive_path = /tmp/archive/ \nmax_recursion = 12 \n",
+        )
+        .unwrap();
+
+        let config = get_config(&path);
+        assert_eq!(config.template_path, "/tmp/template.md");
+        assert_eq!(config.symlink_path, "/tmp/today.md");
+        assert_eq!(config.archive_path, "/tmp/archive/");
+        assert_eq!(config.max_recursion, 12);
+        fs::remove_file(path).unwrap();
+    }
+
+    #[test]
+    fn omitted_values_fall_back_to_defaults() {
+        let path = temp_path("partial");
+        fs::write(&path, "template_path=/tmp/custom-template.md\n").unwrap();
+
+        let config = get_config(&path);
+        let home = env::var("HOME").unwrap();
+        assert_eq!(config.template_path, "/tmp/custom-template.md");
+        assert_eq!(config.symlink_path, format!("{home}/Notes/daily-note.md"));
+        assert_eq!(config.archive_path, format!("{home}/Notes/daily-note/"));
+        assert_eq!(config.max_recursion, 5);
+        fs::remove_file(path).unwrap();
+    }
+
+    #[test]
+    fn invalid_recursion_value_falls_back_to_default() {
+        let path = temp_path("invalid-recursion");
+        fs::write(&path, "max_recursion=not-a-number\n").unwrap();
+
+        assert_eq!(get_config(&path).max_recursion, 5);
+        fs::remove_file(path).unwrap();
+    }
+}
