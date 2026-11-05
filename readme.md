@@ -13,6 +13,11 @@ It is inspired by obsidian daily-note plug-in and can easily be used with obsidi
 - Maintains a symlink to the current daily note for quick access
 
 ## Installation
+To install with cargo just run the command
+```bash
+cargo install --git https://github.com/B3ella/groundhog
+```
+### With nixos
 To install groundhog add the following to your nix flake
 ```nix
 
