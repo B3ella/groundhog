@@ -124,7 +124,6 @@ mod tests {
             "# Work\n!copy_last_day\n# Personal", 
         yesterday, date(2024, 1, 8));
 
-        println!("{}", output);
         assert_eq!(output, 
             "# Work\n- unfinished\n# Personal");
     }
