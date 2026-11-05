@@ -1,9 +1,9 @@
 # Groundhog
+Groundhog was built to replace the Obsidian Daily Notes plugin.
 
-Groundhog is a lightweight daily note templating system written in Rust. It generates a markdown note for the current day, optionally carries over content from the previous day, and keeps a symlink pointing to the most recent daily note.
+Daily notes are great but obsidian is limited to just copying the same text over and over
 
-It is inspired by obsidian daily-note plug-in and can easily be used with obsidian
-
+Groundhog can generate different text depending on the day of the week, carries forward tasks and recurring content, and integrates particularly well with NixOS
 ## Features
 
 - Generates a daily note named in the format `YYYY-MM-DD.md`
