@@ -26,12 +26,15 @@ pub fn create_daily_note(date: DateTime<Local>, config: &config::Config) {
     }
 
     let last_note = get_latest_note(&config.archive_path).unwrap();
+    println!("{}", last_note);
 
     let last_note = read_file(&last_note);
+    println!("{}", last_note);
 
     let template = read_file(&config.template_path);
 
     let note = interpreter::process_tokens(&template, &last_note, date);
+    println!("{}", note);
 
     let file = File::create(path);
     let _ = file
