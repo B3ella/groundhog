@@ -141,7 +141,7 @@ mod tests {
 
         create_daily_note(date(2024, 2, 2), &cfg, 3);
 
-        let expected = "# Work\n- carry me\n\n";
+        let expected = "# Work\n- carry me";
         assert_eq!(
             fs::read_to_string(date_to_file_name(date(2024, 2, 2), &cfg)).unwrap(),
             expected
