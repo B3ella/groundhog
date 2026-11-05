@@ -78,3 +78,121 @@ fn get_latest_note(path: &str) -> Option<String> {
     }
     Some(max)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use chrono::TimeZone;
+    use std::time::{SystemTime, UNIX_EPOCH};
+
+    fn temp_dir() -> std::path::PathBuf {
+        let nonce = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        let path = std::env::temp_dir().join(format!(
+            "groundhog-daily-note-{}-{nonce}",
+            std::process::id()
+        ));
+        fs::create_dir_all(&path).unwrap();
+        path
+    }
+
+    fn date(year: i32, month: u32, day: u32) -> DateTime<Local> {
+        Local
+            .with_ymd_and_hms(year, month, day, 12, 0, 0)
+            .single()
+            .unwrap()
+    }
+
+    fn config_for(dir: &std::path::Path) -> config::Config {
+        config::Config {
+            template_path: dir.join("template.md").to_string_lossy().into_owned(),
+            symlink_path: dir.join("today.md").to_string_lossy().into_owned(),
+            archive_path: format!("{}/", dir.to_string_lossy()),
+            max_recursion: 5,
+        }
+    }
+
+    #[test]
+    fn date_filename_uses_zero_padded_month_and_day() {
+        let dir = temp_dir();
+        let cfg = config_for(&dir);
+
+        assert_eq!(
+            date_to_file_name(date(2024, 2, 3), &cfg),
+            format!("{}/2024-02-03.md", dir.display())
+        );
+
+        fs::remove_dir_all(dir).unwrap();
+    }
+
+    #[test]
+    fn creates_note_using_template_and_yesterdays_section() {
+        let dir = temp_dir();
+        let cfg = config_for(&dir);
+
+        fs::write(&cfg.template_path, "# Work\n!copy_last_day\n").unwrap();
+        fs::write(
+            date_to_file_name(date(2024, 2, 1), &cfg),
+            "# Work\n- carry me\n",
+        )
+        .unwrap();
+
+        create_daily_note(date(2024, 2, 2), &cfg, 3);
+
+        let expected = "# Work\n- carry me\n\n";
+        assert_eq!(
+            fs::read_to_string(date_to_file_name(date(2024, 2, 2), &cfg)).unwrap(),
+            expected
+        );
+
+        fs::remove_dir_all(dir).unwrap();
+    }
+
+    #[test]
+    fn existing_note_is_not_overwritten() {
+        let dir = temp_dir();
+        let cfg = config_for(&dir);
+        let existing = date_to_file_name(date(2024, 2, 2), &cfg);
+
+        fs::write(&existing, "keep this note").unwrap();
+
+        create_daily_note(date(2024, 2, 2), &cfg, 3);
+
+        assert_eq!(fs::read_to_string(existing).unwrap(), "keep this note");
+
+        fs::remove_dir_all(dir).unwrap();
+    }
+
+    #[test]
+    fn negative_recursion_creates_a_blank_seed_note() {
+        let dir = temp_dir();
+        let cfg = config_for(&dir);
+        let path = date_to_file_name(date(2024, 2, 2), &cfg);
+
+        create_daily_note(date(2024, 2, 2), &cfg, -1);
+
+        assert_eq!(fs::read_to_string(path).unwrap(), "");
+
+        fs::remove_dir_all(dir).unwrap();
+    }
+
+    #[test]
+    fn symlink_points_to_the_requested_daily_note() {
+        let dir = temp_dir();
+        let cfg = config_for(&dir);
+        let note = date_to_file_name(date(2024, 2, 2), &cfg);
+
+        fs::write(&note, "today").unwrap();
+
+        symlink_daily_note(date(2024, 2, 2), &cfg);
+
+        assert_eq!(
+            fs::read_link(&cfg.symlink_path).unwrap(),
+            std::path::PathBuf::from(note)
+        );
+
+        fs::remove_dir_all(dir).unwrap();
+    }
+}
