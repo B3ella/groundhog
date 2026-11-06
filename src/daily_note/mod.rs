@@ -104,7 +104,7 @@ fn get_template(template_path: &str) -> String {
     read_file(template_path).to_string()
 }
 fn create_default_template(template_path: &str) {
-    create_parent_dir(config.template_path);
+    create_parent_dir(template_path);
     default_template = "
 This is the default groundhog template, edit it to match your needs
 ## Tasks
