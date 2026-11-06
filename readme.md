@@ -111,7 +111,7 @@ then enable groundhog and put your username in
 ## Template Syntax
 By default groundhog looks for a template on ~/Notes/templates/dnt.md
 
-to overwrite this value refer to the [configuration section](#configuration)
+to overwrite this value refer to the ![configuration section](#configuration)
 
 Groundhog processes markdown templates and supports a few special tokens.
 
