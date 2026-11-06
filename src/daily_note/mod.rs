@@ -7,19 +7,36 @@ use std::os::unix::fs as unix_fs;
 mod interpreter;
 use regex::Regex;
 use std::cmp;
+use std::path::PathBuf;
 
 pub fn symlink_daily_note(date: DateTime<Local>, config: &config::Config) {
     println!(
         "creating symlink for daily-note: {}",
         date_to_file_name(date, config)
     );
+    create_parent_dir(&config.symlink_path);
     let daily_note = date_to_file_name(date, config);
     let _ = remove_file(&config.symlink_path);
     let _ = unix_fs::symlink(daily_note, &config.symlink_path);
 }
 
+fn create_parent_dir(path: &str) {
+    let path = PathBuf::from(path);
+    let parent_dir = path.parent().unwrap();
+    let _ = fs::create_dir_all(parent_dir);
+}
+
+fn date_to_file_name(date: DateTime<Local>, config: &config::Config) -> String {
+    let year = date.year();
+    let month = date.month();
+    let day = date.day();
+    let file_name = format!("{}-{:0>2}-{:0>2}.md", year, month, day);
+    config.archive_path.clone() + &file_name
+}
+
 pub fn create_daily_note(date: DateTime<Local>, config: &config::Config) {
     let path = date_to_file_name(date, config);
+    create_parent_dir(&path);
 
     if note_exists(date, config) {
         println!("Daily note {} already exists", path);
@@ -33,7 +50,7 @@ pub fn create_daily_note(date: DateTime<Local>, config: &config::Config) {
         None => "".to_string(),
     };
 
-    let template = read_file(&config.template_path);
+    let template = get_template(&config.template_path);
 
     let note = interpreter::process_tokens(&template, &last_note, date);
 
@@ -47,24 +64,6 @@ fn note_exists(date: DateTime<Local>, config: &config::Config) -> bool {
     let note_name = date_to_file_name(date, config);
     fs::exists(note_name).expect("The file system is throwing an error?")
 }
-
-fn date_to_file_name(date: DateTime<Local>, config: &config::Config) -> String {
-    let year = date.year();
-    let month = date.month();
-    let day = date.day();
-    let file_name = format!("{}-{:0>2}-{:0>2}.md", year, month, day);
-    config.archive_path.clone() + &file_name
-}
-
-fn read_file(path: &str) -> String {
-    let file = File::open(path);
-    let mut contents = String::new();
-    let _ = file
-        .expect("Failed to read file {}")
-        .read_to_string(&mut contents);
-    contents
-}
-
 fn get_latest_note(path: &str) -> Option<String> {
     let files = fs::read_dir(path).ok()?;
     let paths = files.map(|file| {
@@ -86,6 +85,35 @@ fn get_latest_note(path: &str) -> Option<String> {
         return None;
     }
     Some(max)
+}
+
+fn read_file(path: &str) -> String {
+    let file = File::open(path);
+    let mut contents = String::new();
+    let _ = file
+        .expect("Failed to read file {}")
+        .read_to_string(&mut contents);
+    contents
+}
+
+fn get_template(template_path: &str) -> String {
+    let template_exists = fs::exists(template_path).expect("The file system is throwing an error?");
+    if !template_exists {
+        create_default_template(template_path);
+    }
+    read_file(template_path).to_string()
+}
+fn create_default_template(template_path: &str) {
+    create_parent_dir(template_path);
+    let default_template = format!(
+        "
+This is the default groundhog template, edit it to match your needs
+To change it edit the file at {}
+## Tasks
+!copy_tasks",
+        template_path
+    );
+    fs::write(template_path, default_template).unwrap();
 }
 
 #[cfg(test)]
@@ -227,6 +255,45 @@ mod tests {
             std::path::PathBuf::from(note)
         );
 
+        fs::remove_dir_all(dir).unwrap();
+    }
+
+    #[test]
+    fn can_handle_missing_paths() {
+        let dir = temp_dir();
+        let cfg = config::Config {
+            template_path: dir.join("template.md").to_string_lossy().into_owned(),
+            symlink_path: dir
+                .join("aaaaa/aaaa/today.md")
+                .to_string_lossy()
+                .into_owned(),
+            archive_path: format!("{}/needed_path/", dir.to_string_lossy()),
+        };
+
+        fs::write(&cfg.template_path, "# Work\n!copy_last_day\n").unwrap();
+        create_daily_note(date(2024, 2, 2), &cfg);
+
+        let expected = "# Work";
+        assert_eq!(
+            fs::read_to_string(date_to_file_name(date(2024, 2, 2), &cfg)).unwrap(),
+            expected
+        );
+        fs::remove_dir_all(dir).unwrap();
+    }
+    #[test]
+    fn can_handle_missing_template() {
+        let dir = temp_dir();
+        let cfg = config_for(&dir);
+
+        create_daily_note(date(2024, 2, 2), &cfg);
+        let expected = format!(
+            "This is the default groundhog template, edit it to match your needs\nTo change it edit the file at {}\n## Tasks", 
+            cfg.template_path
+        );
+        assert_eq!(
+            fs::read_to_string(date_to_file_name(date(2024, 2, 2), &cfg)).unwrap(),
+            expected
+        );
         fs::remove_dir_all(dir).unwrap();
     }
 }
