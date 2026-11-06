@@ -34,6 +34,15 @@ fn process_token(
     }
 }
 
+fn get_token(line: &str) -> String {
+    let token_end = line.find("[");
+    let token = match token_end {
+        Some(token_end) => &line[..token_end].trim(),
+        None => line,
+    };
+    token.to_string()
+}
+
 fn get_section_text(section: &str, yesterday: &str, dont_copy: &Vec<&str>) -> String {
     let mut result = "".to_string();
     let mut copy = false;
