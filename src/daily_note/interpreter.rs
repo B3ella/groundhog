@@ -22,7 +22,7 @@ fn process_token(
 ) -> String {
     let token_end = line.find("[");
     let token = match token_end {
-        Some(token_end) => &line[..token_end].trim(),
+        Some(token_end) => line[..token_end].trim(),
         None => line,
     };
 
