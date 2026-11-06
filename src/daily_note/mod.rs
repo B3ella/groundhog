@@ -105,11 +105,14 @@ fn get_template(template_path: &str) -> String {
 }
 fn create_default_template(template_path: &str) {
     create_parent_dir(template_path);
-    let default_template = format!("
+    let default_template = format!(
+        "
 This is the default groundhog template, edit it to match your needs
 To change it edit the file at {}
 ## Tasks
-!copy_tasks", template_path);
+!copy_tasks",
+        template_path
+    );
     fs::write(&template_path, default_template).unwrap();
 }
 
@@ -259,10 +262,7 @@ mod tests {
     fn can_handle_missing_paths() {
         let dir = temp_dir();
         let cfg = config::Config {
-            template_path: dir
-                .join("template.md")
-                .to_string_lossy()
-                .into_owned(),
+            template_path: dir.join("template.md").to_string_lossy().into_owned(),
             symlink_path: dir
                 .join("aaaaa/aaaa/today.md")
                 .to_string_lossy()
