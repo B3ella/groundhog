@@ -13,7 +13,7 @@ pub fn symlink_daily_note(date: DateTime<Local>, config: &config::Config) {
         "creating symlink for daily-note: {}",
         date_to_file_name(date, config)
     );
-    create_parent_dir(config.symlink_path)
+    create_parent_dir(config.symlink_path);
     let daily_note = date_to_file_name(date, config);
     let _ = remove_file(&config.symlink_path);
     let _ = unix_fs::symlink(daily_note, &config.symlink_path);
@@ -21,7 +21,7 @@ pub fn symlink_daily_note(date: DateTime<Local>, config: &config::Config) {
 
 pub fn create_daily_note(date: DateTime<Local>, config: &config::Config) {
     let path = date_to_file_name(date, config);
-    create_parent_dir(&path)
+    create_parent_dir(&path);
 
     if note_exists(date, config) {
         println!("Daily note {} already exists", path);
@@ -96,24 +96,21 @@ fn get_latest_note(path: &str) -> Option<String> {
     Some(max)
 }
 
-fn get_template(template_path: &str) -> string{
-    let template_exists =
-        fs::exists(template_path).expect("The file system is throwing an error?");
+fn get_template(template_path: &str) -> string {
+    let template_exists = fs::exists(template_path).expect("The file system is throwing an error?");
     if !template_exists {
         create_default_template(template_path);
     }
     read_file(template_path).to_string()
 }
-fn create_default_template(template_path: &str){
-    create_parent_dir(config.template_path)
+fn create_default_template(template_path: &str) {
+    create_parent_dir(config.template_path);
     default_template = "
 This is the default groundhog template, edit it to match your needs
 ## Tasks
 !copy_tasks";
     fs::write(&template_path, "default_template").unwrap();
 }
-
-
 
 #[cfg(test)]
 mod tests {
@@ -258,13 +255,19 @@ mod tests {
     }
 
     #[test]
-    fn can_handle_missing_paths()_{
+    fn can_handle_missing_paths() {
         let dir = temp_dir();
         let cfg = config::Config {
-            template_path: dir.join("/test/test/template.md").to_string_lossy().into_owned(),
-            symlink_path: dir.join("/aaaaa/aaaa/today.md").to_string_lossy().into_owned(),
+            template_path: dir
+                .join("/test/test/template.md")
+                .to_string_lossy()
+                .into_owned(),
+            symlink_path: dir
+                .join("/aaaaa/aaaa/today.md")
+                .to_string_lossy()
+                .into_owned(),
             archive_path: format!("{}/needed_path/", dir.to_string_lossy()),
-        }
+        };
         let note = date_to_file_name(date(2024, 2, 2), &cfg);
 
         fs::write(&note, "today").unwrap();
