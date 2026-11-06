@@ -19,6 +19,8 @@ jobs:
         run: cargo build --verbose --locked
       - name: test
         run: cargo test --verbose
+      - name: format
+        run: cargo fmt --check
   build-nix:
     needs: rust_build_and_test
     runs-on: ubuntu-latest
