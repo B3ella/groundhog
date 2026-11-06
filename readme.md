@@ -1,3 +1,4 @@
+[![Quality gate status](https://sonarcloud.io/api/project_badges/measure?project=B3ella_bto-templater&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=B3ella_bto-templater)
 # Groundhog
 Groundhog was built to replace the Obsidian Daily Notes plugin.
 
