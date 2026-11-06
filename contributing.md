@@ -1,5 +1,5 @@
 # Contributing
-Contributions, bug reports, and feature ideas are welcome. If you are working on changes, the project’s Rust tests and sample template fixtures can help validate behavior.
+We expect every pull request to match a issue, if your work doesnt already match an issue please open one
 ## First issues
 If this is your first contribution you may want to look for issues with the "good first issue" label
 ## Running the code locally
