@@ -14,7 +14,7 @@ pub fn symlink_daily_note(date: DateTime<Local>, config: &config::Config) {
         "creating symlink for daily-note: {}",
         date_to_file_name(date, config)
     );
-    create_parent_dir(config.symlink_path);
+    create_parent_dir(&config.symlink_path);
     let daily_note = date_to_file_name(date, config);
     let _ = remove_file(&config.symlink_path);
     let _ = unix_fs::symlink(daily_note, &config.symlink_path);
