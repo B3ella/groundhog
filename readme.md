@@ -5,7 +5,7 @@ Daily notes are great but obsidian is limited to just copying the same text over
 
 Groundhog can generate different text depending on the day of the week, carries forward tasks and recurring content, and integrates particularly well with NixOS
 
-If you want to contribute to the project please check <contributing.md>
+If you want to contribute to the project please check [contributing.md](contributing.md)
 ## Example
 This is a cleansed version of my own daily note template
 
