@@ -156,7 +156,7 @@ mod tests {
         let config1 = get_config(&path1);
 
         let path2 = temp_path("partial");
-        fs::write(&path, "archive_path=~/Notes/daily-note").unwrap();
+        fs::write(&path2, "archive_path=~/Notes/daily-note").unwrap();
         let config2 = get_config(&path2);
 
         assert_eq!(config1.archive_path, config2.archive_path);
