@@ -260,11 +260,11 @@ mod tests {
         let dir = temp_dir();
         let cfg = config::Config {
             template_path: dir
-                .join("/template.md")
+                .join("template.md")
                 .to_string_lossy()
                 .into_owned(),
             symlink_path: dir
-                .join("/aaaaa/aaaa/today.md")
+                .join("aaaaa/aaaa/today.md")
                 .to_string_lossy()
                 .into_owned(),
             archive_path: format!("{}/needed_path/", dir.to_string_lossy()),
