@@ -152,7 +152,7 @@ mod tests {
     #[test]
     fn works_with_or_without_trailling_separators() {
         let path1 = temp_path("partial");
-        fs::write(&path, "archive_path=~/Notes/daily-note/").unwrap();
+        fs::write(&path1, "archive_path=~/Notes/daily-note/").unwrap();
         let config1 = get_config(&path1);
 
         let path2 = temp_path("partial");
