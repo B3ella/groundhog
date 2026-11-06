@@ -1,8 +1,8 @@
 ---
-name: Default issue template
+name: Bug issue template
 about: Create a report to help us improve
 title: ''
-labels: ''
+labels: fix
 assignees: ''
 
 ---
