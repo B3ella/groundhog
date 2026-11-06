@@ -4,6 +4,8 @@ Groundhog was built to replace the Obsidian Daily Notes plugin.
 Daily notes are great but obsidian is limited to just copying the same text over and over
 
 Groundhog can generate different text depending on the day of the week, carries forward tasks and recurring content, and integrates particularly well with NixOS
+
+If you want to contribute to the project please check <contributing.md>
 ## Example
 This is a cleansed version of my own daily note template
 
@@ -173,10 +175,7 @@ Completed taks are lines that start with:
 ```md
 - [x]
 ```
-
-
 ### Weekday-specific content
-
 ```md
 !by_weekday[Deep work;Admin;Planning;Meetings;Follow-ups;Review;Reset]
 !by_weekday[Sunday;Monday;Tuesday;Wednesday;Thursday;Friday;Saturday]
@@ -187,7 +186,6 @@ It expexts a list of 7 values in between square brackets separated by semicolons
 The first value is the one for sunday and it goes on to saturday
 
 ## Configuration
-
 Groundhog reads config from:
 
 ```bash
@@ -215,45 +213,6 @@ groundhog --config-path /path/to/config
 ```
 
 ## Notes
-
 - This project currently targets Unix-like systems.
-
-## Contributing
-
-Contributions, bug reports, and feature ideas are welcome. If you are working on changes, the project’s Rust tests and sample template fixtures can help validate behavior.
-
-## Building from source
-
-```bash
-git clone https://github.com/B3ella/groundhog.git
-cd groundhog
-cargo build --release
-```
-
-The built binary will be available at:
-
-```bash
-./target/release/groundhog
-```
-
-## building With Nix
-
-```bash
-nix build .#default
-```
-
-This builds the `groundhog` package using the included flake.
-
-## Project Structure
-
-- `src/main.rs` — CLI entry point and daily note generation flow
-- `src/config.rs` — configuration loading and default settings
-- `src/interpreter.rs` — template token processing
-- `data/default_config` — sample default config
-- `test_data/` — sample template and expected output for testing
-
-
-
 ## Author
-
 B3ella
