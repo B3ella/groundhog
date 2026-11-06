@@ -105,10 +105,11 @@ fn get_template(template_path: &str) -> String {
 }
 fn create_default_template(template_path: &str) {
     create_parent_dir(template_path);
-    let default_template = "
+    let default_template = format!("
 This is the default groundhog template, edit it to match your needs
+To change it edit the file at {}
 ## Tasks
-!copy_tasks";
+!copy_tasks", temp_path);
     fs::write(&template_path, default_template).unwrap();
 }
 
@@ -284,7 +285,10 @@ mod tests {
         let cfg = config_for(&dir);
 
         create_daily_note(date(2024, 2, 2), &cfg);
-        let expected = "This is the default groundhog template, edit it to match your needs\n## Tasks";
+        let expected = format!(
+            "This is the default groundhog template, edit it to match your needs\nTo change it edit the file at {}\n## Tasks", 
+            &cfg.template_path
+        );
         assert_eq!(
             fs::read_to_string(date_to_file_name(date(2024, 2, 2), &cfg)).unwrap(),
             expected
