@@ -280,6 +280,7 @@ mod tests {
         );
         fs::remove_dir_all(dir).unwrap();
     }
+    #[test]
     fn can_handle_missing_template() {
         let dir = temp_dir();
         let cfg = config_for(&dir);
