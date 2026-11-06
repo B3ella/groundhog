@@ -82,7 +82,7 @@ fn get_latest_note(path: &str) -> Option<String> {
         let string_path = note;
         max = cmp::max(string_path, max);
     }
-    if max == "" {
+    if max.is_empty() {
         return None;
     }
     Some(max)
