@@ -32,7 +32,8 @@ mod tests {
 
     #[test]
     fn config_path_can_be_overridden_with_long_option() {
-        let args = Args::try_parse_from(["groundhog", "--config-path", "/tmp/custom-config"]).unwrap();
+        let args =
+            Args::try_parse_from(["groundhog", "--config-path", "/tmp/custom-config"]).unwrap();
         assert_eq!(args.config_path, "/tmp/custom-config");
     }
 

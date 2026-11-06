@@ -5,8 +5,8 @@ use std::fs::{remove_file, File};
 use std::io::prelude::*;
 use std::os::unix::fs as unix_fs;
 mod interpreter;
-use std::cmp;
 use regex::Regex;
+use std::cmp;
 
 pub fn symlink_daily_note(date: DateTime<Local>, config: &config::Config) {
     println!(
@@ -32,7 +32,6 @@ pub fn create_daily_note(date: DateTime<Local>, config: &config::Config) {
         Some(note) => read_file(&note),
         None => "".to_string(),
     };
-
 
     let template = read_file(&config.template_path);
 
@@ -68,17 +67,23 @@ fn read_file(path: &str) -> String {
 
 fn get_latest_note(path: &str) -> Option<String> {
     let files = fs::read_dir(path).ok()?;
-    let paths = files.map(|file| file.ok().expect("File system error").path().to_string_lossy().to_string());
+    let paths = files.map(|file| {
+        file.ok()
+            .expect("File system error")
+            .path()
+            .to_string_lossy()
+            .to_string()
+    });
 
     let daily_note_reggex = Regex::new(r".*\d{4}-\d{2}-\d{2}.md").unwrap();
     let daily_notes = paths.filter(|file| daily_note_reggex.is_match(file));
 
     let mut max = "".to_string();
-    for note in  daily_notes {
+    for note in daily_notes {
         let string_path = note;
         max = cmp::max(string_path, max);
     }
-    if max=="" {
+    if max == "" {
         return None;
     }
     Some(max)

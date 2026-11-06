@@ -14,19 +14,24 @@ pub fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) ->
     result.trim().to_string()
 }
 
-fn process_token(line: &str, yesterday: &str, current_section: &str, date: DateTime<Local>) -> String {
-        let token_end = line.find("[");
-        let token = match token_end {
-            Some(token_end) => &line[..token_end].trim(),
-            None => line,
-        };
+fn process_token(
+    line: &str,
+    yesterday: &str,
+    current_section: &str,
+    date: DateTime<Local>,
+) -> String {
+    let token_end = line.find("[");
+    let token = match token_end {
+        Some(token_end) => &line[..token_end].trim(),
+        None => line,
+    };
 
-        match token {
-            "!copy_tasks" => get_section_text(current_section, yesterday, &vec!["- [x]"]),
-            "!copy_last_day" => get_section_text(current_section, yesterday, &vec![]),
-            "!by_weekday" => by_weekday(line, date),
-            _ => line.to_string(),
-        }
+    match token {
+        "!copy_tasks" => get_section_text(current_section, yesterday, &vec!["- [x]"]),
+        "!copy_last_day" => get_section_text(current_section, yesterday, &vec![]),
+        "!by_weekday" => by_weekday(line, date),
+        _ => line.to_string(),
+    }
 }
 
 fn get_section_text(section: &str, yesterday: &str, dont_copy: &Vec<&str>) -> String {
@@ -34,9 +39,11 @@ fn get_section_text(section: &str, yesterday: &str, dont_copy: &Vec<&str>) -> St
     let mut copy = false;
 
     let header_end = section.find(" ").unwrap();
-    let header = &section[..header_end+1];
+    let header = &section[..header_end + 1];
 
-    let lines = yesterday.lines().filter(|line| !should_skip(line, dont_copy));
+    let lines = yesterday
+        .lines()
+        .filter(|line| !should_skip(line, dont_copy));
     for line in lines {
         if line.starts_with(header) {
             copy = false;
@@ -125,12 +132,12 @@ mod tests {
         let yesterday = "# Work\n- unfinished\n## Subsection\n# Personal\n- unrelated";
 
         let output = process_tokens(
-            "# Work\n!copy_last_day\n# Personal", 
-        yesterday, date(2024, 1, 8));
-
-        assert_eq!(output, 
-            "# Work\n- unfinished\n## Subsection\n# Personal"
+            "# Work\n!copy_last_day\n# Personal",
+            yesterday,
+            date(2024, 1, 8),
         );
+
+        assert_eq!(output, "# Work\n- unfinished\n## Subsection\n# Personal");
     }
 
     #[test]

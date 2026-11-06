@@ -96,7 +96,10 @@ mod tests {
             .unwrap()
             .as_nanos();
         env::temp_dir()
-            .join(format!("groundhog-config-{label}-{}-{nonce}", std::process::id()))
+            .join(format!(
+                "groundhog-config-{label}-{}-{nonce}",
+                std::process::id()
+            ))
             .to_string_lossy()
             .into_owned()
     }
@@ -106,7 +109,10 @@ mod tests {
         let config = get_config(&temp_path("missing"));
         let home = env::var("HOME").unwrap();
 
-        assert_eq!(config.template_path, format!("{home}/Notes/templates/dnt.md"));
+        assert_eq!(
+            config.template_path,
+            format!("{home}/Notes/templates/dnt.md")
+        );
         assert_eq!(config.symlink_path, format!("{home}/Notes/daily-note.md"));
         assert_eq!(config.archive_path, format!("{home}/Notes/daily-note/"));
     }
