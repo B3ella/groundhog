@@ -168,7 +168,7 @@ mod tests {
         let dir = temp_dir();
         let cfg = config_for(&dir);
 
-        fs::write(cfg.template_path, "# Work\n!copy_last_day\n").unwrap();
+        fs::write(&cfg.template_path, "# Work\n!copy_last_day\n").unwrap();
         create_daily_note(date(2024, 2, 2), &cfg);
 
         let expected = "# Work";
