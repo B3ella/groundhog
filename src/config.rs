@@ -36,11 +36,14 @@ pub fn get_config(config_path: &str) -> Config {
             .get("symlink_path")
             .unwrap_or(&default_config.symlink_path),
     );
-    let archive_path = expand_tilde(
+    let mut archive_path = expand_tilde(
         config_map
             .get("archive_path")
             .unwrap_or(&default_config.archive_path),
     );
+    if ! archive_path.ends_with("/") {
+        archive_path = archive_path + "/";
+    }
 
     Config {
         template_path,
@@ -144,5 +147,18 @@ mod tests {
         assert_eq!(config.symlink_path, format!("{home}/Notes/daily-note.md"));
         assert_eq!(config.archive_path, format!("{home}/Notes/daily-note/"));
         fs::remove_file(path).unwrap();
+    }
+
+    #[test]
+    fn works_with_or_without_trailling_separators() {
+        let path1 = temp_path("partial");
+        fs::write(&path, "archive_path=~/Notes/daily-note/").unwrap();
+        let config1 = get_config(&path1);
+
+        let path2 = temp_path("partial");
+        fs::write(&path, "archive_path=~/Notes/daily-note").unwrap();
+        let config2 = get_config(&path2);
+
+        assert_eq!(config1.archive_path, config2.archive_path);
     }
 }
