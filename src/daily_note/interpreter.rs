@@ -20,12 +20,8 @@ fn process_token(
     current_section: &str,
     date: DateTime<Local>,
 ) -> String {
-    let token_end = line.find("(");
-    let token = match token_end {
-        Some(token_end) => line[..token_end].trim(),
-        None => line,
-    };
-
+    let binding = get_token(line);
+    let token = binding.as_str();
     match token {
         "!copy_tasks" => get_section_text(current_section, yesterday, &vec!["- [x]"]),
         "!copy_last_day" => get_section_text(current_section, yesterday, &vec![]),
@@ -35,9 +31,9 @@ fn process_token(
 }
 
 fn get_token(line: &str) -> String {
-    let token_end = line.find("[");
+    let token_end = line.find("(");
     let token = match token_end {
-        Some(token_end) => &line[..token_end].trim(),
+        Some(token_end) => line[..token_end].trim(),
         None => line,
     };
     token.to_string()
