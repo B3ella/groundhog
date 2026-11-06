@@ -288,7 +288,7 @@ mod tests {
         create_daily_note(date(2024, 2, 2), &cfg);
         let expected = format!(
             "This is the default groundhog template, edit it to match your needs\nTo change it edit the file at {}\n## Tasks", 
-            &cfg.template_path
+            cfg.template_path
         );
         assert_eq!(
             fs::read_to_string(date_to_file_name(date(2024, 2, 2), &cfg)).unwrap(),
