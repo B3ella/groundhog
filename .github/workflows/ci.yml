@@ -8,7 +8,7 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  rust_build_and_test:
+  RustChecks:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -23,8 +23,8 @@ jobs:
         run: cargo fmt --check
       - name: Run Clippy
         run: cargo clippy --all-targets --all-features -- -D warnings
-  build-nix:
-    needs: rust_build_and_test
+  NixBuild:
+    needs: RustChecks
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -35,9 +35,9 @@ jobs:
           nix_path: nixpkgs=channel:nixos-unstable
       - name: run build
         run: nix flake check
-  sonarqube:
+  SonarQube:
     if: github.ref == 'refs/heads/main'
-    needs: build-nix
+    needs: NixBuild
     name: SonarQube
     runs-on: ubuntu-latest
     steps:
