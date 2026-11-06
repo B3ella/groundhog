@@ -259,7 +259,7 @@ mod tests {
         let dir = temp_dir();
         let cfg = config::Config {
             template_path: dir
-                .join("/test/test/template.md")
+                .join("/template.md")
                 .to_string_lossy()
                 .into_owned(),
             symlink_path: dir
@@ -273,6 +273,18 @@ mod tests {
         create_daily_note(date(2024, 2, 2), &cfg);
 
         let expected = "# Work";
+        assert_eq!(
+            fs::read_to_string(date_to_file_name(date(2024, 2, 2), &cfg)).unwrap(),
+            expected
+        );
+        fs::remove_dir_all(dir).unwrap();
+    }
+    fn can_handle_missing_template() {
+        let dir = temp_dir();
+        let cfg = config_for(&dir);
+
+        create_daily_note(date(2024, 2, 2), &cfg);
+        let expected = "This is the default groundhog template, edit it to match your needs\n## Tasks";
         assert_eq!(
             fs::read_to_string(date_to_file_name(date(2024, 2, 2), &cfg)).unwrap(),
             expected
