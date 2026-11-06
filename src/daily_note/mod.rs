@@ -19,6 +19,20 @@ pub fn symlink_daily_note(date: DateTime<Local>, config: &config::Config) {
     let _ = unix_fs::symlink(daily_note, &config.symlink_path);
 }
 
+fn create_parent_dir(path: &str) {
+    let path = PathBuf::from(path);
+    let parent_dir = path.parent().unwrap();
+    fs::create_dir_all(parent_dir)
+}
+
+fn date_to_file_name(date: DateTime<Local>, config: &config::Config) -> String {
+    let year = date.year();
+    let month = date.month();
+    let day = date.day();
+    let file_name = format!("{}-{:0>2}-{:0>2}.md", year, month, day);
+    config.archive_path.clone() + &file_name
+}
+
 pub fn create_daily_note(date: DateTime<Local>, config: &config::Config) {
     let path = date_to_file_name(date, config);
     create_parent_dir(&path);
@@ -45,34 +59,10 @@ pub fn create_daily_note(date: DateTime<Local>, config: &config::Config) {
         .write_all(note.as_bytes());
 }
 
-fn create_parent_dir(path: &str) {
-    let path = PathBuf::from(path);
-    let parent_dir = path.parent().unwrap();
-    fs::create_dir_all(parent_dir)
-}
-
 fn note_exists(date: DateTime<Local>, config: &config::Config) -> bool {
     let note_name = date_to_file_name(date, config);
     fs::exists(note_name).expect("The file system is throwing an error?")
 }
-
-fn date_to_file_name(date: DateTime<Local>, config: &config::Config) -> String {
-    let year = date.year();
-    let month = date.month();
-    let day = date.day();
-    let file_name = format!("{}-{:0>2}-{:0>2}.md", year, month, day);
-    config.archive_path.clone() + &file_name
-}
-
-fn read_file(path: &str) -> String {
-    let file = File::open(path);
-    let mut contents = String::new();
-    let _ = file
-        .expect("Failed to read file {}")
-        .read_to_string(&mut contents);
-    contents
-}
-
 fn get_latest_note(path: &str) -> Option<String> {
     let files = fs::read_dir(path).ok()?;
     let paths = files.map(|file| {
@@ -95,6 +85,16 @@ fn get_latest_note(path: &str) -> Option<String> {
     }
     Some(max)
 }
+
+fn read_file(path: &str) -> String {
+    let file = File::open(path);
+    let mut contents = String::new();
+    let _ = file
+        .expect("Failed to read file {}")
+        .read_to_string(&mut contents);
+    contents
+}
+
 
 fn get_template(template_path: &str) -> string {
     let template_exists = fs::exists(template_path).expect("The file system is throwing an error?");
