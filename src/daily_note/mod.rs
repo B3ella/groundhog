@@ -109,7 +109,7 @@ fn create_default_template(template_path: &str) {
 This is the default groundhog template, edit it to match your needs
 To change it edit the file at {}
 ## Tasks
-!copy_tasks", temp_path);
+!copy_tasks", template_path);
     fs::write(&template_path, default_template).unwrap();
 }
 
