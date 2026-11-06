@@ -20,56 +20,15 @@ the habit tracker list things I need to do every day
 
 Todays most valuable action and tasks is where I list and prioritize the tasks I need to solve
 
-```md
-!by_weekday[# Sunday;# Monday;# Tuesday;# Wednesday;# Thursday;# Friday;# Saturday]
-## Plans for today
-!by_weekday [short run; long run; Therapy; Guitar lessons- 16:00; short run; long run;]
-## Habit tracker
-- [ ] Open notes
-- [ ] Clean the cats litterboxed
-- [ ] take my meds
-- [ ] Play the guitar
-## todays Most Valuable Action
-!copy_tasks
-## Tasks
-!copy_tasks
-## Diary
-```
+![daily note template](imgs/dnt.png)
 
 the note generated will depend on the day of the week
 
 On monday for example we would have
-
-> # Monday
-> ## Plans for today
-> long run
-> ## Habit tracker
-> - [ ] Open notes
-> - [ ] Clean the cats litterboxed
-> - [ ] take my meds
-> - [ ] Play the guitar
-> ## todays Most Valuable Action
-> - [x] Take my cat to the vet
-> ## Tasks
-> - [ ] Fix my tv
-> - [ ] schedule an apointment
-> ## Diary
+![thursday](imgs/thursday.png)
 
 And then on tuesday the note would look like this
-
-> # Tuesday
-> ## Plans for today
-> Therapy
-> ## Habit tracker
-> - [ ] Open notes
-> - [ ] Clean the cats litterboxed
-> - [ ] take my meds
-> - [ ] Play the guitar
-> ## todays Most Valuable Action
-> ## Tasks
-> - [ ] Fix my tv
-> - [ ] schedule an apointment
-> ## Diary
+![friday](imgs/friday.png)
 
 The !copy_tasks token ignores any completed tasks
 
@@ -105,7 +64,7 @@ if you are using obsidian just turn on obsidians daily note plugin and configure
 > ### Warning
 > this assumes your vault is in ~/Notes if your vault is in any other dir, refer to the [configuration section](#configuration) and substitute ~/Notes for your vaults path
 
-[comment]: <> (to-do add print here)
+![new file location](new_file_location.png)
 
 Groundhog uses the same naming convention as obsidian for its daily notes. This means every daily note feature from obsidian will work (Open next daily note, open todays daily note and open previous daily note)
 
