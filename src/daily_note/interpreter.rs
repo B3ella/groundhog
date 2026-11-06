@@ -20,7 +20,7 @@ fn process_token(
     current_section: &str,
     date: DateTime<Local>,
 ) -> String {
-    let token_end = line.find("[");
+    let token_end = line.find("(");
     let token = match token_end {
         Some(token_end) => line[..token_end].trim(),
         None => line,
@@ -70,10 +70,10 @@ fn should_skip(line: &str, dont_copy: &Vec<&str>) -> bool {
 
 fn by_weekday(line: &str, date: DateTime<Local>) -> String {
     let start_bytes = line
-        .find("[")
+        .find("(")
         .expect("no opening brackets found in by weekday template line");
     let end_bytes = line
-        .find("]")
+        .find(")")
         .expect("no closing brackets found in by weekday template line");
     let result = &line[start_bytes + 1..end_bytes];
     let content_by_day: Vec<&str> = result.split(";").collect();
@@ -109,7 +109,7 @@ mod tests {
         for (year, month, day, value) in expected {
             assert_eq!(
                 by_weekday(
-                    "!by_weekday[Sunday;Monday;Tuesday;Wednesday;Thursday;Friday;Saturday]",
+                    "!by_weekday(Sunday;Monday;Tuesday;Wednesday;Thursday;Friday;Saturday)",
                     date(year, month, day)
                 ),
                 value
@@ -120,7 +120,7 @@ mod tests {
     #[test]
     fn process_tokens_replaces_weekday_and_preserves_regular_lines() {
         let output = process_tokens(
-            "# Day\n!by_weekday[Sunday;Monday;Tuesday;Wednesday;Thursday;Friday;Saturday]\nKeep this",
+            "# Day\n!by_weekday(Sunday;Monday;Tuesday;Wednesday;Thursday;Friday;Saturday)\nKeep this",
             "",
             date(2024, 1, 8),
         );
