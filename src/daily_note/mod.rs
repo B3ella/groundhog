@@ -268,17 +268,15 @@ mod tests {
                 .into_owned(),
             archive_path: format!("{}/needed_path/", dir.to_string_lossy()),
         };
-        let note = date_to_file_name(date(2024, 2, 2), &cfg);
 
-        fs::write(&note, "today").unwrap();
+        fs::write(&cfg.template_path, "# Work\n!copy_last_day\n").unwrap();
+        create_daily_note(date(2024, 2, 2), &cfg);
 
-        symlink_daily_note(date(2024, 2, 2), &cfg);
-
+        let expected = "# Work";
         assert_eq!(
-            fs::read_link(&cfg.symlink_path).unwrap(),
-            std::path::PathBuf::from(note)
+            fs::read_to_string(date_to_file_name(date(2024, 2, 2), &cfg)).unwrap(),
+            expected
         );
-
         fs::remove_dir_all(dir).unwrap();
     }
 }
