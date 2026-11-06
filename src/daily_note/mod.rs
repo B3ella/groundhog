@@ -23,7 +23,7 @@ pub fn symlink_daily_note(date: DateTime<Local>, config: &config::Config) {
 fn create_parent_dir(path: &str) {
     let path = PathBuf::from(path);
     let parent_dir = path.parent().unwrap();
-    fs::create_dir_all(parent_dir)
+    fs::create_dir_all(parent_dir);
 }
 
 fn date_to_file_name(date: DateTime<Local>, config: &config::Config) -> String {
