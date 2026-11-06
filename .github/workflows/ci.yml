@@ -21,6 +21,8 @@ jobs:
         run: cargo test --verbose
       - name: format
         run: cargo fmt --check
+      - name: Run Clippy
+        run: cargo clippy --all-targets --all-features -- -D warnings
   build-nix:
     needs: rust_build_and_test
     runs-on: ubuntu-latest
@@ -33,16 +35,9 @@ jobs:
           nix_path: nixpkgs=channel:nixos-unstable
       - name: run build
         run: nix flake check
-  clippy_check:
-    needs: build-nix
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-      - name: Run Clippy
-        run: cargo clippy --all-targets --all-features -- -D warnings
   sonarqube:
     if: github.ref == 'refs/heads/main'
-    needs: clippy_check
+    needs: build-nix
     name: SonarQube
     runs-on: ubuntu-latest
     steps:
