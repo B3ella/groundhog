@@ -105,7 +105,7 @@ fn get_template(template_path: &str) -> String {
 }
 fn create_default_template(template_path: &str) {
     create_parent_dir(template_path);
-    default_template = "
+    let default_template = "
 This is the default groundhog template, edit it to match your needs
 ## Tasks
 !copy_tasks";
