@@ -96,7 +96,7 @@ fn read_file(path: &str) -> String {
     contents
 }
 
-fn get_template(template_path: &str) -> string {
+fn get_template(template_path: &str) -> String {
     let template_exists = fs::exists(template_path).expect("The file system is throwing an error?");
     if !template_exists {
         create_default_template(template_path);
