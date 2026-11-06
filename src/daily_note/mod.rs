@@ -7,6 +7,7 @@ use std::os::unix::fs as unix_fs;
 mod interpreter;
 use regex::Regex;
 use std::cmp;
+use std::path::PathBuf;
 
 pub fn symlink_daily_note(date: DateTime<Local>, config: &config::Config) {
     println!(
