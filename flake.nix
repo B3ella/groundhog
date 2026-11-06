@@ -17,8 +17,9 @@
           meta = with pkgs.lib; {
             description = "Templater for daily notes";
             homepage = "https://github.com/B3ella/groundhog";
-            license = licenses.unlicense;
-            maintainers = [ ];
+            license = licenses.mit;
+            maintainers = with lib.maintainers; [ b3ella ];
+            mainProgram = "groundhog";
           };
         };
 
