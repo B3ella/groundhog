@@ -68,8 +68,7 @@ fn read_file(path: &str) -> String {
 fn get_latest_note(path: &str) -> Option<String> {
     let files = fs::read_dir(path).ok()?;
     let paths = files.map(|file| {
-        file.ok()
-            .expect("File system error")
+        file.expect("File system error")
             .path()
             .to_string_lossy()
             .to_string()
