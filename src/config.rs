@@ -41,7 +41,7 @@ pub fn get_config(config_path: &str) -> Config {
             .get("archive_path")
             .unwrap_or(&default_config.archive_path),
     );
-    if ! archive_path.ends_with("/") {
+    if !archive_path.ends_with("/") {
         archive_path = archive_path + "/";
     }
 
