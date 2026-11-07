@@ -6,6 +6,7 @@ license = "MIT"
 description = "Daily note templating system"
 authors = ["b3ella"]
 readme = "readme.md"
+repository = "https://github.com/b3ella/groundhog"
 
 [dependencies]
 chrono = "0.4"
