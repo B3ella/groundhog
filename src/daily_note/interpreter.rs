@@ -151,4 +151,16 @@ mod tests {
         let output = process_tokens("# Tasks\n!copy_tasks", yesterday, date(2024, 1, 8));
         assert_eq!(output, "# Tasks\n- [ ] pending");
     }
+    #[test]
+    fn on_date_returns_content_on_date() {
+        let template = "on_date(01/01, test text)";
+        let output = process_tokens(template, "", date(2024, 1, 1));
+        assert_eq!(output, "test text");
+    }
+    #[test]
+    fn on_date_doesnt_return_on_wrong_date() {
+        let template = "no text\non_date(01/01, test text)";
+        let output = process_tokens(template, "", date(2024, 1, 2));
+        assert_eq!(output, "no text");
+    }
 }
