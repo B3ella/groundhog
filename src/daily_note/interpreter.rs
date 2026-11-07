@@ -26,6 +26,7 @@ fn process_token(
         "!copy_tasks" => get_section_text(current_section, yesterday, &vec!["- [x]"]),
         "!copy_last_day" => get_section_text(current_section, yesterday, &vec![]),
         "!by_weekday" => by_weekday(line, date),
+        "!on_date" => on_date(line, date),
         _ => line.to_string(),
     }
 }
@@ -74,6 +75,27 @@ fn should_skip(line: &str, dont_copy: &Vec<&str>) -> bool {
 }
 
 fn by_weekday(line: &str, date: DateTime<Local>) -> String {
+    let result = get_content_between_parentheses(line);
+    let content_by_day: Vec<&str> = result.split(";").collect();
+    let index = date.weekday().num_days_from_sunday();
+    let index = usize::try_from(index).expect("Cannot convert weekday to usize");
+    content_by_day[index].to_string()
+}
+
+fn on_date(line: &str, date: DateTime<Local>) -> String {
+    let result = get_content_between_parentheses(line);
+    let (date_expected, text) = result.split_once(", ").unwrap();
+
+    let month = date.month();
+    let day = date.day();
+    let date_real = format!("{:0>2}/{:0>2}", month, day);
+    if date_real == date_expected {
+        return text.to_string();
+    }
+    "".to_string()
+}
+
+fn get_content_between_parentheses(line: &str) -> String {
     let start_bytes = line
         .find("(")
         .expect("no opening brackets found in by weekday template line");
@@ -81,10 +103,7 @@ fn by_weekday(line: &str, date: DateTime<Local>) -> String {
         .find(")")
         .expect("no closing brackets found in by weekday template line");
     let result = &line[start_bytes + 1..end_bytes];
-    let content_by_day: Vec<&str> = result.split(";").collect();
-    let index = date.weekday().num_days_from_sunday();
-    let index = usize::try_from(index).expect("Cannot convert weekday to usize");
-    content_by_day[index].to_string()
+    result.to_string()
 }
 
 #[cfg(test)]
@@ -150,5 +169,17 @@ mod tests {
         let yesterday = "# Tasks\n- [x] done\n- [ ] pending\n# Other\n- unrelated";
         let output = process_tokens("# Tasks\n!copy_tasks", yesterday, date(2024, 1, 8));
         assert_eq!(output, "# Tasks\n- [ ] pending");
+    }
+    #[test]
+    fn on_date_returns_content_on_date() {
+        let template = "!on_date(01/01, test text)";
+        let output = process_tokens(template, "", date(2024, 1, 1));
+        assert_eq!(output, "test text");
+    }
+    #[test]
+    fn on_date_doesnt_return_on_wrong_date() {
+        let template = "no text\n!on_date(01/01, test text)";
+        let output = process_tokens(template, "", date(2024, 1, 2));
+        assert_eq!(output, "no text");
     }
 }
