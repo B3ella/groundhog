@@ -74,6 +74,14 @@ fn should_skip(line: &str, dont_copy: &Vec<&str>) -> bool {
 }
 
 fn by_weekday(line: &str, date: DateTime<Local>) -> String {
+    let result = get_content_between_parentheses(line);
+    let content_by_day: Vec<&str> = result.split(";").collect();
+    let index = date.weekday().num_days_from_sunday();
+    let index = usize::try_from(index).expect("Cannot convert weekday to usize");
+    content_by_day[index].to_string()
+}
+
+fn get_content_between_parentheses(line: &str){
     let start_bytes = line
         .find("(")
         .expect("no opening brackets found in by weekday template line");
@@ -81,10 +89,7 @@ fn by_weekday(line: &str, date: DateTime<Local>) -> String {
         .find(")")
         .expect("no closing brackets found in by weekday template line");
     let result = &line[start_bytes + 1..end_bytes];
-    let content_by_day: Vec<&str> = result.split(";").collect();
-    let index = date.weekday().num_days_from_sunday();
-    let index = usize::try_from(index).expect("Cannot convert weekday to usize");
-    content_by_day[index].to_string()
+    result
 }
 
 #[cfg(test)]
