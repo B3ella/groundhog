@@ -64,7 +64,7 @@ if you are using obsidian just turn on obsidians daily note plugin and configure
 > ### Warning
 > this assumes your vault is in ~/Notes if your vault is in any other dir, refer to the [configuration section](#configuration) and substitute ~/Notes for your vaults path
 
-![new file location](new_file_location.png)
+![new file location](imgs/new_file_location.png)
 
 Groundhog uses the same naming convention as obsidian for its daily notes. This means every daily note feature from obsidian will work (Open next daily note, open todays daily note and open previous daily note)
 
