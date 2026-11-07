@@ -95,7 +95,7 @@ fn on_date(line: &str, date: DateTime<Local>) -> String {
     "".to_string()
 }
 
-fn get_content_between_parentheses(line: &str) -> String{
+fn get_content_between_parentheses(line: &str) -> String {
     let start_bytes = line
         .find("(")
         .expect("no opening brackets found in by weekday template line");
