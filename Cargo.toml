@@ -1,5 +1,5 @@
 [package]
-name = "daily-note"
+name = "groundhog"
 version = "1.0.0"
 edition = "2021"
 
