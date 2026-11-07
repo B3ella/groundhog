@@ -6,7 +6,6 @@ license = "MIT"
 description = "Daily note templating system"
 authors = ["b3ella"]
 readme = "readme.md"
-license-file = "LICENSE"
 
 [dependencies]
 chrono = "0.4"
