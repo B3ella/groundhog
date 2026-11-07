@@ -43,7 +43,7 @@ By default grounghog will look for a template on the following path
 You can install with cargo using the following command.
 
 ```bash
-cargo install --git https://github.com/B3ella/groundhog
+cargo install marmota
 ```
 
 If you dont already have cargo just follow the [official guide to installing rust](https://rust-lang.org/tools/install/)

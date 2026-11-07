@@ -164,15 +164,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "773648b94d0e5d620f64f280777445740e61fe701025087ec8b57f45c791888b"
 
 [[package]]
-name = "daily-note"
-version = "1.0.0"
-dependencies = [
- "chrono",
- "clap",
- "regex",
-]
-
-[[package]]
 name = "find-msvc-tools"
 version = "0.1.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -260,6 +251,15 @@ name = "log"
 version = "0.4.35"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5d15f86d12da44cd8d4ec3c73984537eb7f4cadcb9776a575a0a8a05ca11005c"
+
+[[package]]
+name = "marmota"
+version = "1.0.1"
+dependencies = [
+ "chrono",
+ "clap",
+ "regex",
+]
 
 [[package]]
 name = "memchr"
