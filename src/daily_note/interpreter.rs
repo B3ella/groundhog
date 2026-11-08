@@ -90,7 +90,7 @@ fn on_date(line: &str, date: DateTime<Local>) -> String {
     let day = date.day();
     let date_real = format!("{:0>2}/{:0>2}", day, month);
     if date_real == date_expected.trim() {
-        return text.to_string().trim();
+        return text.trim().to_string();
     }
     "".to_string()
 }
