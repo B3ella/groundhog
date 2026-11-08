@@ -139,8 +139,8 @@ Completed taks are lines that start with:
 ```
 ### Weekday-specific content
 ```md
-!by_weekday[Deep work;Admin;Planning;Meetings;Follow-ups;Review;Reset]
-!by_weekday[Sunday;Monday;Tuesday;Wednesday;Thursday;Friday;Saturday]
+!by_weekday(Deep work;Admin;Planning;Meetings;Follow-ups;Review;Reset)
+!by_weekday(Sunday;Monday;Tuesday;Wednesday;Thursday;Friday;Saturday)
 ```
 
 This selects a value based on the current day of the week.
