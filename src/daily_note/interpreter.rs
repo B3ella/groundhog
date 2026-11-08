@@ -84,13 +84,13 @@ fn by_weekday(line: &str, date: DateTime<Local>) -> String {
 
 fn on_date(line: &str, date: DateTime<Local>) -> String {
     let result = get_content_between_parentheses(line);
-    let (date_expected, text) = result.split_once(", ").unwrap();
+    let (date_expected, text) = result.split_once(",").unwrap();
 
     let month = date.month();
     let day = date.day();
-    let date_real = format!("{:0>2}/{:0>2}", month, day);
-    if date_real == date_expected {
-        return text.to_string();
+    let date_real = format!("{:0>2}/{:0>2}", day, month);
+    if date_real == date_expected.trim() {
+        return text.to_string().trim();
     }
     "".to_string()
 }
