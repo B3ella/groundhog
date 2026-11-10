@@ -58,7 +58,6 @@ fn get_content(line: &str, current_section: &str) -> TemplateLine {
             TemplateLine::OnDate(MonthDay { month, day }, text.trim().to_string())
         }
         _ => TemplateLine::Literal(line.to_string())
-        }
     }
 }
 fn get_token(line: &str) -> String {
