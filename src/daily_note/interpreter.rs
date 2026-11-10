@@ -15,7 +15,7 @@ pub fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) ->
         if line.is_header {
             current_section = line.content.to_string();
         }
-        result += &process_token(&line.content, yesterday, current_section, date);
+        result += &process_token(&line.content, yesterday, &current_section, date);
         result += "\n";
     }
     result.trim().to_string()
