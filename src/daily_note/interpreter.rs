@@ -180,7 +180,7 @@ mod tests {
         for (year, month, day, value) in expected {
             assert_eq!(
                 by_weekday(
-                    "!by_weekday(Sunday;Monday;Tuesday;Wednesday;Thursday;Friday;Saturday)",
+                    ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
                     date(year, month, day)
                 ),
                 value
