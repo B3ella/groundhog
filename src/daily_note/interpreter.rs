@@ -22,8 +22,8 @@ pub fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) ->
     let mut current_section = "".to_string();
     let template = get_template(template);
     for line in template {
-        if let Content::literal(text) = line.content && line.is_header {
-            current_section = text.clone();
+        if let Content::literal(ref text) = line.content && line.is_header {
+            current_section = text.to_string();
         }
         result += &process_token(&line.content, yesterday, &current_section, date);
         result += "\n";
