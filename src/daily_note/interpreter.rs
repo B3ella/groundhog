@@ -82,8 +82,8 @@ fn process_token(
     date: DateTime<Local>,
 ) -> String {
     match content {
-        TemplateLine::CopyTasks => get_section_text(current_section, yesterday, &vec!["- [x]"]),
-        TemplateLine::CopyLastDay => get_section_text(current_section, yesterday, &vec![]),
+        TemplateLine::CopyTasks => copy_tasks(yesterday, current_section),
+        TemplateLine::CopyLastDay => get_section_text(current_section, yesterday),
         TemplateLine::ByWeekday(content_by_day) => by_weekday(content_by_day, date),
         TemplateLine::OnDate(expected_date, text) => on_date(expected_date, text, date),
         TemplateLine::Literal(literal) => literal.to_string(),
@@ -91,17 +91,20 @@ fn process_token(
     }
 }
 
-fn get_section_text(section: &str, yesterday: &str, dont_copy: &Vec<&str>) -> String {
+fn copy_tasks(yesterday: &str, current_section: &str) -> String {
+    get_section_text(current_section, yesterday)
+    .lines().filter(|line| !line.starts_with("- [x]"))
+    .collect::<Vec<_>>().join("\n")
+}
+
+fn get_section_text(section: &str, yesterday: &str) -> String {
     let mut result = "".to_string();
     let mut copy = false;
 
     let header_end = section.find(" ").unwrap();
     let header = &section[..header_end + 1];
 
-    let lines = yesterday
-        .lines()
-        .filter(|line| !should_skip(line, dont_copy));
-    for line in lines {
+    for line in yesterday.lines() {
         if line.starts_with(header) {
             copy = false;
         }
@@ -127,15 +130,6 @@ fn on_date(expected_date: &MonthDay, text: &str, real_date: DateTime<Local>) -> 
         return text.to_string();
     }
     "".to_string()
-}
-
-fn should_skip(line: &str, dont_copy: &Vec<&str>) -> bool {
-    for token in dont_copy {
-        if line.starts_with(token) {
-            return true;
-        }
-    }
-    false
 }
 
 fn get_content_between_parentheses(line: &str) -> String {
