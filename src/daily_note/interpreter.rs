@@ -13,7 +13,7 @@ pub fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) ->
     let template = get_template(template);
     for line in template {
         if line.is_header {
-            current_section = line.content.to_string();
+            current_section = &line.content.to_string();
         }
         result += &process_token(&line.content, yesterday, current_section, date);
         result += "\n";
