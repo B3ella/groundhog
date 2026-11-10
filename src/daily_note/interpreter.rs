@@ -85,7 +85,6 @@ fn get_content_between_parentheses(line: &str) -> String {
     result.to_string()
 }
 
-
 fn process_token(
     content: &TemplateLine,
     yesterday: &str,
@@ -104,8 +103,10 @@ fn process_token(
 
 fn copy_tasks(yesterday: &str, current_section: &str) -> String {
     get_section_text(current_section, yesterday)
-    .lines().filter(|line| !line.starts_with("- [x]"))
-    .collect::<Vec<_>>().join("\n")
+        .lines()
+        .filter(|line| !line.starts_with("- [x]"))
+        .collect::<Vec<_>>()
+        .join("\n")
 }
 
 fn get_section_text(section: &str, yesterday: &str) -> String {
