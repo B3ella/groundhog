@@ -1,17 +1,35 @@
 use chrono::{DateTime, Datelike, Local};
 
+type Template = Vec<TemplateLine>;
+struct TemplateLine {
+    content: String,
+    is_header: bool,
+}
+
 pub fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) -> String {
     let mut result = "".to_string();
-    let mut current_section = "";
-    for line in template.lines() {
-        let is_header = line.starts_with("#");
-        if is_header {
-            current_section = line;
+    let mut current_section = "".to_string();
+    let template = get_template(template);
+    for line in template {
+        if line.is_header {
+            current_section = line.content.to_string();
         }
-        result += &process_token(line, yesterday, current_section, date);
+        result += &process_token(&line.content, yesterday, &current_section, date);
         result += "\n";
     }
     result.trim().to_string()
+}
+
+fn get_template(template: &str) -> Template {
+    let mut result = vec![];
+    for line in template.lines() {
+        let is_header = line.starts_with("#");
+        result.push(TemplateLine {
+            content: line.to_string(),
+            is_header,
+        });
+    }
+    result
 }
 
 fn process_token(
