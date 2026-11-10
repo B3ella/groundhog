@@ -87,7 +87,7 @@ fn process_token(
         Content::copy_last_day => get_section_text(current_section, yesterday, &vec![]),
         Content::by_weekday(content_by_day) => by_weekday(content_by_day, date),
         Content::on_date(expectedDate, text) => on_date(expectedDate, text, date),
-        Content::literal(literal) => literal,
+        Content::literal(literal) => literal.to_string(),
     }
 }
 
