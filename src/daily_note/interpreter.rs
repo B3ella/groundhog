@@ -35,11 +35,11 @@ fn get_template(template: &str) -> Template {
     }
     result
 }
-fn get_content(line: &str, current_section: &str) -> TemplateLine {
+fn get_content(line: &str, current_section: String) -> TemplateLine {
     let token = get_token(line);
     match token.as_str() {
-        "!copy_tasks" => TemplateLine::CopyTasks(current_section.to_string()),
-        "!copy_last_day" => TemplateLine::CopyLastDay(current_section.to_string()),
+        "!copy_tasks" => TemplateLine::CopyTasks(current_section),
+        "!copy_last_day" => TemplateLine::CopyLastDay(current_section),
         "!by_weekday" => {
             let result = get_content_between_parentheses(line);
             let content_by_day: Vec<String> = result.split(";").map(|s| s.to_string()).collect();
