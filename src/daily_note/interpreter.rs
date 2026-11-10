@@ -85,7 +85,7 @@ fn process_token(
         TemplateLine::CopyTasks => get_section_text(current_section, yesterday, &vec!["- [x]"]),
         TemplateLine::CopyLastDay => get_section_text(current_section, yesterday, &vec![]),
         TemplateLine::ByWeekday(content_by_day) => by_weekday(content_by_day, date),
-        TemplateLine::OnDate(expectedDate, text) => on_date(expectedDate, text, date),
+        TemplateLine::OnDate(expected_date, text) => on_date(expected_date, text, date),
         TemplateLine::Literal(literal) => literal.to_string(),
         TemplateLine::Heading(heading) => heading.to_string(),
     }
@@ -122,8 +122,8 @@ fn by_weekday(content_by_day: &[String; 7], date: DateTime<Local>) -> String {
     content_by_day[index].to_string()
 }
 
-fn on_date(expectedDate: &MonthDay, text: &str, realDate: DateTime<Local>) -> String {
-    if realDate.month() == expectedDate.month && realDate.day() == expectedDate.day {
+fn on_date(expected_date: &MonthDay, text: &str, real_date: DateTime<Local>) -> String {
+    if real_date.month() == expected_date.month && real_date.day() == expected_date.day {
         return text.to_string();
     }
     "".to_string()
