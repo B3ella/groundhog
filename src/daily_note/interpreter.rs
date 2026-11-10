@@ -31,15 +31,15 @@ fn get_template(template: &str) -> Template {
         if line.starts_with("#") {
             current_section = line.to_string()
         }
-        result.push(get_content(line, current_section));
+        result.push(get_content(line, &current_section));
     }
     result
 }
-fn get_content(line: &str, current_section: String) -> TemplateLine {
+fn get_content(line: &str, current_section: &str) -> TemplateLine {
     let token = get_token(line);
     match token.as_str() {
-        "!copy_tasks" => TemplateLine::CopyTasks(current_section),
-        "!copy_last_day" => TemplateLine::CopyLastDay(current_section),
+        "!copy_tasks" => TemplateLine::CopyTasks(current_section.to_string()),
+        "!copy_last_day" => TemplateLine::CopyLastDay(current_section.to_string()),
         "!by_weekday" => {
             let result = get_content_between_parentheses(line);
             let content_by_day: Vec<String> = result.split(";").map(|s| s.to_string()).collect();
