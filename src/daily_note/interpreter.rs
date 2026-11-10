@@ -2,12 +2,12 @@ use chrono::{DateTime, Datelike, Local};
 
 type Template = Vec<TemplateLine>;
 enum TemplateLine {
-    copy_tasks,
-    copy_last_day,
-    by_weekday([String; 7]),
-    on_date(MonthDay, String),
-    literal(String),
-    heading(String),
+    CopyTasks,
+    CopyLastDay,
+    ByWeekday([String; 7]),
+    OnDate(MonthDay, String),
+    Literal(String),
+    Heading(String),
 }
 struct MonthDay {
     month: u32,
@@ -19,7 +19,7 @@ pub fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) ->
     let mut current_section = "".to_string();
     let template = get_template(template);
     for line in template {
-        if let TemplateLine::heading(ref text) = line {
+        if let TemplateLine::Heading(ref text) = line {
             current_section = text.to_string();
         }
         result += &process_token(&line, yesterday, &current_section, date);
@@ -38,13 +38,13 @@ fn get_template(template: &str) -> Template {
 fn get_content(line: &str) -> TemplateLine {
     let token = get_token(line);
     match token.as_str() {
-        "!copy_tasks" => TemplateLine::copy_tasks,
-        "!copy_last_day" => TemplateLine::copy_last_day,
+        "!copy_tasks" => TemplateLine::CopyTasks,
+        "!copy_last_day" => TemplateLine::CopyLastDay,
         "!by_weekday" => {
             let result = get_content_between_parentheses(line);
             let content_by_day: Vec<String> = result.split(";").map(|s| s.to_string()).collect();
             let content_by_day: [String; 7] = content_by_day.try_into().expect("Expected 7 days");
-            TemplateLine::by_weekday(content_by_day)
+            TemplateLine::ByWeekday(content_by_day)
         }
         "!on_date" => {
             let result = get_content_between_parentheses(line);
@@ -55,13 +55,13 @@ fn get_content(line: &str) -> TemplateLine {
                 .expect("Expected month/day format");
             let month: u32 = month.parse().expect("Expected month to be a number");
             let day: u32 = day.parse().expect("Expected day to be a number");
-            TemplateLine::on_date(MonthDay { month, day }, text.trim().to_string())
+            TemplateLine::OnDate(MonthDay { month, day }, text.trim().to_string())
         }
         _ => {
             if line.starts_with("#") {
-                TemplateLine::heading(line.to_string())
+                TemplateLine::Heading(line.to_string())
             } else {
-                TemplateLine::literal(line.to_string())
+                TemplateLine::Literal(line.to_string())
             }
         }
     }
@@ -82,12 +82,12 @@ fn process_token(
     date: DateTime<Local>,
 ) -> String {
     match content {
-        TemplateLine::copy_tasks => get_section_text(current_section, yesterday, &vec!["- [x]"]),
-        TemplateLine::copy_last_day => get_section_text(current_section, yesterday, &vec![]),
-        TemplateLine::by_weekday(content_by_day) => by_weekday(content_by_day, date),
-        TemplateLine::on_date(expectedDate, text) => on_date(expectedDate, text, date),
-        TemplateLine::literal(literal) => literal.to_string(),
-        TemplateLine::heading(heading) => heading.to_string(),
+        TemplateLine::CopyTasks => get_section_text(current_section, yesterday, &vec!["- [x]"]),
+        TemplateLine::CopyLastDay => get_section_text(current_section, yesterday, &vec![]),
+        TemplateLine::ByWeekday(content_by_day) => by_weekday(content_by_day, date),
+        TemplateLine::OnDate(expectedDate, text) => on_date(expectedDate, text, date),
+        TemplateLine::Literal(literal) => literal.to_string(),
+        TemplateLine::Heading(heading) => heading.to_string(),
     }
 }
 
