@@ -9,11 +9,11 @@ struct TemplateLine {
 
 pub fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) -> String {
     let mut result = "".to_string();
-    let mut current_section = "";
+    let mut current_section = "".to_string();
     let template = get_template(template);
     for line in template {
         if line.is_header {
-            current_section = &line.content.to_string();
+            current_section = line.content.to_string();
         }
         result += &process_token(&line.content, yesterday, current_section, date);
         result += "\n";
