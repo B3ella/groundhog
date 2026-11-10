@@ -57,11 +57,13 @@ fn get_content(line: &str) -> TemplateLine {
             let day: u32 = day.parse().expect("Expected day to be a number");
             TemplateLine::on_date(MonthDay { month, day }, text.trim().to_string())
         }
-        _ => if line.starts_with("#") {
-            TemplateLine::heading(line.to_string())
-        } else {
-            TemplateLine::literal(line.to_string())
-        },
+        _ => {
+            if line.starts_with("#") {
+                TemplateLine::heading(line.to_string())
+            } else {
+                TemplateLine::literal(line.to_string())
+            }
+        }
     }
 }
 fn get_token(line: &str) -> String {
