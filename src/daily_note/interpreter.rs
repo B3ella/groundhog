@@ -1,7 +1,7 @@
 use chrono::{DateTime, Datelike, Local};
 
 type Template = Vec<TemplateLine>;
-struct TemplateLine {
+enum TemplateLine {
     copy_tasks,
     copy_last_day,
     by_weekday([String; 7]),
