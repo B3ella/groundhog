@@ -1,9 +1,17 @@
 use chrono::{DateTime, Datelike, Local};
 
 type Template = Vec<TemplateLine>;
-struct TemplateLine {
-    content: String,
-    is_header: bool,
+enum TemplateLine {
+    CopyTasks,
+    CopyLastDay,
+    ByWeekday([String; 7]),
+    OnDate(MonthDay, String),
+    Literal(String),
+    Heading(String),
+}
+struct MonthDay {
+    month: u32,
+    day: u32,
 }
 
 pub fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) -> String {
@@ -11,10 +19,10 @@ pub fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) ->
     let mut current_section = "".to_string();
     let template = get_template(template);
     for line in template {
-        if line.is_header {
-            current_section = line.content.to_string();
+        if let TemplateLine::Heading(ref text) = line {
+            current_section = text.to_string();
         }
-        result += &process_token(&line.content, yesterday, &current_section, date);
+        result += &process_token(&line, yesterday, &current_section, date);
         result += "\n";
     }
     result.trim().to_string()
@@ -23,32 +31,41 @@ pub fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) ->
 fn get_template(template: &str) -> Template {
     let mut result = vec![];
     for line in template.lines() {
-        let is_header = line.starts_with("#");
-        result.push(TemplateLine {
-            content: line.to_string(),
-            is_header,
-        });
+        result.push(get_content(line));
     }
     result
 }
-
-fn process_token(
-    line: &str,
-    yesterday: &str,
-    current_section: &str,
-    date: DateTime<Local>,
-) -> String {
-    let binding = get_token(line);
-    let token = binding.as_str();
-    match token {
-        "!copy_tasks" => get_section_text(current_section, yesterday, &vec!["- [x]"]),
-        "!copy_last_day" => get_section_text(current_section, yesterday, &vec![]),
-        "!by_weekday" => by_weekday(line, date),
-        "!on_date" => on_date(line, date),
-        _ => line.to_string(),
+fn get_content(line: &str) -> TemplateLine {
+    let token = get_token(line);
+    match token.as_str() {
+        "!copy_tasks" => TemplateLine::CopyTasks,
+        "!copy_last_day" => TemplateLine::CopyLastDay,
+        "!by_weekday" => {
+            let result = get_content_between_parentheses(line);
+            let content_by_day: Vec<String> = result.split(";").map(|s| s.to_string()).collect();
+            let content_by_day: [String; 7] = content_by_day.try_into().expect("Expected 7 days");
+            TemplateLine::ByWeekday(content_by_day)
+        }
+        "!on_date" => {
+            let result = get_content_between_parentheses(line);
+            let (date_expected, text) = result.split_once(",").unwrap();
+            let (month, day) = date_expected
+                .trim()
+                .split_once("/")
+                .expect("Expected month/day format");
+            let month: u32 = month.parse().expect("Expected month to be a number");
+            let day: u32 = day.parse().expect("Expected day to be a number");
+            TemplateLine::OnDate(MonthDay { month, day }, text.trim().to_string())
+        }
+        _ => {
+            if line.starts_with("#") {
+                TemplateLine::Heading(line.to_string())
+            } else {
+                TemplateLine::Literal(line.to_string())
+            }
+        }
     }
 }
-
 fn get_token(line: &str) -> String {
     let token_end = line.find("(");
     let token = match token_end {
@@ -56,6 +73,22 @@ fn get_token(line: &str) -> String {
         None => line,
     };
     token.to_string()
+}
+
+fn process_token(
+    content: &TemplateLine,
+    yesterday: &str,
+    current_section: &str,
+    date: DateTime<Local>,
+) -> String {
+    match content {
+        TemplateLine::CopyTasks => get_section_text(current_section, yesterday, &vec!["- [x]"]),
+        TemplateLine::CopyLastDay => get_section_text(current_section, yesterday, &vec![]),
+        TemplateLine::ByWeekday(content_by_day) => by_weekday(content_by_day, date),
+        TemplateLine::OnDate(expected_date, text) => on_date(expected_date, text, date),
+        TemplateLine::Literal(literal) => literal.to_string(),
+        TemplateLine::Heading(heading) => heading.to_string(),
+    }
 }
 
 fn get_section_text(section: &str, yesterday: &str, dont_copy: &Vec<&str>) -> String {
@@ -83,6 +116,19 @@ fn get_section_text(section: &str, yesterday: &str, dont_copy: &Vec<&str>) -> St
     result.trim().to_string()
 }
 
+fn by_weekday(content_by_day: &[String; 7], date: DateTime<Local>) -> String {
+    let index = date.weekday().num_days_from_sunday();
+    let index = usize::try_from(index).expect("Cannot convert weekday to usize");
+    content_by_day[index].to_string()
+}
+
+fn on_date(expected_date: &MonthDay, text: &str, real_date: DateTime<Local>) -> String {
+    if real_date.month() == expected_date.month && real_date.day() == expected_date.day {
+        return text.to_string();
+    }
+    "".to_string()
+}
+
 fn should_skip(line: &str, dont_copy: &Vec<&str>) -> bool {
     for token in dont_copy {
         if line.starts_with(token) {
@@ -90,27 +136,6 @@ fn should_skip(line: &str, dont_copy: &Vec<&str>) -> bool {
         }
     }
     false
-}
-
-fn by_weekday(line: &str, date: DateTime<Local>) -> String {
-    let result = get_content_between_parentheses(line);
-    let content_by_day: Vec<&str> = result.split(";").collect();
-    let index = date.weekday().num_days_from_sunday();
-    let index = usize::try_from(index).expect("Cannot convert weekday to usize");
-    content_by_day[index].to_string()
-}
-
-fn on_date(line: &str, date: DateTime<Local>) -> String {
-    let result = get_content_between_parentheses(line);
-    let (date_expected, text) = result.split_once(",").unwrap();
-
-    let month = date.month();
-    let day = date.day();
-    let date_real = format!("{:0>2}/{:0>2}", day, month);
-    if date_real == date_expected.trim() {
-        return text.trim().to_string();
-    }
-    "".to_string()
 }
 
 fn get_content_between_parentheses(line: &str) -> String {
@@ -151,7 +176,15 @@ mod tests {
         for (year, month, day, value) in expected {
             assert_eq!(
                 by_weekday(
-                    "!by_weekday(Sunday;Monday;Tuesday;Wednesday;Thursday;Friday;Saturday)",
+                    &[
+                        "Sunday".to_string(),
+                        "Monday".to_string(),
+                        "Tuesday".to_string(),
+                        "Wednesday".to_string(),
+                        "Thursday".to_string(),
+                        "Friday".to_string(),
+                        "Saturday".to_string()
+                    ],
                     date(year, month, day)
                 ),
                 value
