@@ -57,7 +57,7 @@ fn get_content(line: &str, current_section: &str) -> TemplateLine {
             let day: u32 = day.parse().expect("Expected day to be a number");
             TemplateLine::OnDate(MonthDay { month, day }, text.trim().to_string())
         }
-        _ => TemplateLine::Literal(line.to_string())
+        _ => TemplateLine::Literal(line.to_string()),
     }
 }
 fn get_token(line: &str) -> String {
@@ -79,11 +79,7 @@ fn get_content_between_parentheses(line: &str) -> String {
     result.to_string()
 }
 
-fn process_token(
-    content: &TemplateLine,
-    yesterday: &str,
-    date: DateTime<Local>,
-) -> String {
+fn process_token(content: &TemplateLine, yesterday: &str, date: DateTime<Local>) -> String {
     match content {
         TemplateLine::CopyTasks(section) => copy_tasks(yesterday, section),
         TemplateLine::CopyLastDay(section) => get_section_text(section, yesterday),
