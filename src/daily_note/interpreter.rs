@@ -68,6 +68,15 @@ fn get_content(line: &str) -> Content {
         _ => Content::literal(line.to_string()),
     }
 }
+fn get_token(line: &str) -> String {
+    let token_end = line.find("(");
+    let token = match token_end {
+        Some(token_end) => line[..token_end].trim(),
+        None => line,
+    };
+    token.to_string()
+}
+
 
 fn process_token(
     content: &Content,
@@ -78,32 +87,10 @@ fn process_token(
     match content {
         Content::copy_tasks => get_section_text(current_section, yesterday, &vec!["- [x]"]),
         Content::copy_last_day => get_section_text(current_section, yesterday, &vec![]),
-        Content::by_weekday(content_by_day) => by_weekday_content(content_by_day, date),
-        Content::on_date(expectedDate, text) => on_date_content(expectedDate, text, date),
+        Content::by_weekday(content_by_day) => by_weekday(content_by_day, date),
+        Content::on_date(expectedDate, text) => on_date(expectedDate, text, date),
         Content::literal(literal) => literal,
     }
-}
-
-fn by_weekday_content(content_by_day: [String; 7], date: DateTime<Local>) -> String {
-    let index = date.weekday().num_days_from_sunday();
-    let index = usize::try_from(index).expect("Cannot convert weekday to usize");
-    content_by_day[index].to_string()
-}
-
-fn on_date_content(expectedDate: MonthDay, text: String, realDate: DateTime<Local>) -> String {
-    if realDate.month == expectedDate.month && realDate.day == expectedDate.day {
-        return text;
-    }
-    "".to_string()
-}
-
-fn get_token(line: &str) -> String {
-    let token_end = line.find("(");
-    let token = match token_end {
-        Some(token_end) => line[..token_end].trim(),
-        None => line,
-    };
-    token.to_string()
 }
 
 fn get_section_text(section: &str, yesterday: &str, dont_copy: &Vec<&str>) -> String {
@@ -131,6 +118,20 @@ fn get_section_text(section: &str, yesterday: &str, dont_copy: &Vec<&str>) -> St
     result.trim().to_string()
 }
 
+
+fn by_weekday(content_by_day: [String; 7], date: DateTime<Local>) -> String {
+    let index = date.weekday().num_days_from_sunday();
+    let index = usize::try_from(index).expect("Cannot convert weekday to usize");
+    content_by_day[index].to_string()
+}
+
+fn on_date(expectedDate: MonthDay, text: String, realDate: DateTime<Local>) -> String {
+    if realDate.month == expectedDate.month && realDate.day == expectedDate.day {
+        return text;
+    }
+    "".to_string()
+}
+
 fn should_skip(line: &str, dont_copy: &Vec<&str>) -> bool {
     for token in dont_copy {
         if line.starts_with(token) {
@@ -140,26 +141,6 @@ fn should_skip(line: &str, dont_copy: &Vec<&str>) -> bool {
     false
 }
 
-fn by_weekday(line: &str, date: DateTime<Local>) -> String {
-    let result = get_content_between_parentheses(line);
-    let content_by_day: Vec<&str> = result.split(";").collect();
-    let index = date.weekday().num_days_from_sunday();
-    let index = usize::try_from(index).expect("Cannot convert weekday to usize");
-    content_by_day[index].to_string()
-}
-
-fn on_date(line: &str, date: DateTime<Local>) -> String {
-    let result = get_content_between_parentheses(line);
-    let (date_expected, text) = result.split_once(",").unwrap();
-
-    let month = date.month();
-    let day = date.day();
-    let date_real = format!("{:0>2}/{:0>2}", day, month);
-    if date_real == date_expected.trim() {
-        return text.trim().to_string();
-    }
-    "".to_string()
-}
 
 fn get_content_between_parentheses(line: &str) -> String {
     let start_bytes = line
