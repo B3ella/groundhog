@@ -174,7 +174,7 @@ mod tests {
         for (year, month, day, value) in expected {
             assert_eq!(
                 by_weekday(
-                    [
+                    &[
                         "Sunday".to_string(),
                         "Monday".to_string(),
                         "Tuesday".to_string(),
