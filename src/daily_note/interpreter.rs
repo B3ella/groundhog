@@ -2,9 +2,21 @@ use chrono::{DateTime, Datelike, Local};
 
 type Template = Vec<TemplateLine>;
 struct TemplateLine {
-    content: String,
+    content: Content,
     is_header: bool,
 }
+enum Content {
+    copy_tasks,
+    copy_last_day,
+    by_weekday([String; 7]),
+    on_date(MonthDay, String),
+    literal(String),
+}
+struct MonthDay {
+    month: u32,
+    day: u32,
+}
+
 
 pub fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) -> String {
     let mut result = "".to_string();
@@ -25,28 +37,64 @@ fn get_template(template: &str) -> Template {
     for line in template.lines() {
         let is_header = line.starts_with("#");
         result.push(TemplateLine {
-            content: line.to_string(),
+            content: get_content(line),
             is_header,
         });
     }
     result
 }
+fn get_content(line: &str) -> Content {
+    let token = get_token(line);
+    match token.as_str() {
+        "!copy_tasks" => Content::copy_tasks,
+        "!copy_last_day" => Content::copy_last_day,
+        "!by_weekday" => {
+            let result = get_content_between_parentheses(line);
+            let content_by_day: Vec<String> = result.split(";").map(|s| s.to_string()).collect();
+            let content_by_day: [String; 7] = content_by_day.try_into().expect("Expected 7 days");
+            Content::by_weekday(content_by_day)
+        }
+        "!on_date" => {
+            let result = get_content_between_parentheses(line);
+            let (date_expected, text) = result.split_once(",").unwrap();
+            let (month, day) = date_expected
+                .trim()
+                .split_once("/")
+                .expect("Expected month/day format");
+            let month: u32 = month.parse().expect("Expected month to be a number");
+            let day: u32 = day.parse().expect("Expected day to be a number");
+            Content::on_date(MonthDay { month, day }, text.trim().to_string())
+        }
+        _ => Content::literal(line.to_string()),
+    }
+}
 
 fn process_token(
-    line: &str,
+    content: &Content,
     yesterday: &str,
     current_section: &str,
     date: DateTime<Local>,
 ) -> String {
-    let binding = get_token(line);
-    let token = binding.as_str();
-    match token {
-        "!copy_tasks" => get_section_text(current_section, yesterday, &vec!["- [x]"]),
-        "!copy_last_day" => get_section_text(current_section, yesterday, &vec![]),
-        "!by_weekday" => by_weekday(line, date),
-        "!on_date" => on_date(line, date),
-        _ => line.to_string(),
+    match content {
+        Content::copy_tasks => get_section_text(current_section, yesterday, &vec!["- [x]"]),
+        Content::copy_last_day => get_section_text(current_section, yesterday, &vec![]),
+        Content::by_weekday(content_by_day) => by_weekday_content(content_by_day, date),
+        Content::on_date(expectedDate, text) => on_date_content(expectedDate, text, date),
+        Content::literal(literal) => literal,
     }
+}
+
+fn by_weekday_content(content_by_day: [String; 7], date: DateTime<Local>) -> String {
+    let index = date.weekday().num_days_from_sunday();
+    let index = usize::try_from(index).expect("Cannot convert weekday to usize");
+    content_by_day[index].to_string()
+}
+
+fn on_date_content(expectedDate: MonthDay, text: String, realDate: DateTime<Local>) -> String {
+    if realDate.month == expectedDate.month && realDate.day == expectedDate.day {
+        return text;
+    }
+    "".to_string()
 }
 
 fn get_token(line: &str) -> String {
