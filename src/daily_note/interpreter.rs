@@ -4,7 +4,6 @@ type Template = Vec<TemplateLine>;
 struct TemplateLine {
     content: String,
     is_header: bool,
-    is_token: bool,
 }
 
 pub fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) -> String {
