@@ -124,7 +124,7 @@ fn by_weekday(content_by_day: &[String; 7], date: DateTime<Local>) -> String {
 
 fn on_date(expectedDate: &MonthDay, text: &str, realDate: DateTime<Local>) -> String {
     if realDate.month() == expectedDate.month && realDate.day() == expectedDate.day {
-        return text;
+        return text.to_string();
     }
     "".to_string()
 }
