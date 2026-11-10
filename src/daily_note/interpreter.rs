@@ -24,11 +24,9 @@ fn get_template(template: &str) -> Template {
     let mut result = vec![];
     for line in template.lines() {
         let is_header = line.starts_with("#");
-        let is_token = line.starts_with("!");
         result.push(TemplateLine {
             content: line.to_string(),
             is_header,
-            is_token,
         });
     }
     result
