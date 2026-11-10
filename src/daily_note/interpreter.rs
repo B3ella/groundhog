@@ -116,14 +116,14 @@ fn get_section_text(section: &str, yesterday: &str, dont_copy: &Vec<&str>) -> St
     result.trim().to_string()
 }
 
-fn by_weekday(content_by_day: [String; 7], date: DateTime<Local>) -> String {
+fn by_weekday(content_by_day: &[String; 7], date: DateTime<Local>) -> String {
     let index = date.weekday().num_days_from_sunday();
     let index = usize::try_from(index).expect("Cannot convert weekday to usize");
     content_by_day[index].to_string()
 }
 
-fn on_date(expectedDate: MonthDay, text: String, realDate: DateTime<Local>) -> String {
-    if realDate.month == expectedDate.month && realDate.day == expectedDate.day {
+fn on_date(expectedDate: &MonthDay, text: &str, realDate: DateTime<Local>) -> String {
+    if realDate.month() == expectedDate.month && realDate.day() == expectedDate.day {
         return text;
     }
     "".to_string()
