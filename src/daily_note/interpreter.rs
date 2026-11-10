@@ -17,7 +17,6 @@ struct MonthDay {
     day: u32,
 }
 
-
 pub fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) -> String {
     let mut result = "".to_string();
     let mut current_section = "".to_string();
@@ -77,7 +76,6 @@ fn get_token(line: &str) -> String {
     token.to_string()
 }
 
-
 fn process_token(
     content: &Content,
     yesterday: &str,
@@ -118,7 +116,6 @@ fn get_section_text(section: &str, yesterday: &str, dont_copy: &Vec<&str>) -> St
     result.trim().to_string()
 }
 
-
 fn by_weekday(content_by_day: [String; 7], date: DateTime<Local>) -> String {
     let index = date.weekday().num_days_from_sunday();
     let index = usize::try_from(index).expect("Cannot convert weekday to usize");
@@ -140,7 +137,6 @@ fn should_skip(line: &str, dont_copy: &Vec<&str>) -> bool {
     }
     false
 }
-
 
 fn get_content_between_parentheses(line: &str) -> String {
     let start_bytes = line
@@ -180,7 +176,15 @@ mod tests {
         for (year, month, day, value) in expected {
             assert_eq!(
                 by_weekday(
-                    ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+                    [
+                        "Sunday",
+                        "Monday",
+                        "Tuesday",
+                        "Wednesday",
+                        "Thursday",
+                        "Friday",
+                        "Saturday"
+                    ],
                     date(year, month, day)
                 ),
                 value
