@@ -175,13 +175,13 @@ mod tests {
             assert_eq!(
                 by_weekday(
                     [
-                        "Sunday",
-                        "Monday",
-                        "Tuesday",
-                        "Wednesday",
-                        "Thursday",
-                        "Friday",
-                        "Saturday"
+                        "Sunday".to_string(),
+                        "Monday".to_string(),
+                        "Tuesday".to_string(),
+                        "Wednesday".to_string(),
+                        "Thursday".to_string(),
+                        "Friday".to_string(),
+                        "Saturday".to_string()
                     ],
                     date(year, month, day)
                 ),
