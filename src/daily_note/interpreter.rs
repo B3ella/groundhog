@@ -74,6 +74,17 @@ fn get_token(line: &str) -> String {
     };
     token.to_string()
 }
+fn get_content_between_parentheses(line: &str) -> String {
+    let start_bytes = line
+        .find("(")
+        .expect("no opening brackets found in by weekday template line");
+    let end_bytes = line
+        .find(")")
+        .expect("no closing brackets found in by weekday template line");
+    let result = &line[start_bytes + 1..end_bytes];
+    result.to_string()
+}
+
 
 fn process_token(
     content: &TemplateLine,
@@ -130,17 +141,6 @@ fn on_date(expected_date: &MonthDay, text: &str, real_date: DateTime<Local>) -> 
         return text.to_string();
     }
     "".to_string()
-}
-
-fn get_content_between_parentheses(line: &str) -> String {
-    let start_bytes = line
-        .find("(")
-        .expect("no opening brackets found in by weekday template line");
-    let end_bytes = line
-        .find(")")
-        .expect("no closing brackets found in by weekday template line");
-    let result = &line[start_bytes + 1..end_bytes];
-    result.to_string()
 }
 
 #[cfg(test)]
