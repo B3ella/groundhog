@@ -19,10 +19,10 @@ pub fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) ->
     let mut current_section = "".to_string();
     let template = get_template(template);
     for line in template {
-        if let TemplateLine::heading(ref text) = line.content {
+        if let TemplateLine::heading(ref text) = line {
             current_section = text.to_string();
         }
-        result += &process_token(&line.content, yesterday, &current_section, date);
+        result += &process_token(&line, yesterday, &current_section, date);
         result += "\n";
     }
     result.trim().to_string()
@@ -31,9 +31,7 @@ pub fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) ->
 fn get_template(template: &str) -> Template {
     let mut result = vec![];
     for line in template.lines() {
-        result.push(TemplateLine {
-            content: get_content(line),
-        });
+        result.push(get_content(line));
     }
     result
 }
