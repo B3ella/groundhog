@@ -98,25 +98,20 @@ fn copy_tasks(yesterday: &str, current_section: &str) -> String {
 }
 
 fn get_section_text(section: &str, yesterday: &str) -> String {
-    let mut result = "".to_string();
-    let mut copy = false;
+    let section_start = match yesterday.find(section) {
+        Some(v) => v + section.len(),
+        None => return "".to_string(),
+    };
 
     let header_end = section.find(" ").unwrap();
-    let header = &section[..header_end + 1];
+    let header = "\n".to_string()+&section[..header_end + 1];
+    let section_end = match yesterday[section_start..].find(&header) {
+        None => yesterday.len(),
+        Some(v) => v + section_start,
+    };
 
-    for line in yesterday.lines() {
-        if line.starts_with(header) {
-            copy = false;
-        }
-        if copy {
-            result += line;
-            result += "\n";
-        }
-        if line.starts_with(section) {
-            copy = true;
-        }
-    }
-    result.trim().to_string()
+    let section_text = &yesterday[section_start..section_end];
+    section_text.trim().to_string()
 }
 
 fn by_weekday(content_by_day: &[String; 7], date: DateTime<Local>) -> String {
