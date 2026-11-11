@@ -68,4 +68,3 @@ fn get_content_between_parentheses(line: &str) -> String {
     let result = &line[start_bytes + 1..end_bytes];
     result.to_string()
 }
-

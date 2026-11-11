@@ -11,7 +11,11 @@ pub fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) ->
     result.trim().to_string()
 }
 
-fn process_token(content: &template::TemplateLine, yesterday: &str, date: DateTime<Local>) -> String {
+fn process_token(
+    content: &template::TemplateLine,
+    yesterday: &str,
+    date: DateTime<Local>,
+) -> String {
     match content {
         template::TemplateLine::CopyTasks(section) => copy_tasks(yesterday, section),
         template::TemplateLine::CopyLastDay(section) => get_section_text(section, yesterday),

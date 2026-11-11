@@ -1,12 +1,12 @@
 use crate::config;
 use crate::interpreter;
 use chrono::{DateTime, Datelike, Local};
+use regex::Regex;
+use std::cmp;
 use std::fs;
 use std::fs::{remove_file, File};
 use std::io::prelude::*;
 use std::os::unix::fs as unix_fs;
-use regex::Regex;
-use std::cmp;
 use std::path::PathBuf;
 
 pub fn symlink_daily_note(date: DateTime<Local>, config: &config::Config) {
