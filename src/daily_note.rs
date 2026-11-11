@@ -1,10 +1,10 @@
 use crate::config;
+use crate::interpreter;
 use chrono::{DateTime, Datelike, Local};
 use std::fs;
 use std::fs::{remove_file, File};
 use std::io::prelude::*;
 use std::os::unix::fs as unix_fs;
-mod interpreter;
 use regex::Regex;
 use std::cmp;
 use std::path::PathBuf;

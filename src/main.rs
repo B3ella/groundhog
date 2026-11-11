@@ -2,6 +2,7 @@ use chrono::{DateTime, Local};
 use clap::Parser;
 mod config;
 mod daily_note;
+mod interpreter;
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
