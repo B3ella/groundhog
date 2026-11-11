@@ -1,22 +1,9 @@
+mod template;
 use chrono::{DateTime, Datelike, Local};
-
-type Template = Vec<TemplateLine>;
-enum TemplateLine {
-    CopyTasks(Section),
-    CopyLastDay(Section),
-    ByWeekday([String; 7]),
-    OnDate(MonthDay, String),
-    Literal(String),
-}
-type Section = String;
-struct MonthDay {
-    month: u32,
-    day: u32,
-}
 
 pub fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) -> String {
     let mut result = "".to_string();
-    let template = get_template(template);
+    let template = template::parse(template);
     for line in template {
         result += &process_token(&line, yesterday, date);
         result += "\n";
@@ -24,68 +11,17 @@ pub fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) ->
     result.trim().to_string()
 }
 
-fn get_template(template: &str) -> Template {
-    let mut result = vec![];
-    let mut current_section = "".to_string();
-    for line in template.lines() {
-        if line.starts_with("#") {
-            current_section = line.to_string()
-        }
-        result.push(get_content(line, &current_section));
-    }
-    result
-}
-fn get_content(line: &str, current_section: &str) -> TemplateLine {
-    let token = get_token(line);
-    match token.as_str() {
-        "!copy_tasks" => TemplateLine::CopyTasks(current_section.to_string()),
-        "!copy_last_day" => TemplateLine::CopyLastDay(current_section.to_string()),
-        "!by_weekday" => {
-            let result = get_content_between_parentheses(line);
-            let content_by_day: Vec<String> = result.split(";").map(|s| s.to_string()).collect();
-            let content_by_day: [String; 7] = content_by_day.try_into().expect("Expected 7 days");
-            TemplateLine::ByWeekday(content_by_day)
-        }
-        "!on_date" => {
-            let result = get_content_between_parentheses(line);
-            let (date_expected, text) = result.split_once(",").unwrap();
-            let (month, day) = date_expected
-                .trim()
-                .split_once("/")
-                .expect("Expected month/day format");
-            let month: u32 = month.parse().expect("Expected month to be a number");
-            let day: u32 = day.parse().expect("Expected day to be a number");
-            TemplateLine::OnDate(MonthDay { month, day }, text.trim().to_string())
-        }
-        _ => TemplateLine::Literal(line.to_string()),
-    }
-}
-fn get_token(line: &str) -> String {
-    let token_end = line.find("(");
-    let token = match token_end {
-        Some(token_end) => line[..token_end].trim(),
-        None => line,
-    };
-    token.to_string()
-}
-fn get_content_between_parentheses(line: &str) -> String {
-    let start_bytes = line
-        .find("(")
-        .expect("no opening brackets found in by weekday template line");
-    let end_bytes = line
-        .find(")")
-        .expect("no closing brackets found in by weekday template line");
-    let result = &line[start_bytes + 1..end_bytes];
-    result.to_string()
-}
-
-fn process_token(content: &TemplateLine, yesterday: &str, date: DateTime<Local>) -> String {
+fn process_token(
+    content: &template::TemplateLine,
+    yesterday: &str,
+    date: DateTime<Local>,
+) -> String {
     match content {
-        TemplateLine::CopyTasks(section) => copy_tasks(yesterday, section),
-        TemplateLine::CopyLastDay(section) => get_section_text(section, yesterday),
-        TemplateLine::ByWeekday(content_by_day) => by_weekday(content_by_day, date),
-        TemplateLine::OnDate(expected_date, text) => on_date(expected_date, text, date),
-        TemplateLine::Literal(literal) => literal.to_string(),
+        template::TemplateLine::CopyTasks(section) => copy_tasks(yesterday, section),
+        template::TemplateLine::CopyLastDay(section) => get_section_text(section, yesterday),
+        template::TemplateLine::ByWeekday(content_by_day) => by_weekday(content_by_day, date),
+        template::TemplateLine::OnDate(expected_date, text) => on_date(expected_date, text, date),
+        template::TemplateLine::Literal(literal) => literal.to_string(),
     }
 }
 
@@ -120,7 +56,7 @@ fn by_weekday(content_by_day: &[String; 7], date: DateTime<Local>) -> String {
     content_by_day[index].to_string()
 }
 
-fn on_date(expected_date: &MonthDay, text: &str, real_date: DateTime<Local>) -> String {
+fn on_date(expected_date: &template::MonthDay, text: &str, real_date: DateTime<Local>) -> String {
     if real_date.month() == expected_date.month && real_date.day() == expected_date.day {
         return text.to_string();
     }
