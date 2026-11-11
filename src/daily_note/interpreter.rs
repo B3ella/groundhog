@@ -104,7 +104,7 @@ fn get_section_text(section: &str, yesterday: &str) -> String {
     };
 
     let header_end = section.find(" ").unwrap();
-    let header = "\n".to_string()+&section[..header_end + 1];
+    let header = "\n".to_string() + &section[..header_end + 1];
     let section_end = match yesterday[section_start..].find(&header) {
         None => yesterday.len(),
         Some(v) => v + section_start,
