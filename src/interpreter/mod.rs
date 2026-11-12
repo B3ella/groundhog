@@ -51,9 +51,7 @@ fn get_section_text(section: &str, yesterday: &str) -> String {
 
 fn by_weekday(content_by_day: &[String; 7], date: DateTime<Local>) -> String {
     let index = date.weekday().num_days_from_sunday();
-    println!("{}", index);
     let index = usize::try_from(index).expect("Cannot convert weekday to usize");
-    println!("{}", content_by_day[index].to_string());
     content_by_day[index].to_string()
 }
 
