@@ -1,4 +1,4 @@
-use logos::Logos;
+use logos::{Logos, Lexer};
 pub type TemplateLine = Token;
 
 type Template = Vec<TemplateLine>;
