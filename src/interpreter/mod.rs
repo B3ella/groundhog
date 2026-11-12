@@ -6,7 +6,6 @@ pub fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) ->
     let template = template::parse(template);
     for line in template {
         result += &process_token(&line, yesterday, date);
-        result += "\n";
     }
     result.trim().to_string()
 }
