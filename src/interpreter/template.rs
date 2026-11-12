@@ -33,7 +33,7 @@ pub enum Token {
 }
 
 fn header_callback(lex: &mut Lexer<Token>) -> String {
-    lex.extras = lex.slice().to_string();
+    lex.extras = lex.slice().trim().to_string();
     lex.slice().to_string()
 }
 
