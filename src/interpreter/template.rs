@@ -69,11 +69,11 @@ pub fn parse(template: &str) -> Template {
     }
     for token in result {
         match token {
-            template::TemplateLine::CopyTasks(section) => println!("Copy: {}", section),
-            template::TemplateLine::CopyLastDay(section) => println!("Copy tasks: {}", section),
-            template::TemplateLine::ByWeekday(content_by_day) => println!("By_weekday: {}", content),
-            template::TemplateLine::OnDate(params) => println!("on_date: {}/{}: {}", params.date.day, params.date.month, params.text),
-            template::TemplateLine::Literal(literal) => println!("{}", section),
+            TemplateLine::CopyTasks(section) => println!("Copy: {}", section),
+            TemplateLine::CopyLastDay(section) => println!("Copy tasks: {}", section),
+            TemplateLine::ByWeekday(content_by_day) => println!("By_weekday: {}", content),
+            TemplateLine::OnDate(params) => println!("on_date: {}/{}: {}", params.date.day, params.date.month, params.text),
+            TemplateLine::Literal(literal) => println!("{}", section),
         }
     }
     result
