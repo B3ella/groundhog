@@ -33,7 +33,7 @@ pub fn parse(template: &str) -> Template {
                 if line.starts_with("#") {
                     current_section = line.trim().to_string()
                 }
-                result.push(line)
+                result.push(TemplateLine::Literal(line.to_string()))
             }
             Token::Expression(text) => result.push(get_content(text, &current_section));
         }
