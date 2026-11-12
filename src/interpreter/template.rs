@@ -12,8 +12,8 @@ pub struct MonthDay {
 
 #[derive(Debug, PartialEq)]
 pub struct OnDate {
-    date: MonthDay,
-    text: String,
+    pub date: MonthDay,
+    pub text: String,
 }
 
 #[derive(Logos, Debug, PartialEq)]
