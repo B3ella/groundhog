@@ -67,6 +67,7 @@ pub fn parse(template: &str) -> Template {
             Err(_) => continue,
         }
     }
+    println!("{}", result)
     result
 }
 
