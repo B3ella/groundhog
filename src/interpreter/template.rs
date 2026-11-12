@@ -62,10 +62,18 @@ fn on_date(lex: &mut Lexer<Token>) -> OnDate {
 pub fn parse(template: &str) -> Template {
     let mut result = vec![];
     for token in Token::lexer(template) {
-        println!("{}", token);
         match token {
             Ok(token) => result.push(token),
             Err(_) => continue,
+        }
+    }
+    for token in result {
+        match token {
+            template::TemplateLine::CopyTasks(section) => println!("Copy: {}", section),
+            template::TemplateLine::CopyLastDay(section) => println!("Copy tasks: {}", section),
+            template::TemplateLine::ByWeekday(content_by_day) => println!("By_weekday: {}", content),
+            template::TemplateLine::OnDate(params) => println!("on_date: {}/{}: {}", params.date.day, params.date.month, params.text),
+            template::TemplateLine::Literal(literal) => println!("{}", section),
         }
     }
     result
