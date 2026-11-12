@@ -23,7 +23,7 @@ enum Token {
     CopyLastDay,
     #[regex(r"!by_weekday(\ |\t|\n|\r)*\((.|\n)*?\))", by_weekday)]
     ByWeekday([String; 7]),
-    #[regex(r"!on_date(\ |\t|\n|\r)*\((.|\n)*?\))"), on_date]
+    #[regex(r"!on_date(\ |\t|\n|\r)*\((.|\n)*?\))", on_date)]
     OnDate(MonthDay, String),
     #[regex(".*?\n", |lex| lex.slice().to_string())]
     Literal(String),
