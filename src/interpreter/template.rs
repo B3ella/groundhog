@@ -18,14 +18,16 @@ pub struct OnDate {
 
 #[derive(Logos, Debug, PartialEq)]
 #[logos(extras = String)]
+#[logos(subpattern white_space = r"(\ |\t|\n|\r)")]
+#[logos(subpattern params = r"?&whitespace*\((.|\n)*?\)")]
 pub enum Token {
     #[token("!copy_last_day", |lex| lex.extras.to_string(), priority = 20)]
     CopyLastDay(Section),
     #[token("!copy_tasks", |lex| lex.extras.to_string())]
     CopyTasks(Section),
-    #[regex(r"!by_weekday(\ |\t|\n|\r)*\((.|\n)*?\)", by_weekday)]
+    #[regex(r"!by_weekday(?&params)", by_weekday)]
     ByWeekday([String; 7]),
-    #[regex(r"!on_date(\ |\t|\n|\r)*\((.|\n)*?\)", on_date)]
+    #[regex(r"!on_date(?&params)", on_date)]
     OnDate(OnDate),
     #[regex("#.*?\n", header_callback)]
     #[regex(".*?\n", |lex| lex.slice().to_string())]
