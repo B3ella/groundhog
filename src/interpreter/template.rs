@@ -21,7 +21,7 @@ pub struct OnDate {
 pub enum Token {
     #[token("!copy_tasks", |lex| lex.extras.to_string())]
     CopyTasks(Section),
-    #[token("!copy_last_day", |lex| lex.extras.to_string())]
+    #[token("!copy_last_day", |lex| lex.extras.to_string(), priority = 20)]
     CopyLastDay(Section),
     #[regex(r"!by_weekday(\ |\t|\n|\r)*\((.|\n)*?\)", by_weekday)]
     ByWeekday([String; 7]),
