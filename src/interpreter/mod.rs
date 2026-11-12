@@ -33,6 +33,8 @@ fn copy_tasks(yesterday: &str, current_section: &str) -> String {
 }
 
 fn get_section_text(section: &str, yesterday: &str) -> String {
+    println!("{}", section);
+    println!("{}", yesterday);
     let section_start = match yesterday.find(section) {
         Some(v) => v + section.len(),
         None => return "".to_string(),
