@@ -33,13 +33,10 @@ fn copy_tasks(yesterday: &str, current_section: &str) -> String {
 }
 
 fn get_section_text(section: &str, yesterday: &str) -> String {
-    println!("{}", section);
-    println!("{}", yesterday);
     let section_start = match yesterday.find(section) {
         Some(v) => v + section.len(),
         None => return "".to_string(),
     };
-    println!("{}", section_start);
 
     let header_end = section.find(" ").unwrap();
     let header = "\n".to_string() + &section[..header_end + 1];
@@ -47,16 +44,16 @@ fn get_section_text(section: &str, yesterday: &str) -> String {
         None => yesterday.len(),
         Some(v) => v + section_start,
     };
-    println!("{}", section_end);
 
     let section_text = &yesterday[section_start..section_end];
-    println!("{}", section_text);
     section_text.trim().to_string()
 }
 
 fn by_weekday(content_by_day: &[String; 7], date: DateTime<Local>) -> String {
     let index = date.weekday().num_days_from_sunday();
+    println!("{}", index);
     let index = usize::try_from(index).expect("Cannot convert weekday to usize");
+    println!("{}", content_by_day[index].to_string());
     content_by_day[index].to_string()
 }
 
