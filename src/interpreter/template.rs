@@ -4,6 +4,8 @@ pub type TemplateLine = Token;
 type Template = Vec<TemplateLine>;
 
 type Section = String;
+#[derive(Debug)]
+#[derive(PartialEq)]
 pub struct MonthDay {
     pub month: u32,
     pub day: u32,
@@ -62,8 +64,8 @@ pub fn parse(template: &str) -> Template {
     let mut current_section = "".to_string();
     for token in Token::lexer(template) {
         match token {
-            Some(token) => result.push(token),
-            None => continue
+            Ok(token) => result.push(token),
+            Err(_) => continue
         }
     }
     result
