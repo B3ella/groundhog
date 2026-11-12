@@ -19,10 +19,10 @@ pub struct OnDate {
 #[derive(Logos, Debug, PartialEq)]
 #[logos(extras = String)]
 pub enum Token {
-    #[token("!copy_tasks", |lex| lex.extras.to_string())]
-    CopyTasks(Section),
     #[token("!copy_last_day", |lex| lex.extras.to_string(), priority = 20)]
     CopyLastDay(Section),
+    #[token("!copy_tasks", |lex| lex.extras.to_string())]
+    CopyTasks(Section),
     #[regex(r"!by_weekday(\ |\t|\n|\r)*\((.|\n)*?\)", by_weekday)]
     ByWeekday([String; 7]),
     #[regex(r"!on_date(\ |\t|\n|\r)*\((.|\n)*?\)", on_date)]
