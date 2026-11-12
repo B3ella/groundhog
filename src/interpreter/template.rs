@@ -67,15 +67,6 @@ pub fn parse(template: &str) -> Template {
             Err(_) => continue,
         }
     }
-    for token in &result {
-        match token {
-            TemplateLine::CopyTasks(section) => println!("Copy: {}", section),
-            TemplateLine::CopyLastDay(section) => println!("Copy tasks: {}", section),
-            TemplateLine::ByWeekday(content_by_day) => println!("By_weekday: {}", content_by_day.join(", ")),
-            TemplateLine::OnDate(params) => println!("on_date: {}/{}: {}", params.date.day, params.date.month, params.text),
-            TemplateLine::Literal(literal) => println!("{}", literal),
-        }
-    }
     result
 }
 
@@ -88,4 +79,21 @@ fn get_content_between_parentheses(line: &str) -> String {
         .expect("no closing brackets found in by weekday template line");
     let result = &line[start_bytes + 1..end_bytes];
     result.to_string()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn parsing_copy_tasks() {
+        let mut lex = Token::lexer("#tasks\n!copy_tasks");
+        assert_eq!(lex.next(), Some(Ok(Token::Literal)));
+        assert_eq!(lex.span(), 0..7);
+        assert_eq!(lex.slice(), "#tasks");
+
+        assert_eq!(lex.next(), Some(Ok(Token::CopyTasks)));
+        assert_eq!(lex.span(), 8..19);
+        assert_eq!(lex.slice(), "!copy_tasks");
+    }
 }
