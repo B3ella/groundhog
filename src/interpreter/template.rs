@@ -18,7 +18,7 @@ pub struct OnDate {
 
 #[derive(Logos, Debug, PartialEq)]
 #[logos(extras = String)]
-enum Token {
+pub enum Token {
     #[token("!copy_tasks", |lex| lex.extras.to_string())]
     CopyTasks(Section),
     #[token("!copy_last_day", |lex| lex.extras.to_string())]
