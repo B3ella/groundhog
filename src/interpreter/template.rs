@@ -18,7 +18,7 @@ pub struct MonthDay {
 
 #[derive(Logos, Debug, PartialEq)]
 enum Token {
-    #[regex(".*")]
+    #[regex("..*")]
     Literal,
     #[regex(r"!(copy_last_day|copy_tasks|(by_weekday|on_date)(\ |\t|\n|\r)*\((.|\n)*?\))")]
     Expression,
