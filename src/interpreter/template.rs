@@ -30,7 +30,7 @@ pub fn parse(template: &str) -> Template {
     for token in Token::lexer(template) {
         match token {
             Token::Literal(line) => {
-                if token.starts_with("#") {
+                if line.starts_with("#") {
                     current_section = line.trim().to_string()
                 }
                 result.push(line)
