@@ -1,11 +1,5 @@
 use logos::Logos;
-pub enum TemplateLine {
-    CopyTasks(Section),
-    CopyLastDay(Section),
-    ByWeekday([String; 7]),
-    OnDate(MonthDay, String),
-    Literal(String),
-}
+pub type TemplateLine = Token
 
 type Template = Vec<TemplateLine>;
 
@@ -16,17 +10,24 @@ pub struct MonthDay {
 }
 
 #[derive(Logos, Debug, PartialEq)]
+#[logos(extras = String)]
 enum Token {
-    #[token("!copy_tasks")]
-    CopyTasks,
-    #[token("!copy_last_day")]
-    CopyLastDay,
+    #[token("!copy_tasks", |lex| lex.extras)]
+    CopyTasks(Section),
+    #[token("!copy_last_day", |lex| lex.extras)]
+    CopyLastDay(Section),
     #[regex(r"!by_weekday(\ |\t|\n|\r)*\((.|\n)*?\))", by_weekday)]
     ByWeekday([String; 7]),
     #[regex(r"!on_date(\ |\t|\n|\r)*\((.|\n)*?\))", on_date)]
     OnDate(MonthDay, String),
+    #[regex("#.*?\n", header_callback)]
     #[regex(".*?\n", |lex| lex.slice().to_string())]
     Literal(String),
+}
+
+fn header_callback(lex: &mut Lexer<Token>){
+    lex.extras = lex.slice().to_string();
+    lex.slice().to_string()
 }
 
 fn by_weekday(lex: &mut Lexer<Token>){
@@ -52,17 +53,9 @@ pub fn parse(template: &str) -> Template {
     let mut result = vec![];
     let mut current_section = "".to_string();
     for token in Token::lexer(template) {
-        match token.unwrap() {
-            Token::Literal(line) => {
-                if line.starts_with("#") {
-                    current_section = line.trim().to_string()
-                }
-                result.push(TemplateLine::Literal(line.to_string()))
-            }
-            Token::CopyTasks => TemplateLine::CopyTasks(current_section),
-            Token::CopyLastDay => TemplateLine::CopyLastDay(current_section),
-            Token::ByWeekday(content_by_day) => TemplateLine::ByWeekday(content_by_day),
-            Token::OnDate(day, text) => TemplateLine::OnDate(day, text),
+        match token {
+            Some(token) => result.push(token)
+            None => continue
         }
     }
     result
