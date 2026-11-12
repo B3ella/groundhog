@@ -28,7 +28,7 @@ pub fn parse(template: &str) -> Template {
     let mut result = vec![];
     let mut current_section = "".to_string();
     for token in Token::lexer(template) {
-        match token {
+        match token.unwrap() {
             Token::Literal(line) => {
                 if line.starts_with("#") {
                     current_section = line.trim().to_string()
