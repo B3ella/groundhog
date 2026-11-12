@@ -32,7 +32,7 @@ enum Token {
     Literal(String),
 }
 
-fn header_callback(lex: &mut Lexer<Token>) {
+fn header_callback(lex: &mut Lexer<Token>) -> String {
     lex.extras = lex.slice().to_string();
     lex.slice().to_string()
 }
