@@ -19,7 +19,7 @@ pub struct OnDate {
 #[derive(Logos, Debug, PartialEq)]
 #[logos(extras = String)]
 #[logos(subpattern white_space = r"(\ |\t|\n|\r)")]
-#[logos(subpattern params = r"?&whitespace*\((.|\n)*?\)")]
+#[logos(subpattern params = r"(?&whitespace)*\((.|\n)*?\)")]
 pub enum Token {
     #[token("!copy_last_day", |lex| lex.extras.to_string(), priority = 20)]
     CopyLastDay(Section),
