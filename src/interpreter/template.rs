@@ -1,3 +1,4 @@
+use logos::Logos;
 pub enum TemplateLine {
     CopyTasks(Section),
     CopyLastDay(Section),
@@ -14,11 +15,20 @@ pub struct MonthDay {
     pub day: u32,
 }
 
+
+#[derive(Logos, Debug, PartialEq)]
+enum Token {
+    #[regex(".*\s")]
+    Literal,
+    #[regex("!(copy_last_day|copy_tasks|(by_weekday|on_date)(\ |\t|\n|\r)*\((.|\n)*?\))")]
+    Expressions,
+}
+
 pub fn parse(template: &str) -> Template {
     let mut result = vec![];
     let mut current_section = "".to_string();
-    for line in template.lines() {
-        if line.starts_with("#") {
+    for token in Token::lexer(template) {
+        if token.starts_with("#") {
             current_section = line.to_string()
         }
         result.push(get_content(line, &current_section));
