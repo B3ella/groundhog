@@ -53,10 +53,10 @@ fn on_date(lex: &mut Lexer<Token>) -> Token {
         .expect("Expected month/day format");
     let month: u32 = month.parse().expect("Expected month to be a number");
     let day: u32 = day.parse().expect("Expected day to be a number");
-    Token::OnDate(OnDate({
+    Token::OnDate(OnDate{
         date: MonthDay{month, day},
         text: text.trim().to_string()
-    }))
+    })
 }
 
 pub fn parse(template: &str) -> Template {
