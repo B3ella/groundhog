@@ -4,13 +4,13 @@ pub type TemplateLine = Token;
 type Template = Vec<TemplateLine>;
 
 type Section = String;
-#[derive(Debug)]
-#[derive(PartialEq)]
+#[derive(Debug, PartialEq)]
 pub struct MonthDay {
     pub month: u32,
     pub day: u32,
 }
 
+#[derive(Debug, PartialEq)]
 struct OnDate {
     date: MonthDay,
     text: String
