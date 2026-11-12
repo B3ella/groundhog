@@ -1,4 +1,4 @@
-use logos::{Logos, Lexer};
+use logos::{Lexer, Logos};
 pub type TemplateLine = Token;
 
 type Template = Vec<TemplateLine>;
@@ -13,7 +13,7 @@ pub struct MonthDay {
 #[derive(Debug, PartialEq)]
 pub struct OnDate {
     date: MonthDay,
-    text: String
+    text: String,
 }
 
 #[derive(Logos, Debug, PartialEq)]
@@ -32,7 +32,7 @@ enum Token {
     Literal(String),
 }
 
-fn header_callback(lex: &mut Lexer<Token>){
+fn header_callback(lex: &mut Lexer<Token>) {
     lex.extras = lex.slice().to_string();
     lex.slice().to_string()
 }
@@ -53,9 +53,9 @@ fn on_date(lex: &mut Lexer<Token>) -> Token {
         .expect("Expected month/day format");
     let month: u32 = month.parse().expect("Expected month to be a number");
     let day: u32 = day.parse().expect("Expected day to be a number");
-    Token::OnDate(OnDate{
-        date: MonthDay{month, day},
-        text: text.trim().to_string()
+    Token::OnDate(OnDate {
+        date: MonthDay { month, day },
+        text: text.trim().to_string(),
     })
 }
 
@@ -64,7 +64,7 @@ pub fn parse(template: &str) -> Template {
     for token in Token::lexer(template) {
         match token {
             Ok(token) => result.push(token),
-            Err(_) => continue
+            Err(_) => continue,
         }
     }
     result
