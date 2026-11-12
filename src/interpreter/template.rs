@@ -67,7 +67,7 @@ pub fn parse(template: &str) -> Template {
             Err(_) => continue,
         }
     }
-    for token in result {
+    for token in &result {
         match token {
             TemplateLine::CopyTasks(section) => println!("Copy: {}", section),
             TemplateLine::CopyLastDay(section) => println!("Copy tasks: {}", section),
