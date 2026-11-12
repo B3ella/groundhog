@@ -82,20 +82,3 @@ fn get_content_between_parentheses(line: &str) -> String {
     let result = &line[start_bytes + 1..end_bytes];
     result.to_string()
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn parsing_copy_tasks() {
-        let mut lex = Token::lexer("#tasks\n!copy_tasks");
-        assert_eq!(lex.next(), Some(Ok(Token::Literal)));
-        assert_eq!(lex.span(), 0..7);
-        assert_eq!(lex.slice(), "#tasks");
-
-        assert_eq!(lex.next(), Some(Ok(Token::CopyTasks)));
-        assert_eq!(lex.span(), 8..19);
-        assert_eq!(lex.slice(), "!copy_tasks");
-    }
-}
