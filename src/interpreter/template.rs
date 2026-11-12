@@ -38,7 +38,7 @@ fn header_callback(lex: &mut Lexer<Token>){
 }
 
 fn by_weekday(lex: &mut Lexer<Token>) -> Token {
-    let result = get_content_between_parentheses(line);
+    let result = get_content_between_parentheses(lex.slice());
     let content_by_day: Vec<String> = result.split(";").map(|s| s.to_string()).collect();
     let content_by_day: [String; 7] = content_by_day.try_into().expect("Expected 7 days");
     Token::ByWeekday(content_by_day)
