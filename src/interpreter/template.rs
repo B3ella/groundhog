@@ -18,20 +18,25 @@ pub struct MonthDay {
 
 #[derive(Logos, Debug, PartialEq)]
 enum Token {
-    #[regex(".*\s")]
+    #[regex(".*")]
     Literal,
-    #[regex("!(copy_last_day|copy_tasks|(by_weekday|on_date)(\ |\t|\n|\r)*\((.|\n)*?\))")]
-    Expressions,
+    #[regex(r"!(copy_last_day|copy_tasks|(by_weekday|on_date)(\ |\t|\n|\r)*\((.|\n)*?\))")]
+    Expression,
 }
 
 pub fn parse(template: &str) -> Template {
     let mut result = vec![];
     let mut current_section = "".to_string();
     for token in Token::lexer(template) {
-        if token.starts_with("#") {
-            current_section = line.to_string()
+        match token {
+            Token::Literal(line) => {
+                if token.starts_with("#") {
+                    current_section = line.trim().to_string()
+                }
+                result.push(line)
+            }
+            Token::Expression(text) => result.push(get_content(token, &current_section));
         }
-        result.push(get_content(line, &current_section));
     }
     result
 }
