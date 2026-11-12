@@ -71,7 +71,7 @@ pub fn parse(template: &str) -> Template {
         match token {
             TemplateLine::CopyTasks(section) => println!("Copy: {}", section),
             TemplateLine::CopyLastDay(section) => println!("Copy tasks: {}", section),
-            TemplateLine::ByWeekday(content_by_day) => println!("By_weekday: {}", content_by_day),
+            TemplateLine::ByWeekday(content_by_day) => println!("By_weekday: {}", content_by_day.join(", ")),
             TemplateLine::OnDate(params) => println!("on_date: {}/{}: {}", params.date.day, params.date.month, params.text),
             TemplateLine::Literal(literal) => println!("{}", literal),
         }
