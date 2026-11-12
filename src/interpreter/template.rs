@@ -62,12 +62,12 @@ fn on_date(lex: &mut Lexer<Token>) -> OnDate {
 pub fn parse(template: &str) -> Template {
     let mut result = vec![];
     for token in Token::lexer(template) {
+        println!(token)
         match token {
             Ok(token) => result.push(token),
             Err(_) => continue,
         }
     }
-    println!("{}", result);
     result
 }
 
