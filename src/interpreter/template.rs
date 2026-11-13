@@ -30,7 +30,7 @@ pub enum Token {
     #[regex(r"!on_date(?&params)", on_date)]
     OnDate(OnDate),
     #[regex(r"#*?\ .*?\n", header_callback)]
-    #[regex(".*?\n", |lex| lex.slice().to_string())]
+    #[regex(r".*?\n", |lex| lex.slice().to_string())]
     Literal(String),
 }
 
