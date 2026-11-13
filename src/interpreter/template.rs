@@ -21,9 +21,9 @@ pub struct OnDate {
 #[logos(subpattern whitespace = r"(\ |\t|\n|\r)")]
 #[logos(subpattern params = r"(?&whitespace)*\((.|\n)*?\)")]
 pub enum Token {
-    #[regex(r"!copy_last_day(?&whitespace)", |lex| lex.extras.to_string())]
+    #[regex(r"!copy_last_day", |lex| lex.extras.to_string())]
     CopyLastDay(Section),
-    #[regex(r"!copy_tasks(?&whitespace)", |lex| lex.extras.to_string())]
+    #[regex(r"!copy_tasks", |lex| lex.extras.to_string())]
     CopyTasks(Section),
     #[regex(r"!by_weekday(?&params)", by_weekday)]
     ByWeekday([String; 7]),
