@@ -11,6 +11,7 @@ repository = "https://github.com/b3ella/groundhog"
 [dependencies]
 chrono = "0.4"
 clap = { version = "4.6.7", features = ["derive"] }
+logos = "0.16.1"
 regex = "1.13.1"
 
 [[bin]]

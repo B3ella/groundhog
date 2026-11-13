@@ -6,7 +6,6 @@ pub fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) ->
     let template = template::parse(template);
     for line in template {
         result += &process_token(&line, yesterday, date);
-        result += "\n";
     }
     result.trim().to_string()
 }
@@ -20,7 +19,7 @@ fn process_token(
         template::TemplateLine::CopyTasks(section) => copy_tasks(yesterday, section),
         template::TemplateLine::CopyLastDay(section) => get_section_text(section, yesterday),
         template::TemplateLine::ByWeekday(content_by_day) => by_weekday(content_by_day, date),
-        template::TemplateLine::OnDate(expected_date, text) => on_date(expected_date, text, date),
+        template::TemplateLine::OnDate(params) => on_date(&params.date, &params.text, date),
         template::TemplateLine::Literal(literal) => literal.to_string(),
     }
 }
