@@ -32,7 +32,7 @@ pub enum Token {
     ByWeekday([String; 7]),
     #[regex(r"!on_date(?&params)", on_date)]
     OnDate(OnDate),
-    #[regex(r"#*?\ .*?\n", header_callback)]
+    #[regex(r"#+\ .*?\n", header_callback)]
     #[regex(r".*?(?&whitespace)+?", |lex| lex.slice().to_string())]
     Literal(String),
 }
