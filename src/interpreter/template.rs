@@ -20,20 +20,18 @@ pub struct OnDate {
 #[logos(extras = String)]
 #[logos(subpattern whitespace = r"(\ |\t|\n|\r)")]
 #[logos(subpattern params = r"(?&whitespace)*\((.|\n)*?\)")]
-#[logos(subpattern by_weekday_arg = r"(.|(?&whitespace))+")]
-#[logos(subpattern by_weekday_args = r"((?&by_weekday_arg);){6}(?&by_weekday_arg)")]
-#[logos(subpattern by_weekday_params = r"(?&whitespace)*\((?&by_weekday_args)\)")]
+#[logos(subpattern any_token = r"(!copy_last_day(?&whitespace)|!copy_tasks(?&whitespace)|!by_weekday(?&params)|!on_date(?&params))")]
 pub enum Token {
     #[regex(r"!copy_last_day(?&whitespace)", |lex| lex.extras.to_string())]
     CopyLastDay(Section),
     #[regex(r"!copy_tasks(?&whitespace)", |lex| lex.extras.to_string())]
     CopyTasks(Section),
-    #[regex(r"!by_weekday(?&by_weekday_params)", by_weekday)]
+    #[regex(r"!by_weekday(?&params)", by_weekday)]
     ByWeekday([String; 7]),
     #[regex(r"!on_date(?&params)", on_date)]
     OnDate(OnDate),
     #[regex(r"#+\ .*?\n", header_callback)]
-    #[regex(r".*?(?&whitespace)+?", |lex| lex.slice().to_string())]
+    #[regex(r".+(?!(?&any_token))", |lex| lex.slice().to_string())]
     Literal(String),
 }
 
