@@ -18,7 +18,7 @@ jobs:
       - name: build
         run: cargo build --verbose --locked
       - name: test
-        run: cargo test --verbose -- --nocapture
+        run: cargo test --verbose
       - name: format
         run: cargo fmt --check
       - name: Run Clippy
