@@ -20,7 +20,6 @@ pub struct OnDate {
 #[logos(extras = String)]
 #[logos(subpattern whitespace = r"(\ |\t|\n|\r)")]
 #[logos(subpattern params = r"(?&whitespace)*\((.|\n)*?\)")]
-#[logos(subpattern any_token = r"(!copy_last_day(?&whitespace)|!copy_tasks(?&whitespace)|!by_weekday(?&params)|!on_date(?&params))")]
 pub enum Token {
     #[regex(r"!copy_last_day(?&whitespace)", |lex| lex.extras.to_string())]
     CopyLastDay(Section),
@@ -31,7 +30,7 @@ pub enum Token {
     #[regex(r"!on_date(?&params)", on_date)]
     OnDate(OnDate),
     #[regex(r"#+\ .*?\n", header_callback)]
-    #[regex(r".+(?!(?&any_token))", |lex| lex.slice().to_string())]
+    #[regex(r".+?", |lex| lex.slice().to_string())]
     Literal(String),
 }
 
