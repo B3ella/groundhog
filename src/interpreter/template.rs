@@ -18,8 +18,8 @@ pub struct OnDate {
 
 #[derive(Logos, Debug, PartialEq)]
 #[logos(extras = String)]
-#[logos(subpattern whitspace = r"(\ |\t|\n|\r)")]
-#[logos(subpattern params = r"(?&whitspace)*\((.|\n)*?\)")]
+#[logos(subpattern withespace = r"(\ |\t|\n|\r)")]
+#[logos(subpattern params = r"(?&withespace)*\((.|\n)*?\)")]
 pub enum Token {
     #[token("!copy_last_day", |lex| lex.extras.to_string(), priority = 20)]
     CopyLastDay(Section),
@@ -30,7 +30,7 @@ pub enum Token {
     #[regex(r"!on_date(?&params)", on_date)]
     OnDate(OnDate),
     #[regex("#.*?\n", header_callback)]
-    #[regex(".*?\n", |lex| lex.slice().to_string(), priority = 2)]
+    #[regex(".*?(?&withespace)", |lex| lex.slice().to_string(), priority = 2)]
     Literal(String),
 }
 
