@@ -9,7 +9,7 @@
       mkGroundhogPackage = pkgs:
         pkgs.rustPlatform.buildRustPackage {
           pname = "groundhog";
-          version = "1.0.3";
+          version = "1.0.4";
 
           cargoLock.lockFile = ./Cargo.lock;
           src = self;
