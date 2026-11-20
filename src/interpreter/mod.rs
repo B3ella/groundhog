@@ -137,7 +137,7 @@ mod tests {
     #[test]
     fn on_date_returns_content_on_date() {
         let template = "!on_date(20/11, test text)";
-        let output = process_tokens(template, "test text", date(2024, 20, 11));
+        let output = process_tokens(template, "test text", date(2024, 11, 20));
         assert_eq!(output, "test text");
     }
     #[test]
