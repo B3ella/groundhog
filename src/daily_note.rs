@@ -14,10 +14,10 @@ pub fn symlink_daily_note(date: DateTime<Local>, config: &config::Config) {
         "creating symlink for daily-note: {}",
         date_to_file_name(date, config)
     );
-    create_parent_dir(&config.symlink_path);
+    create_parent_dir(&config.symlink);
     let daily_note = date_to_file_name(date, config);
-    let _ = remove_file(&config.symlink_path);
-    let _ = unix_fs::symlink(daily_note, &config.symlink_path);
+    let _ = remove_file(&config.symlink);
+    let _ = unix_fs::symlink(daily_note, &config.symlink);
 }
 
 fn create_parent_dir(path: &str) {
@@ -31,7 +31,7 @@ fn date_to_file_name(date: DateTime<Local>, config: &config::Config) -> String {
     let month = date.month();
     let day = date.day();
     let file_name = format!("{year}-{month:0>2}-{day:0>2}.md");
-    config.archive_path.clone() + &file_name
+    config.archive.clone() + &file_name
 }
 
 pub fn create_daily_note(date: DateTime<Local>, config: &config::Config) {
@@ -43,14 +43,14 @@ pub fn create_daily_note(date: DateTime<Local>, config: &config::Config) {
         return;
     }
 
-    let last_note = get_latest_note(&config.archive_path);
+    let last_note = get_latest_note(&config.archive);
 
     let last_note = match last_note {
         Some(note) => read_file(&note),
         None => String::new(),
     };
 
-    let template = get_template(&config.template_path);
+    let template = get_template(&config.template);
 
     let note = interpreter::process_tokens(&template, &last_note, date);
 
@@ -96,23 +96,23 @@ fn read_file(path: &str) -> String {
     contents
 }
 
-fn get_template(template_path: &str) -> String {
-    let template_exists = fs::exists(template_path).expect("The file system is throwing an error?");
+fn get_template(template: &str) -> String {
+    let template_exists = fs::exists(template).expect("The file system is throwing an error?");
     if !template_exists {
-        create_default_template(template_path);
+        create_default_template(template);
     }
-    read_file(template_path)
+    read_file(template)
 }
-fn create_default_template(template_path: &str) {
-    create_parent_dir(template_path);
+fn create_default_template(template: &str) {
+    create_parent_dir(template);
     let default_template = format!(
         "
 This is the default marmota template, edit it to match your needs
-To change it edit the file at {template_path}
+To change it edit the file at {template}
 ## Tasks
 !copy_tasks"
     );
-    fs::write(template_path, default_template).unwrap();
+    fs::write(template, default_template).unwrap();
 }
 
 #[cfg(test)]
@@ -141,9 +141,9 @@ mod tests {
 
     fn config_for(dir: &std::path::Path) -> config::Config {
         config::Config {
-            template_path: dir.join("template.md").to_string_lossy().into_owned(),
-            symlink_path: dir.join("today.md").to_string_lossy().into_owned(),
-            archive_path: format!("{}/", dir.to_string_lossy()),
+            template: dir.join("template.md").to_string_lossy().into_owned(),
+            symlink: dir.join("today.md").to_string_lossy().into_owned(),
+            archive: format!("{}/", dir.to_string_lossy()),
         }
     }
 
@@ -165,7 +165,7 @@ mod tests {
         let dir = temp_dir();
         let cfg = config_for(&dir);
 
-        fs::write(&cfg.template_path, "# Work\n!copy_last_day\n").unwrap();
+        fs::write(&cfg.template, "# Work\n!copy_last_day\n").unwrap();
         create_daily_note(date(2024, 2, 2), &cfg);
 
         let expected = "# Work";
@@ -181,7 +181,7 @@ mod tests {
         let dir = temp_dir();
         let cfg = config_for(&dir);
 
-        fs::write(&cfg.template_path, "# Work\n!copy_last_day\n").unwrap();
+        fs::write(&cfg.template, "# Work\n!copy_last_day\n").unwrap();
         fs::write(
             date_to_file_name(date(2024, 2, 1), &cfg),
             "# Work\n- carry me\n",
@@ -204,7 +204,7 @@ mod tests {
         let dir = temp_dir();
         let cfg = config_for(&dir);
 
-        fs::write(&cfg.template_path, "# Work\n!copy_last_day\n").unwrap();
+        fs::write(&cfg.template, "# Work\n!copy_last_day\n").unwrap();
         fs::write(
             date_to_file_name(date(2022, 2, 1), &cfg),
             "# Work\n- carry me\n",
@@ -248,7 +248,7 @@ mod tests {
         symlink_daily_note(date(2024, 2, 2), &cfg);
 
         assert_eq!(
-            fs::read_link(&cfg.symlink_path).unwrap(),
+            fs::read_link(&cfg.symlink).unwrap(),
             std::path::PathBuf::from(note)
         );
 
@@ -259,15 +259,15 @@ mod tests {
     fn can_handle_missing_paths() {
         let dir = temp_dir();
         let cfg = config::Config {
-            template_path: dir.join("template.md").to_string_lossy().into_owned(),
-            symlink_path: dir
+            template: dir.join("template.md").to_string_lossy().into_owned(),
+            symlink: dir
                 .join("aaaaa/aaaa/today.md")
                 .to_string_lossy()
                 .into_owned(),
-            archive_path: format!("{}/needed_path/", dir.to_string_lossy()),
+            archive: format!("{}/needed_path/", dir.to_string_lossy()),
         };
 
-        fs::write(&cfg.template_path, "# Work\n!copy_last_day\n").unwrap();
+        fs::write(&cfg.template, "# Work\n!copy_last_day\n").unwrap();
         create_daily_note(date(2024, 2, 2), &cfg);
 
         let expected = "# Work";
@@ -285,7 +285,7 @@ mod tests {
         create_daily_note(date(2024, 2, 2), &cfg);
         let expected = format!(
             "This is the default marmota template, edit it to match your needs\nTo change it edit the file at {}\n## Tasks", 
-            cfg.template_path
+            cfg.template
         );
         assert_eq!(
             fs::read_to_string(date_to_file_name(date(2024, 2, 2), &cfg)).unwrap(),
