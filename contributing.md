@@ -4,8 +4,8 @@ We expect every pull request to match a issue, if your work doesnt already match
 If this is your first contribution you may want to look for issues with the "good first issue" label
 ## Running the code locally
 ```bash
-git clone https://github.com/B3ella/groundhog.git
-cd groundhog
+git clone https://github.com/B3ella/marmota.git
+cd marmota
 cargo run
 ```
 ## Project Structure
@@ -24,16 +24,16 @@ cargo clippy --all-targets --all-features -- -D warnings
 ```
 ## Building from source
 ```bash
-git clone https://github.com/B3ella/groundhog.git
-cd groundhog
+git clone https://github.com/B3ella/marmota.git
+cd marmota
 cargo build --release
 ```
 The built binary will be available at:
 ```bash
-./target/release/groundhog
+./target/release/marmota
 ```
 ## building With Nix
 ```bash
 nix build .#default
 ```
-This builds the `groundhog` package using the included flake.
+This builds the `marmota` package using the included flake.

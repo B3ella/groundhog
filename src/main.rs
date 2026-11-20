@@ -7,7 +7,7 @@ mod interpreter;
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
 struct Args {
-    #[arg(short, long, default_value_t = "~/.config/groundhog".to_string())]
+    #[arg(short, long, default_value_t = "~/.config/marmota".to_string())]
     config_path: String,
 }
 
@@ -27,20 +27,20 @@ mod tests {
 
     #[test]
     fn config_path_defaults_to_the_documented_location() {
-        let args = Args::try_parse_from(["groundhog"]).unwrap();
-        assert_eq!(args.config_path, "~/.config/groundhog");
+        let args = Args::try_parse_from(["marmota"]).unwrap();
+        assert_eq!(args.config_path, "~/.config/marmota");
     }
 
     #[test]
     fn config_path_can_be_overridden_with_long_option() {
         let args =
-            Args::try_parse_from(["groundhog", "--config-path", "/tmp/custom-config"]).unwrap();
+            Args::try_parse_from(["marmota", "--config-path", "/tmp/custom-config"]).unwrap();
         assert_eq!(args.config_path, "/tmp/custom-config");
     }
 
     #[test]
     fn config_path_can_be_overridden_with_short_option() {
-        let args = Args::try_parse_from(["groundhog", "-c", "/tmp/short-config"]).unwrap();
+        let args = Args::try_parse_from(["marmota", "-c", "/tmp/short-config"]).unwrap();
         assert_eq!(args.config_path, "/tmp/short-config");
     }
 }

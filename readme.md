@@ -54,10 +54,10 @@ cargo install marmota
 
 If you dont already have cargo just follow the [official guide to installing rust](https://rust-lang.org/tools/install/)
 
-Then you can run the groundhog command
+Then you can run the marmota command
 
 ```bash
-groundhog
+marmota
 ```
 
 This will generate a daily-note with todays date in
@@ -110,21 +110,21 @@ paru -S marmota-daily
 
 installation with nix may seem complex but it will automatically add a systemd service that runs everyday on midnight generating the next days note.
 
-And all you have to do is provide the groundhog url to your nixos flake
+And all you have to do is provide the marmota url to your nixos flake
 
 ```nix
   inputs = {
-    groundhog.url = "github:B3ella/groundhog";
+    marmota.url = "github:B3ella/marmota";
   };
 ```
 
-then enable groundhog and put your username in
+then enable marmota and put your username in
 
 ```nix
       modules = [
-        groundhog.nixosModules.default
+        marmota.nixosModules.default
         {
-          services.groundhog = {
+          services.marmota = {
             enable = true;
             user = "bella";
           };
@@ -134,7 +134,7 @@ then enable groundhog and put your username in
 
 ## Template Syntax
 
-By default groundhog looks for a template on ~/Notes/templates/dnt.md
+By default marmota looks for a template on ~/Notes/templates/dnt.md
 
 to overwrite this value refer to the ![configuration section](#configuration)
 
@@ -182,7 +182,7 @@ The first value is the one for sunday and it goes on to saturday
 Groundhog reads config from:
 
 ```bash
-~/.config/groundhog
+~/.config/marmota
 ```
 
 If the file does not exist, it falls back to these defaults:
@@ -202,7 +202,7 @@ symlink_path is the shortcut for the current daily note
 You can override the config path with:
 
 ```bash
-groundhog --config-path /path/to/config
+marmota --config-path /path/to/config
 ```
 
 ## Notes

@@ -1,12 +1,12 @@
 [package]
 name = "marmota"
-version = "1.0.4"
+version = "2.0.0"
 edition = "2021"
 license = "MIT"
 description = "Daily note templating system"
 authors = ["b3ella"]
 readme = "readme.md"
-repository = "https://github.com/b3ella/groundhog"
+repository = "https://github.com/b3ella/marmota"
 
 [dependencies]
 chrono = "0.4"
@@ -15,5 +15,5 @@ logos = "0.16.1"
 regex = "1.13.1"
 
 [[bin]]
-name = "groundhog"
+name = "marmota"
 path = "src/main.rs"
