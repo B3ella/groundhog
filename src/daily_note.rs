@@ -30,7 +30,7 @@ fn date_to_file_name(date: DateTime<Local>, config: &config::Config) -> String {
     let year = date.year();
     let month = date.month();
     let day = date.day();
-    let file_name = format!("{}-{:0>2}-{:0>2}.md", year, month, day);
+    let file_name = format!("{year}-{month:0>2}-{day:0>2}.md");
     config.archive_path.clone() + &file_name
 }
 
@@ -39,7 +39,7 @@ pub fn create_daily_note(date: DateTime<Local>, config: &config::Config) {
     create_parent_dir(&path);
 
     if note_exists(date, config) {
-        println!("Daily note {} already exists", path);
+        println!("Daily note {path} already exists");
         return;
     }
 
@@ -47,7 +47,7 @@ pub fn create_daily_note(date: DateTime<Local>, config: &config::Config) {
 
     let last_note = match last_note {
         Some(note) => read_file(&note),
-        None => "".to_string(),
+        None => String::new(),
     };
 
     let template = get_template(&config.template_path);
@@ -76,7 +76,7 @@ fn get_latest_note(path: &str) -> Option<String> {
     let daily_note_reggex = Regex::new(r".*\d{4}-\d{2}-\d{2}.md").unwrap();
     let daily_notes = paths.filter(|file| daily_note_reggex.is_match(file));
 
-    let mut max = "".to_string();
+    let mut max = String::new();
     for note in daily_notes {
         let string_path = note;
         max = cmp::max(string_path, max);
@@ -101,17 +101,16 @@ fn get_template(template_path: &str) -> String {
     if !template_exists {
         create_default_template(template_path);
     }
-    read_file(template_path).to_string()
+    read_file(template_path)
 }
 fn create_default_template(template_path: &str) {
     create_parent_dir(template_path);
     let default_template = format!(
         "
 This is the default marmota template, edit it to match your needs
-To change it edit the file at {}
+To change it edit the file at {template_path}
 ## Tasks
-!copy_tasks",
-        template_path
+!copy_tasks"
     );
     fs::write(template_path, default_template).unwrap();
 }

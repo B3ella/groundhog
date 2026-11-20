@@ -18,8 +18,7 @@ pub fn get_config(config_path: &str) -> Config {
     let default_config = get_default_config();
     if !config_path_exists {
         println!(
-            "no file found at {}, using default config instead",
-            config_path
+            "no file found at {config_path}, using default config instead"
         );
         return default_config;
     }
@@ -41,7 +40,7 @@ pub fn get_config(config_path: &str) -> Config {
             .get("archive_path")
             .unwrap_or(&default_config.archive_path),
     );
-    if !archive_path.ends_with("/") {
+    if !archive_path.ends_with('/') {
         archive_path += "/";
     }
 
@@ -85,7 +84,7 @@ fn read_file(path: &str) -> String {
 
 fn expand_tilde(string: &str) -> String {
     let home = env::var("HOME").expect("Stirng contains ~ but variable HOME is not set");
-    string.replace("~", &home)
+    string.replace('~', &home)
 }
 
 #[cfg(test)]
