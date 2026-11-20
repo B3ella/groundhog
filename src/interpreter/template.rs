@@ -41,7 +41,10 @@ fn header_callback(lex: &mut Lexer<Token>) -> String {
 
 fn by_weekday(lex: &Lexer<Token>) -> [String; 7] {
     let result = get_content_between_parentheses(lex.slice());
-    let content_by_day: Vec<String> = result.split(';').map(std::string::ToString::to_string).collect();
+    let content_by_day: Vec<String> = result
+        .split(';')
+        .map(std::string::ToString::to_string)
+        .collect();
     let content_by_day: [String; 7] = content_by_day.try_into().expect("Expected 7 days");
     content_by_day
 }
@@ -63,7 +66,9 @@ fn on_date(lex: &Lexer<Token>) -> OnDate {
 
 pub fn parse(template: &str) -> Template {
     let mut result = vec![];
-    for token in Token::lexer(template).flatten() { result.push(token) }
+    for token in Token::lexer(template).flatten() {
+        result.push(token)
+    }
     result
 }
 

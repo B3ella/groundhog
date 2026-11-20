@@ -20,17 +20,13 @@ impl Default for Config {
     }
 }
 
-
 pub fn get_config(config_path: &str) -> Config {
     let config_path = expand_tilde(config_path);
-    let config_path_exists =
-        fs::exists(&config_path).unwrap_or(false);
+    let config_path_exists = fs::exists(&config_path).unwrap_or(false);
 
     let default_config = Config::default();
     if !config_path_exists {
-        println!(
-            "no file found at {config_path}, using default config instead"
-        );
+        println!("no file found at {config_path}, using default config instead");
         return default_config;
     }
 
@@ -41,16 +37,8 @@ pub fn get_config(config_path: &str) -> Config {
             .get("template")
             .unwrap_or(&default_config.template),
     );
-    let symlink = expand_tilde(
-        config_map
-            .get("symlink")
-            .unwrap_or(&default_config.symlink),
-    );
-    let mut archive = expand_tilde(
-        config_map
-            .get("archive")
-            .unwrap_or(&default_config.archive),
-    );
+    let symlink = expand_tilde(config_map.get("symlink").unwrap_or(&default_config.symlink));
+    let mut archive = expand_tilde(config_map.get("archive").unwrap_or(&default_config.archive));
     if !archive.ends_with('/') {
         archive += "/";
     }
@@ -67,9 +55,7 @@ fn read_config(config_path: &str) -> HashMap<String, String> {
     let config_file = read_file(config_path);
 
     for line in config_file.lines() {
-        let (key, value) = line
-            .split_once('=')
-            .unwrap_or(("", ""));
+        let (key, value) = line.split_once('=').unwrap_or(("", ""));
 
         config.insert(key.trim().to_string(), expand_tilde(value.trim()));
     }
@@ -114,10 +100,7 @@ mod tests {
         let config = get_config(&temp_path("missing"));
         let home = env::var("HOME").unwrap();
 
-        assert_eq!(
-            config.template,
-            format!("{home}/Notes/templates/dnt.md")
-        );
+        assert_eq!(config.template, format!("{home}/Notes/templates/dnt.md"));
         assert_eq!(config.symlink, format!("{home}/Notes/daily-note.md"));
         assert_eq!(config.archive, format!("{home}/Notes/daily-note/"));
     }
