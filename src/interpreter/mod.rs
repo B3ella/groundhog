@@ -52,7 +52,7 @@ fn get_section_text(section: &str, yesterday: &str) -> String {
 fn by_weekday(content_by_day: &[String; 7], date: DateTime<Local>) -> String {
     let index = date.weekday().num_days_from_sunday();
     let index = usize::try_from(index).expect("Cannot convert weekday to usize");
-    content_by_day[index].clone()
+    content_by_day.get(index).unwrap_or(&String::new()).clone()
 }
 
 fn on_date(expected_date: &template::MonthDay, text: &str, real_date: DateTime<Local>) -> String {
