@@ -58,7 +58,7 @@ fn read_config(config_path: &str) -> HashMap<String, String> {
     for line in config_file.lines() {
         let (key, value) = line
             .split_once('=')
-            .expect("Invalid config line (missing '=')");
+            .unwrap_or(("", ""));
 
         config.insert(key.trim().to_string(), expand_tilde(value.trim()));
     }
