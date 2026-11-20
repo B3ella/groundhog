@@ -10,12 +10,23 @@ pub struct Config {
     pub archive: String,
 }
 
+impl Default for Config {
+    fn default() -> Self {
+        Self {
+            template: expand_tilde("~/Notes/templates/dnt.md"),
+            symlink: expand_tilde("~/Notes/daily-note.md"),
+            archive: expand_tilde("~/Notes/daily-note/"),
+        }
+    }
+}
+
+
 pub fn get_config(config_path: &str) -> Config {
     let config_path = expand_tilde(config_path);
     let config_path_exists =
         fs::exists(&config_path).unwrap_or(false);
 
-    let default_config = get_default_config();
+    let default_config = Config::default();
     if !config_path_exists {
         println!(
             "no file found at {config_path}, using default config instead"
@@ -63,14 +74,6 @@ fn read_config(config_path: &str) -> HashMap<String, String> {
         config.insert(key.trim().to_string(), expand_tilde(value.trim()));
     }
     config
-}
-
-fn get_default_config() -> Config {
-    Config {
-        template: expand_tilde("~/Notes/templates/dnt.md"),
-        symlink: expand_tilde("~/Notes/daily-note.md"),
-        archive: expand_tilde("~/Notes/daily-note/"),
-    }
 }
 
 fn read_file(path: &str) -> String {
