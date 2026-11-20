@@ -46,7 +46,7 @@ fn by_weekday(lex: &mut Lexer<Token>) -> [String; 7] {
     content_by_day
 }
 
-fn on_date(lex: &mut Lexer<Token>) -> OnDate {
+fn on_date(lex: &Lexer<Token>) -> OnDate {
     let result = get_content_between_parentheses(lex.slice());
     let (date_expected, text) = result.split_once(',').unwrap();
     let (month, day) = date_expected
