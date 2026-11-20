@@ -66,7 +66,7 @@ pub fn parse(template: &str) -> Template {
     for token in Token::lexer(template) {
         match token {
             Ok(token) => result.push(token),
-            Err(_) => continue,
+            Err(_) => {},
         }
     }
     result
