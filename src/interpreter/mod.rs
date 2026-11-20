@@ -38,7 +38,7 @@ fn get_section_text(section: &str, yesterday: &str) -> String {
         None => return String::new(),
     };
 
-    let header_end = section.find(' ').unwrap();
+    let header_end = section.find(' ').unwrap_or(0);
     let header = "\n".to_string() + &section[..=header_end];
     let section_end = match yesterday[section_start..].find(&header) {
         None => yesterday.len(),
