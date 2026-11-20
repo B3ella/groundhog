@@ -107,7 +107,7 @@ fn create_default_template(template_path: &str) {
     create_parent_dir(template_path);
     let default_template = format!(
         "
-This is the default groundhog template, edit it to match your needs
+This is the default marmota template, edit it to match your needs
 To change it edit the file at {}
 ## Tasks
 !copy_tasks",
@@ -127,10 +127,8 @@ mod tests {
             .duration_since(UNIX_EPOCH)
             .unwrap()
             .as_nanos();
-        let path = std::env::temp_dir().join(format!(
-            "groundhog-daily-note-{}-{nonce}",
-            std::process::id()
-        ));
+        let path =
+            std::env::temp_dir().join(format!("marmota-daily-note-{}-{nonce}", std::process::id()));
         fs::create_dir_all(&path).unwrap();
         path
     }
@@ -287,7 +285,7 @@ mod tests {
 
         create_daily_note(date(2024, 2, 2), &cfg);
         let expected = format!(
-            "This is the default groundhog template, edit it to match your needs\nTo change it edit the file at {}\n## Tasks", 
+            "This is the default marmota template, edit it to match your needs\nTo change it edit the file at {}\n## Tasks", 
             cfg.template_path
         );
         assert_eq!(

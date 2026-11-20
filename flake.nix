@@ -8,27 +8,27 @@
     let
       mkGroundhogPackage = pkgs:
         pkgs.rustPlatform.buildRustPackage {
-          pname = "groundhog";
-          version = "1.0.4";
+          pname = "marmota";
+          version = "2.0.0";
 
           cargoLock.lockFile = ./Cargo.lock;
           src = self;
 
           meta = with pkgs.lib; {
             description = "Templater for daily notes";
-            homepage = "https://github.com/B3ella/groundhog";
+            homepage = "https://github.com/B3ella/marmota";
             license = licenses.mit;
             maintainers = with lib.maintainers; [ b3ella ];
-            mainProgram = "groundhog";
+            mainProgram = "marmota";
           };
         };
 
       nixosModule = { config, lib, pkgs, ... }:
         let
-          cfg = config.services.groundhog;
-          groundhogPkg = self.packages.${pkgs.system}.default;
+          cfg = config.services.marmota;
+          marmotaPkg = self.packages.${pkgs.system}.default;
         in {
-          options.services.groundhog = {
+          options.services.marmota = {
             enable = lib.mkEnableOption "Groundhog daily note generator";
 
             user = lib.mkOption {
@@ -38,7 +38,7 @@
           };
 
           config = lib.mkIf cfg.enable {
-            systemd.timers.groundhog = {
+            systemd.timers.marmota = {
               wantedBy = [ "timers.target" ];
 
               timerConfig = {
@@ -47,13 +47,13 @@
               };
             };
 
-            systemd.services.groundhog = {
+            systemd.services.marmota = {
               description = "Generate daily notes with Groundhog";
 
               serviceConfig = {
                 Type = "oneshot";
                 User = cfg.user;
-                ExecStart = "${groundhogPkg}/bin/groundhog";
+                        ExecStart = "${marmotaPkg}/bin/marmota";
               };
             };
           };

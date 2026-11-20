@@ -100,7 +100,7 @@ mod tests {
             .as_nanos();
         env::temp_dir()
             .join(format!(
-                "groundhog-config-{label}-{}-{nonce}",
+                "marmota-config-{label}-{}-{nonce}",
                 std::process::id()
             ))
             .to_string_lossy()
