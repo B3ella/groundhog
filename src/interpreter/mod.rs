@@ -2,7 +2,7 @@ mod template;
 use chrono::{DateTime, Datelike, Local};
 
 pub fn process_tokens(template: &str, yesterday: &str, date: DateTime<Local>) -> String {
-    let mut result = "".to_string();
+    let mut result = String::new();
     let template = template::parse(template);
     for line in template {
         result += &process_token(&line, yesterday, date);
@@ -20,7 +20,7 @@ fn process_token(
         template::TemplateLine::CopyLastDay(section) => get_section_text(section, yesterday),
         template::TemplateLine::ByWeekday(content_by_day) => by_weekday(content_by_day, date),
         template::TemplateLine::OnDate(params) => on_date(&params.date, &params.text, date),
-        template::TemplateLine::Literal(literal) => literal.to_string(),
+        template::TemplateLine::Literal(literal) => literal.clone(),
     }
 }
 
@@ -35,11 +35,11 @@ fn copy_tasks(yesterday: &str, current_section: &str) -> String {
 fn get_section_text(section: &str, yesterday: &str) -> String {
     let section_start = match yesterday.find(section) {
         Some(v) => v + section.len(),
-        None => return "".to_string(),
+        None => return String::new(),
     };
 
-    let header_end = section.find(" ").unwrap();
-    let header = "\n".to_string() + &section[..header_end + 1];
+    let header_end = section.find(' ').unwrap();
+    let header = "\n".to_string() + &section[..=header_end];
     let section_end = match yesterday[section_start..].find(&header) {
         None => yesterday.len(),
         Some(v) => v + section_start,
@@ -52,14 +52,14 @@ fn get_section_text(section: &str, yesterday: &str) -> String {
 fn by_weekday(content_by_day: &[String; 7], date: DateTime<Local>) -> String {
     let index = date.weekday().num_days_from_sunday();
     let index = usize::try_from(index).expect("Cannot convert weekday to usize");
-    content_by_day[index].to_string()
+    content_by_day.get(index).unwrap_or(&String::new()).clone()
 }
 
 fn on_date(expected_date: &template::MonthDay, text: &str, real_date: DateTime<Local>) -> String {
     if real_date.month() == expected_date.month && real_date.day() == expected_date.day {
         return text.to_string();
     }
-    "".to_string()
+    String::new()
 }
 
 #[cfg(test)]

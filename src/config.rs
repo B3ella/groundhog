@@ -5,50 +5,48 @@ use std::fs::File;
 use std::io::prelude::*;
 
 pub struct Config {
-    pub template_path: String,
-    pub symlink_path: String,
-    pub archive_path: String,
+    pub template: String,
+    pub symlink: String,
+    pub archive: String,
+}
+
+impl Default for Config {
+    fn default() -> Self {
+        Self {
+            template: expand_tilde("~/Notes/templates/dnt.md"),
+            symlink: expand_tilde("~/Notes/daily-note.md"),
+            archive: expand_tilde("~/Notes/daily-note/"),
+        }
+    }
 }
 
 pub fn get_config(config_path: &str) -> Config {
     let config_path = expand_tilde(config_path);
-    let config_path_exists =
-        fs::exists(&config_path).expect("The file system is throwing an error?");
+    let config_path_exists = fs::exists(&config_path).unwrap_or(false);
 
-    let default_config = get_default_config();
+    let default_config = Config::default();
     if !config_path_exists {
-        println!(
-            "no file found at {}, using default config instead",
-            config_path
-        );
+        println!("no file found at {config_path}, using default config instead");
         return default_config;
     }
 
     let config_map = read_config(&config_path);
 
-    let template_path = expand_tilde(
+    let template = expand_tilde(
         config_map
-            .get("template_path")
-            .unwrap_or(&default_config.template_path),
+            .get("template")
+            .unwrap_or(&default_config.template),
     );
-    let symlink_path = expand_tilde(
-        config_map
-            .get("symlink_path")
-            .unwrap_or(&default_config.symlink_path),
-    );
-    let mut archive_path = expand_tilde(
-        config_map
-            .get("archive_path")
-            .unwrap_or(&default_config.archive_path),
-    );
-    if !archive_path.ends_with("/") {
-        archive_path += "/";
+    let symlink = expand_tilde(config_map.get("symlink").unwrap_or(&default_config.symlink));
+    let mut archive = expand_tilde(config_map.get("archive").unwrap_or(&default_config.archive));
+    if !archive.ends_with('/') {
+        archive += "/";
     }
 
     Config {
-        template_path,
-        symlink_path,
-        archive_path,
+        template,
+        symlink,
+        archive,
     }
 }
 
@@ -57,21 +55,11 @@ fn read_config(config_path: &str) -> HashMap<String, String> {
     let config_file = read_file(config_path);
 
     for line in config_file.lines() {
-        let (key, value) = line
-            .split_once('=')
-            .expect("Invalid config line (missing '=')");
+        let (key, value) = line.split_once('=').unwrap_or(("", ""));
 
         config.insert(key.trim().to_string(), expand_tilde(value.trim()));
     }
     config
-}
-
-fn get_default_config() -> Config {
-    Config {
-        template_path: expand_tilde("~/Notes/templates/dnt.md"),
-        symlink_path: expand_tilde("~/Notes/daily-note.md"),
-        archive_path: expand_tilde("~/Notes/daily-note/"),
-    }
 }
 
 fn read_file(path: &str) -> String {
@@ -85,7 +73,7 @@ fn read_file(path: &str) -> String {
 
 fn expand_tilde(string: &str) -> String {
     let home = env::var("HOME").expect("Stirng contains ~ but variable HOME is not set");
-    string.replace("~", &home)
+    string.replace('~', &home)
 }
 
 #[cfg(test)]
@@ -112,12 +100,9 @@ mod tests {
         let config = get_config(&temp_path("missing"));
         let home = env::var("HOME").unwrap();
 
-        assert_eq!(
-            config.template_path,
-            format!("{home}/Notes/templates/dnt.md")
-        );
-        assert_eq!(config.symlink_path, format!("{home}/Notes/daily-note.md"));
-        assert_eq!(config.archive_path, format!("{home}/Notes/daily-note/"));
+        assert_eq!(config.template, format!("{home}/Notes/templates/dnt.md"));
+        assert_eq!(config.symlink, format!("{home}/Notes/daily-note.md"));
+        assert_eq!(config.archive, format!("{home}/Notes/daily-note/"));
     }
 
     #[test]
@@ -125,40 +110,40 @@ mod tests {
         let path = temp_path("complete");
         fs::write(
             &path,
-            " template_path = /tmp/template.md \nsymlink_path=/tmp/today.md\n archive_path = /tmp/archive/ \n",
+            " template = /tmp/template.md \nsymlink=/tmp/today.md\n archive = /tmp/archive/ \n",
         )
         .unwrap();
 
         let config = get_config(&path);
-        assert_eq!(config.template_path, "/tmp/template.md");
-        assert_eq!(config.symlink_path, "/tmp/today.md");
-        assert_eq!(config.archive_path, "/tmp/archive/");
+        assert_eq!(config.template, "/tmp/template.md");
+        assert_eq!(config.symlink, "/tmp/today.md");
+        assert_eq!(config.archive, "/tmp/archive/");
         fs::remove_file(path).unwrap();
     }
 
     #[test]
     fn omitted_values_fall_back_to_defaults() {
         let path = temp_path("partial");
-        fs::write(&path, "template_path=/tmp/custom-template.md\n").unwrap();
+        fs::write(&path, "template=/tmp/custom-template.md\n").unwrap();
 
         let config = get_config(&path);
         let home = env::var("HOME").unwrap();
-        assert_eq!(config.template_path, "/tmp/custom-template.md");
-        assert_eq!(config.symlink_path, format!("{home}/Notes/daily-note.md"));
-        assert_eq!(config.archive_path, format!("{home}/Notes/daily-note/"));
+        assert_eq!(config.template, "/tmp/custom-template.md");
+        assert_eq!(config.symlink, format!("{home}/Notes/daily-note.md"));
+        assert_eq!(config.archive, format!("{home}/Notes/daily-note/"));
         fs::remove_file(path).unwrap();
     }
 
     #[test]
     fn works_with_or_without_trailling_separators() {
         let path1 = temp_path("partial");
-        fs::write(&path1, "archive_path=~/Notes/daily-note/").unwrap();
+        fs::write(&path1, "archive=~/Notes/daily-note/").unwrap();
         let config1 = get_config(&path1);
 
         let path2 = temp_path("partial");
-        fs::write(&path2, "archive_path=~/Notes/daily-note").unwrap();
+        fs::write(&path2, "archive=~/Notes/daily-note").unwrap();
         let config2 = get_config(&path2);
 
-        assert_eq!(config1.archive_path, config2.archive_path);
+        assert_eq!(config1.archive, config2.archive);
     }
 }

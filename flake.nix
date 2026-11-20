@@ -6,7 +6,7 @@
 
   outputs = { self, nixpkgs, flake-utils }:
     let
-      mkGroundhogPackage = pkgs:
+      mkMarmotaPackage = pkgs:
         pkgs.rustPlatform.buildRustPackage {
           pname = "marmota";
           version = "2.0.0";
@@ -29,11 +29,11 @@
           marmotaPkg = self.packages.${pkgs.system}.default;
         in {
           options.services.marmota = {
-            enable = lib.mkEnableOption "Groundhog daily note generator";
+            enable = lib.mkEnableOption "Marmota daily note generator";
 
             user = lib.mkOption {
               type = lib.types.str;
-              description = "User that runs Groundhog.";
+              description = "User that runs Marmota.";
             };
           };
 
@@ -48,7 +48,7 @@
             };
 
             systemd.services.marmota = {
-              description = "Generate daily notes with Groundhog";
+              description = "Generate daily notes with Marmota";
 
               serviceConfig = {
                 Type = "oneshot";
@@ -64,7 +64,7 @@
           pkgs = nixpkgs.legacyPackages.${system};
         in {
           packages = {
-            default = mkGroundhogPackage pkgs;
+            default = mkMarmotaPackage pkgs;
           };
         }))
       // {

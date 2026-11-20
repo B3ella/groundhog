@@ -17,3 +17,4 @@ regex = "1.13.1"
 [[bin]]
 name = "marmota"
 path = "src/main.rs"
+

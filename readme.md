@@ -1,12 +1,12 @@
 [![Quality gate status](https://sonarcloud.io/api/project_badges/measure?project=B3ella_bto-templater&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=B3ella_bto-templater)
 
-# Groundhog
+# Marmota
 
-Groundhog was built to replace the Obsidian Daily Notes plugin.
+Marmota was built to replace the Obsidian Daily Notes plugin.
 
 Daily notes are great but obsidian is limited to just copying the same text over and over
 
-Groundhog can generate different text depending on the day of the week, carries forward tasks and recurring content, and integrates particularly well with NixOS
+Marmota can generate different text depending on the day of the week, carries forward tasks and recurring content, and integrates particularly well with NixOS
 
 Contributions are welcome and wanted!!
 Feel free to open issues for any feature you would like or fix you need.
@@ -74,9 +74,9 @@ if you are using obsidian just turn on obsidians daily note plugin and configure
 
 ![new file location](imgs/new_file_location.png)
 
-Groundhog uses the same naming convention as obsidian for its daily notes. This means every daily note feature from obsidian will work (Open next daily note, open todays daily note and open previous daily note)
+Marmota uses the same naming convention as obsidian for its daily notes. This means every daily note feature from obsidian will work (Open next daily note, open todays daily note and open previous daily note)
 
-Groundhog will also symlink todays daily note to
+Marmota will also symlink todays daily note to
 
 ```bash
 ~/Notes/daily-note.md
@@ -138,7 +138,7 @@ By default marmota looks for a template on ~/Notes/templates/dnt.md
 
 to overwrite this value refer to the ![configuration section](#configuration)
 
-Groundhog processes markdown templates and supports a few special tokens.
+Marmota processes markdown templates and supports a few special tokens.
 
 ### Copy previous section
 
@@ -179,7 +179,7 @@ The first value is the one for sunday and it goes on to saturday
 
 ## Configuration
 
-Groundhog reads config from:
+Marmota reads config from:
 
 ```bash
 ~/.config/marmota

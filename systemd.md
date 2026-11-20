@@ -1,6 +1,6 @@
 ```toml
 [Unit]
-Description=Generate daily notes with Groundhog
+Description=Generate daily notes with Marmota
 After=network.target
 StartLimitIntervalSec=0
 [Service]
