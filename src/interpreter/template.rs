@@ -82,3 +82,13 @@ fn get_content_between_parentheses(line: &str) -> String {
     let result = &line[start_bytes + 1..end_bytes];
     result.to_string()
 }
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn content_between_parenthesis() {
+        assert_eq!(get_content_between_parentheses("teste(test)teste"), "test".to_string())
+    }
+
+}
