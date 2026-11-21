@@ -109,6 +109,14 @@ mod tests {
         ];
         assert_eq!(parse("!by_weekday(1;2;3;4;5;6;7)"), expected)
     }
+    #[test]
+    fn can_parse_copy_last_day() {
+        let expected = vec![
+            Token::Literal("# sec\n".to_string()),
+            Token::CopyLastDay("# sec".to_string()),
+        ];
+        assert_eq!(parse("# sec\n!copy_last_day"), expected)
+    }
 
     #[test]
     fn can_parse_copy_tasks() {
