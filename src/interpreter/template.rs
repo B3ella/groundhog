@@ -95,11 +95,54 @@ mod tests {
     }
 
     #[test]
+    fn can_parse_by_weekday() {
+        let expected = vec![Token::ByWeekday([
+            "1".to_string(),
+            "2".to_string(),
+            "3".to_string(),
+            "4".to_string(),
+            "5".to_string(),
+            "6".to_string(),
+            "7".to_string(),
+        ])];
+        assert_eq!(parse("!by_weekday(1;2;3;4;5;6;7)"), expected)
+    }
+    #[test]
+    fn can_parse_copy_last_day() {
+        let expected = vec![
+            Token::Literal("# sec\n".to_string()),
+            Token::CopyLastDay("# sec".to_string()),
+        ];
+        assert_eq!(parse("# sec\n!copy_last_day"), expected)
+    }
+
+    #[test]
+    fn can_parse_copy_tasks() {
+        let expected = vec![
+            Token::Literal("# sec\n".to_string()),
+            Token::CopyTasks("# sec".to_string()),
+        ];
+        assert_eq!(parse("# sec\n!copy_tasks"), expected)
+    }
+    #[test]
     fn can_parse_on_date() {
         let expected = Token::OnDate(OnDate {
             date: MonthDay { month: 11, day: 20 },
             text: "test".to_string(),
         });
         assert_eq!(parse("!on_date(20/11, test)"), vec![expected])
+    }
+    #[test]
+    fn can_parse_literal() {
+        let expected = vec![
+            Token::Literal("L".to_string()),
+            Token::Literal("i".to_string()),
+            Token::Literal("t".to_string()),
+            Token::Literal("e".to_string()),
+            Token::Literal("r".to_string()),
+            Token::Literal("a".to_string()),
+            Token::Literal("l".to_string()),
+        ];
+        assert_eq!(parse("Literal"), expected)
     }
 }
