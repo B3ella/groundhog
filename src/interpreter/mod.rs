@@ -38,7 +38,7 @@ fn get_section_text(section: &str, yesterday: &str) -> String {
         None => return String::new(),
     };
 
-    let header_end = section.find(' ').unwrap();
+    let header_end = section.find(' ').unwrap_or(0);
     let header = "\n".to_string() + &section[..=header_end];
     let section_end = match yesterday[section_start..].find(&header) {
         None => yesterday.len(),
@@ -136,8 +136,8 @@ mod tests {
     }
     #[test]
     fn on_date_returns_content_on_date() {
-        let template = "!on_date(01/01, test text)";
-        let output = process_tokens(template, "", date(2024, 1, 1));
+        let template = "!on_date(20/11, test text)";
+        let output = process_tokens(template, "test text", date(2024, 11, 20));
         assert_eq!(output, "test text");
     }
     #[test]

@@ -52,7 +52,7 @@ fn by_weekday(lex: &Lexer<Token>) -> [String; 7] {
 fn on_date(lex: &Lexer<Token>) -> OnDate {
     let result = get_content_between_parentheses(lex.slice());
     let (date_expected, text) = result.split_once(',').unwrap();
-    let (month, day) = date_expected
+    let (day, month) = date_expected
         .trim()
         .split_once('/')
         .expect("Expected month/day format");
@@ -81,4 +81,25 @@ fn get_content_between_parentheses(line: &str) -> String {
         .expect("no closing brackets found in by weekday template line");
     let result = &line[start_bytes + 1..end_bytes];
     result.to_string()
+}
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn content_between_parenthesis() {
+        assert_eq!(
+            get_content_between_parentheses("teste(test)teste"),
+            "test".to_string()
+        )
+    }
+
+    #[test]
+    fn can_parse_on_date() {
+        let expected = Token::OnDate(OnDate {
+            date: MonthDay { month: 11, day: 20 },
+            text: "test".to_string(),
+        });
+        assert_eq!(parse("!on_date(20/11, test)"), vec![expected])
+    }
 }
