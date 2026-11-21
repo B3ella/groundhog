@@ -91,4 +91,10 @@ mod tests {
         assert_eq!(get_content_between_parentheses("teste(test)teste"), "test".to_string())
     }
 
+    #[test]
+    fn can_parse_on_date() {
+        let expected = Token::OnDate(OnDate{ date: MonthDay { month: 11, day: 20 }, text: "test".to_string(), });
+        assert_eq!(parse("!on_date(20/11, test)"), vec![expected])
+    }
+
 }
