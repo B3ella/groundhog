@@ -102,4 +102,17 @@ mod tests {
         });
         assert_eq!(parse("!on_date(20/11, test)"), vec![expected])
     }
+    #[test]
+    fn can_parse_literal() {
+        let expected = vec![
+            Token::Literal("L".to_string()),
+            Token::Literal("i".to_string()),
+            Token::Literal("t".to_string()),
+            Token::Literal("e".to_string()),
+            Token::Literal("r".to_string()),
+            Token::Literal("a".to_string()),
+            Token::Literal("l".to_string())
+        ];
+        assert_eq!(parse("Literal"), expected)
+    }
 }
