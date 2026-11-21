@@ -95,6 +95,21 @@ mod tests {
     }
 
     #[test]
+    fn can_parse_by_weekday() {
+        let expected = vec![
+            Token::ByWeekday([
+                "1".to_string(), 
+                "2".to_string(), 
+                "3".to_string(), 
+                "4".to_string(), 
+                "5".to_string(), 
+                "6".to_string(), 
+                "7".to_string()
+            ]),
+        ];
+        assert_eq!(parse("!by_weekday(1;2;3;4;5;6;7)"), expected)
+    }
+    #[test]
     fn can_parse_on_date() {
         let expected = Token::OnDate(OnDate {
             date: MonthDay { month: 11, day: 20 },
